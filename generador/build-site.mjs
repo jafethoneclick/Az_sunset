@@ -577,22 +577,82 @@ files["assets/css/site.css"] = `/* Estilos compartidos propios del sitio (se car
    Claro:   #F5F5F5
    Estas variables pisan las de main.css (este archivo carga después). */
 :root {
-	--color-primary: #2a2f35;       /* acero oscuro: fondos de secciones, botones outline */
+	--color-primary: #2a2f35;       /* acero oscuro: fondos de heros/CTA, rellenos hover */
 	--color-primary-dark: #121212;  /* extremo oscuro del degradado del hero */
 	--color-primary-light: #5e666e; /* acero medio */
 	--color-accent: #d89a1f;        /* dorado: botones CTA, estrellas, enlaces destacados */
-	--color-dark: #121212;          /* footer y texto principal */
-	--color-brand-red: #98291e;     /* rojo del logo: rótulos de sección */
-	--color-brand-orange: #d66c1d;  /* naranja: hover de enlaces dorados en tarjetas */
+	--color-brand-red: #98291e;     /* rojo del logo: errores de formulario */
+	--color-brand-orange: #d66c1d;  /* naranja: rótulos de sección, hovers */
 
-	/* Textos sobre fondo oscuro (el tema original usaba celestes) */
-	--color-blue-100: #f5f5f5;
+	/* TEMA OSCURO — el sitio entero usa fondo negro. Estas variables
+	   remapean los grises del tema (que asumían fondo blanco). */
+	--color-dark: #f5f5f5;          /* "text-dark" (títulos) ahora es claro */
+	--color-blue-100: #f5f5f5;      /* subtítulos sobre heros oscuros */
 	--color-blue-200: #b8bec4;
+	--color-gray-50: #191d22;       /* secciones alternas y hover de menús */
+	--color-gray-100: #23282e;      /* bordes suaves, fondos de imagen */
+	--color-gray-200: #2f353c;      /* bordes de tarjetas y divisores */
+	--color-gray-300: #3d444d;      /* bordes de inputs */
+	--color-gray-400: #8a929a;      /* rótulos apagados */
+	--color-gray-500: #9aa2aa;      /* texto terciario */
+	--color-gray-600: #b8bec4;      /* texto secundario */
+	--color-gray-700: #cdd2d6;      /* texto de párrafos largos */
+}
 
-	/* Grises del tema mapeados a la paleta */
-	--color-gray-50: #f5f5f5;   /* fondo de secciones claras */
-	--color-gray-300: #b8bec4;  /* bordes de inputs, texto del footer */
-	--color-gray-600: #5e666e;  /* texto secundario sobre fondo claro */
+/* ---- Superficies oscuras (clases que asumían fondo blanco) ---- */
+body {
+	background-color: #121212;
+	color: #f5f5f5;
+}
+
+.bg-white {
+	background-color: #1c2127; /* tarjetas y paneles */
+}
+
+.bg-white\\/95 {
+	background-color: rgba(18, 18, 18, 0.92); /* barra del header */
+}
+
+.bg-dark {
+	background-color: #0d0f12; /* footer, un paso más oscuro que el body */
+}
+
+.text-gray-300 {
+	color: #b8bec4; /* texto del footer (el var gray-300 ahora es un borde) */
+}
+
+/* ---- Acentos que eran azul primario sobre blanco ---- */
+.text-primary {
+	color: var(--color-accent); /* precios, contadores, enlaces "View →" */
+}
+
+.border-primary {
+	border-color: var(--color-accent);
+}
+
+.bg-primary\\/10 {
+	background-color: rgba(216, 154, 31, 0.12); /* círculos numerados */
+}
+
+.focus\\:border-primary:focus {
+	border-color: var(--color-accent);
+}
+
+.focus\\:ring-primary:focus {
+	--tw-ring-color: var(--color-accent);
+}
+
+/* Hover de los enlaces del menú y textos que iban al azul primario:
+   ahora van al dorado (el primario oscuro no se vería sobre negro). */
+.hover\\:text-primary:hover {
+	color: var(--color-accent);
+}
+
+/* Campos de formulario con relleno propio sobre el fondo negro. */
+form input:not([type="hidden"]),
+form select,
+form textarea {
+	background-color: #191d22;
 }
 
 /* Los botones dorados aclaran a #F4B400 (amarillo sol) al pasar el
@@ -609,9 +669,10 @@ button.bg-accent:hover {
 	color: var(--color-brand-orange);
 }
 
-/* Rótulos de sección en el rojo del logo (sobre fondo claro). */
+/* Rótulos de sección en naranja (el rojo del logo no contrasta
+   suficiente sobre fondo negro; queda para errores). */
 .eyebrow-red {
-	color: var(--color-brand-red);
+	color: var(--color-brand-orange);
 }
 
 /* Permite abrir los desplegables del menú también con teclado (Tab),
