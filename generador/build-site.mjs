@@ -499,7 +499,7 @@ ${footProducts}
 }
 
 function sectionHeading(eyebrow, title, subtitle = "", light = false) {
-  const eyebrowClass = light ? "text-blue-200" : "text-accent";
+  const eyebrowClass = light ? "text-blue-200" : "eyebrow-red";
   const titleClass = light ? "text-white" : "text-dark";
   const subtitleClass = light ? "text-blue-100" : "text-gray-600";
   return `<div class="max-w-2xl mx-auto text-center" data-reveal>
@@ -570,6 +570,49 @@ const files = {};
 files["assets/css/site.css"] = `/* Estilos compartidos propios del sitio (se cargan en todas las páginas,
    después de main.css). El menú del header usa clases Tailwind de
    main.css; aquí solo va lo que Tailwind compilado no cubre. */
+
+/* ============ Paleta de marca AZ Sunset ============
+   Oscuros: #121212 · #2A2F35 · #5E666E · #B8BEC4
+   Cálidos: #D89A1F (dorado) · #F4B400 (sol) · #D66C1D (naranja) · #98291E (rojo)
+   Claro:   #F5F5F5
+   Estas variables pisan las de main.css (este archivo carga después). */
+:root {
+	--color-primary: #2a2f35;       /* acero oscuro: fondos de secciones, botones outline */
+	--color-primary-dark: #121212;  /* extremo oscuro del degradado del hero */
+	--color-primary-light: #5e666e; /* acero medio */
+	--color-accent: #d89a1f;        /* dorado: botones CTA, estrellas, enlaces destacados */
+	--color-dark: #121212;          /* footer y texto principal */
+	--color-brand-red: #98291e;     /* rojo del logo: rótulos de sección */
+	--color-brand-orange: #d66c1d;  /* naranja: hover de enlaces dorados en tarjetas */
+
+	/* Textos sobre fondo oscuro (el tema original usaba celestes) */
+	--color-blue-100: #f5f5f5;
+	--color-blue-200: #b8bec4;
+
+	/* Grises del tema mapeados a la paleta */
+	--color-gray-50: #f5f5f5;   /* fondo de secciones claras */
+	--color-gray-300: #b8bec4;  /* bordes de inputs, texto del footer */
+	--color-gray-600: #5e666e;  /* texto secundario sobre fondo claro */
+}
+
+/* Los botones dorados aclaran a #F4B400 (amarillo sol) al pasar el
+   mouse, en vez del efecto genérico de transparencia. */
+a.bg-accent:hover,
+button.bg-accent:hover {
+	background-color: #f4b400;
+	opacity: 1;
+}
+
+/* En las tarjetas de producto, el enlace dorado pasa a naranja al
+   hacer hover sobre la tarjeta. */
+.group:hover span.text-accent {
+	color: var(--color-brand-orange);
+}
+
+/* Rótulos de sección en el rojo del logo (sobre fondo claro). */
+.eyebrow-red {
+	color: var(--color-brand-red);
+}
 
 /* Permite abrir los desplegables del menú también con teclado (Tab),
    no solo con el mouse. */
@@ -1198,7 +1241,7 @@ ${options}
    intentar enviar (la clase la agrega contact.js). */
 #quote-form.was-validated input:invalid,
 #quote-form.was-validated select:invalid {
-	border-color: #dc2626;
+	border-color: #98291e;
 }
 `;
 
@@ -1441,7 +1484,7 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 
 #apply-form.was-validated input:invalid,
 #apply-form.was-validated select:invalid {
-	border-color: #dc2626;
+	border-color: #98291e;
 }
 `;
 
@@ -1761,9 +1804,11 @@ responde "credenciales inválidas". El backend real va ahí.
 ## Cómo editar
 
 - **Textos**: directamente en el \`.html\` de cada carpeta.
-- **Colores de marca**: variables \`--color-primary\`, \`--color-accent\`,
-  etc. al final de \`assets/css/main.css\` (o sobreescribilas en el
-  \`.css\` de una página).
+- **Colores de marca**: la paleta AZ Sunset vive en el bloque \`:root\`
+  de \`assets/css/site.css\` (oscuros #121212 / #2A2F35 / #5E666E /
+  #B8BEC4, dorado #D89A1F, sol #F4B400, naranja #D66C1D, rojo #98291E,
+  claro #F5F5F5) y pisa los valores por defecto de \`main.css\`.
+  Cambiá ahí cualquier color.
 - **Estilos de una sola página**: en el \`.css\` de su carpeta.
 - **Imágenes**: reemplazá los SVG placeholder en \`assets/images/\`
   manteniendo el mismo nombre de archivo.
@@ -1776,11 +1821,11 @@ que no existan ya en ese archivo, agregá la regla equivalente en el
 \`.css\` de la página.
 `;
 
-// Placeholders SVG para productos que no traían imagen del tema original.
+// Placeholders SVG con la paleta de marca (fondos negros, líneas doradas).
 function placeholderSvg(label, w, h, bg) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <rect width="100%" height="100%" fill="${bg}"/>
-  <g fill="none" stroke="#ffffff" stroke-width="2" opacity="0.35">
+  <g fill="none" stroke="#d89a1f" stroke-width="2" opacity="0.35">
     <line x1="0" y1="0" x2="${w}" y2="${h}"/>
     <line x1="${w}" y1="0" x2="0" y2="${h}"/>
   </g>
@@ -1788,11 +1833,12 @@ function placeholderSvg(label, w, h, bg) {
 </svg>
 `;
 }
-for (const slug of ["utility-units", "lean-tos"]) {
-  const p = products.find((x) => x.slug === slug);
-  files[`assets/images/products/${slug}/card-placeholder.svg`] = placeholderSvg(p.title, 800, 600, "#2f5583");
-  files[`assets/images/products/${slug}/hero-placeholder.svg`] = placeholderSvg(p.title, 1600, 700, "#1e3a5f");
+for (const p of products) {
+  files[`assets/images/products/${p.slug}/card-placeholder.svg`] = placeholderSvg(p.title, 800, 600, "#2a2f35");
+  files[`assets/images/products/${p.slug}/hero-placeholder.svg`] = placeholderSvg(p.title, 1600, 700, "#121212");
 }
+files["assets/images/hero/hero-placeholder.svg"] = placeholderSvg(site.shortName, 1600, 700, "#121212");
+files["assets/images/testimonials/avatar-placeholder.svg"] = placeholderSvg("", 200, 200, "#5e666e");
 
 // -------------------------------------------------------------- escribir
 for (const [rel, content] of Object.entries(files)) {

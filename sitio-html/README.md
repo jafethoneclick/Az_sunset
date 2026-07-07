@@ -69,9 +69,11 @@ responde "credenciales inválidas". El backend real va ahí.
 ## Cómo editar
 
 - **Textos**: directamente en el `.html` de cada carpeta.
-- **Colores de marca**: variables `--color-primary`, `--color-accent`,
-  etc. al final de `assets/css/main.css` (o sobreescribilas en el
-  `.css` de una página).
+- **Colores de marca**: la paleta AZ Sunset vive en el bloque `:root`
+  de `assets/css/site.css` (oscuros #121212 / #2A2F35 / #5E666E /
+  #B8BEC4, dorado #D89A1F, sol #F4B400, naranja #D66C1D, rojo #98291E,
+  claro #F5F5F5) y pisa los valores por defecto de `main.css`.
+  Cambiá ahí cualquier color.
 - **Estilos de una sola página**: en el `.css` de su carpeta.
 - **Imágenes**: reemplazá los SVG placeholder en `assets/images/`
   manteniendo el mismo nombre de archivo.

@@ -3,5 +3,5 @@
 
 #apply-form.was-validated input:invalid,
 #apply-form.was-validated select:invalid {
-	border-color: #dc2626;
+	border-color: #98291e;
 }
