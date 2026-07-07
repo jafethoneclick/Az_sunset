@@ -1,0 +1,4 @@
+# Impide descargar la lista de leads desde el navegador.
+<Files "leads.csv">
+	Require all denied
+</Files>

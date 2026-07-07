@@ -1,0 +1,7 @@
+/* Estilos específicos de la página Dealer Application.
+   El diseño base compartido vive en ../../assets/css/main.css. */
+
+#apply-form.was-validated input:invalid,
+#apply-form.was-validated select:invalid {
+	border-color: #dc2626;
+}

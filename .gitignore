@@ -1,0 +1,17 @@
+# WordPress core (managed by the wp_core Docker volume, not checked in)
+/wp-admin/
+/wp-includes/
+/*.php
+!wp-content/**/*.php
+/wp-config.php
+
+# Uploads (media the client uploads via wp-admin — not source-controlled)
+wp-content/uploads/
+
+# Node (Tailwind CLI build tooling)
+node_modules/
+wp-content/themes/ironclad-steel/assets/css/main.css
+
+# OS / editor
+.DS_Store
+Thumbs.db

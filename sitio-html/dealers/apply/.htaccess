@@ -1,0 +1,4 @@
+# Impide descargar la lista de solicitudes desde el navegador.
+<Files "dealer-leads.csv">
+	Require all denied
+</Files>

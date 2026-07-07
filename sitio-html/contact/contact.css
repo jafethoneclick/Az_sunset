@@ -1,0 +1,9 @@
+/* Estilos específicos de la página Contact.
+   El diseño base compartido vive en ../assets/css/main.css. */
+
+/* Marca en rojo los campos requeridos que quedaron inválidos tras
+   intentar enviar (la clase la agrega contact.js). */
+#quote-form.was-validated input:invalid,
+#quote-form.was-validated select:invalid {
+	border-color: #dc2626;
+}

@@ -1,0 +1,6 @@
+/* Estilos específicos del Dealer Portal (login).
+   El diseño base compartido vive en ../../assets/css/main.css. */
+
+.portal-card {
+	max-width: 26rem;
+}
