@@ -1,0 +1,49 @@
+/* ===== Scroll-to-expand media hero (portado a vanilla desde el componente
+   React "ScrollExpandMedia"). El JS (assets/js/scroll-expand.js) sólo
+   actualiza tamaños y opacidades; toda la estructura vive en el HTML. ===== */
+.sxm { overflow-x: hidden; }
+.sxm-stage { position: relative; display: flex; flex-direction: column; align-items: center; min-height: 100dvh; }
+
+.sxm-bg {
+	position: absolute; inset: 0; z-index: 0;
+	background:
+		radial-gradient(120% 90% at 82% 0%, rgba(244, 169, 60, 0.38), rgba(244, 169, 60, 0) 55%),
+		linear-gradient(160deg, #1d2630 0%, #141a21 55%, #0f141a 100%);
+}
+.sxm-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); }
+
+.sxm-container { position: relative; z-index: 10; width: 100%; max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
+
+.sxm-media {
+	position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+	z-index: 0; border-radius: 1rem; overflow: hidden;
+	width: min(1100px, 95vw); height: min(78vh, 680px); /* respaldo si el JS no corre */
+	max-width: 95vw; max-height: 85vh;
+	box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6);
+}
+.sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+.sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
+
+.sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
+.sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
+.sxm-scroll { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; color: #c9cfd6; }
+.sxm.is-expanded .sxm-hint { opacity: 0; }
+
+.sxm-title { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100%; text-align: center; }
+.sxm-title h2 { margin: 0; color: #fff; font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.05; font-size: clamp(2.8rem, 8vw, 4.75rem); text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
+
+.sxm-content { width: 100%; padding: 3rem 2rem 5rem; opacity: 0; }
+
+/* El tamaño del media y el desplazamiento del título siguen el "scroll" sin
+   easing (instantáneo), igual que el original; el resto sí atenúa. */
+.sxm-media, .sxm-title h2, .sxm-date, .sxm-scroll { transition: none; }
+.sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
+.sxm-content { transition: opacity 0.7s ease; }
+
+/* Reducir movimiento: el JS deja el media expandido y el contenido visible;
+   acá garantizamos que el contenido se vea aunque el JS no corra. */
+@media (prefers-reduced-motion: reduce) {
+	.sxm-content { opacity: 1; }
+	.sxm-hint { display: none; }
+}

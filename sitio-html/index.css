@@ -1,2 +1,61 @@
 /* Estilos específicos de la portada (index.html).
    El diseño base compartido vive en assets/css/main.css. */
+
+/* Video de fondo del hero (assets/video/hero.mp4).
+   object-fit: cover hace que siempre llene el área sin deformarse,
+   recortando lo que sobre desde el centro, en cualquier pantalla. */
+.hero-video {
+	opacity: 0.6;
+	object-fit: cover;
+	object-position: center;
+}
+
+/* Altura del hero adaptable al dispositivo (mobile-first):
+   en celulares ocupa ~3/4 de la pantalla; en pantallas más grandes
+   crece hasta un máximo cómodo. El video siempre acompaña porque
+   cubre el 100% del contenedor. */
+[data-hero-parallax] {
+	min-height: 70vh;  /* respaldo para navegadores sin svh */
+	min-height: min(78svh, 560px);
+}
+
+@media (min-width: 40rem) {
+	[data-hero-parallax] {
+		min-height: min(80svh, 620px);
+	}
+}
+
+@media (min-width: 64rem) {
+	[data-hero-parallax] {
+		min-height: min(85svh, 720px);
+	}
+}
+
+/* Velo acero + brillo de atardecer sobre el video. Dos capas:
+   1. Un degradado de acero (más denso a la izquierda, donde va el titular)
+      que mantiene el texto blanco legible sin apagar del todo el video.
+   2. Un brillo radial ámbar arriba a la derecha: el "atardecer de Arizona"
+      que da el toque cálido y premium. */
+.hero-overlay {
+	background:
+		linear-gradient(
+			100deg,
+			rgba(20, 26, 33, 0.93) 0%,
+			rgba(22, 28, 34, 0.80) 40%,
+			rgba(28, 37, 46, 0.52) 72%,
+			rgba(35, 43, 51, 0.36) 100%
+		),
+		radial-gradient(
+			115% 90% at 88% 6%,
+			rgba(244, 169, 60, 0.40),
+			rgba(244, 169, 60, 0) 55%
+		);
+}
+
+/* Con "reducir movimiento" activado se oculta el video (además el JS
+   de la página lo pausa) y queda la imagen estática de respaldo. */
+@media (prefers-reduced-motion: reduce) {
+	.hero-video {
+		display: none;
+	}
+}

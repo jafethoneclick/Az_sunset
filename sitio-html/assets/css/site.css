@@ -2,108 +2,459 @@
    después de main.css). El menú del header usa clases Tailwind de
    main.css; aquí solo va lo que Tailwind compilado no cubre. */
 
-/* ============ Paleta de marca AZ Sunset ============
-   Oscuros: #121212 · #2A2F35 · #5E666E · #B8BEC4
-   Cálidos: #D89A1F (dorado) · #F4B400 (sol) · #D66C1D (naranja) · #98291E (rojo)
-   Claro:   #F5F5F5
-   Estas variables pisan las de main.css (este archivo carga después). */
+/* ============ Paleta de marca AZ Sunset — Steel & Sunset ============
+   Tema NEGRO + NARANJA: lienzo casi negro con el naranja de marca como color
+   PROTAGONISTA (CTAs, links, precios, números, estrellas, eyebrows, brillos),
+   y texto claro para lectura. Estas variables pisan las de main.css (este
+   archivo carga después), así que casi todo el re-tematizado sucede acá sin
+   tocar el Tailwind ya compilado.
+     Negro:   #0D0D0D fondo · #141414 / #171717 superficies · #000 footer
+     Naranja: #F26A21 marca/CTA/acento · #FF8033 hover · #F9B24A ámbar/brillo
+     Texto:   #E8E8E8 cuerpo · #F4F4F4 títulos/labels */
 :root {
-	--color-primary: #2a2f35;       /* acero oscuro: fondos de heros/CTA, rellenos hover */
-	--color-primary-dark: #121212;  /* extremo oscuro del degradado del hero */
-	--color-primary-light: #5e666e; /* acero medio */
-	--color-accent: #d89a1f;        /* dorado: botones CTA, estrellas, enlaces destacados */
+	--color-primary: #161616;       /* casi negro: fondo de secciones "bg-primary" (heros, CTA, footer alterno) */
+	--color-primary-dark: #0d0d0d;  /* negro: extremo del degradado del hero */
+	--color-primary-light: #2a2a2a; /* gris muy oscuro */
+	--color-accent: #f26a21;        /* NARANJA protagonista: CTA, links, precios, números */
+	--color-accent-hover: #ff8033;  /* naranja más brillante: hover de los CTA */
+	--color-sun: #f9b24a;           /* ámbar: brillo del hero, estrellas, detalles cálidos */
 	--color-brand-red: #98291e;     /* rojo del logo: errores de formulario */
-	--color-brand-orange: #d66c1d;  /* naranja: rótulos de sección, hovers */
 
-	/* TEMA OSCURO — el sitio entero usa fondo negro. Estas variables
-	   remapean los grises del tema (que asumían fondo blanco). */
-	--color-dark: #f5f5f5;          /* "text-dark" (títulos) ahora es claro */
-	--color-blue-100: #f5f5f5;      /* subtítulos sobre heros oscuros */
-	--color-blue-200: #b8bec4;
-	--color-gray-50: #191d22;       /* secciones alternas y hover de menús */
-	--color-gray-100: #23282e;      /* bordes suaves, fondos de imagen */
-	--color-gray-200: #2f353c;      /* bordes de tarjetas y divisores */
-	--color-gray-300: #3d444d;      /* bordes de inputs */
-	--color-gray-400: #8a929a;      /* rótulos apagados */
-	--color-gray-500: #9aa2aa;      /* texto terciario */
-	--color-gray-600: #b8bec4;      /* texto secundario */
-	--color-gray-700: #cdd2d6;      /* texto de párrafos largos */
+	--color-dark: #f4f4f4;          /* "text-dark" (títulos/labels) ahora es claro sobre negro */
+
+	/* Texto claro sobre superficies negras (hero y secciones bg-primary). */
+	--color-blue-100: #ededed;      /* subtítulos */
+	--color-blue-200: #bdbdbd;      /* rótulos apagados */
+
+	/* Escala de grises remapeada a oscuro (el tema base asumía fondo blanco). */
+	--color-gray-50: #141414;       /* secciones alternas */
+	--color-gray-100: #1a1a1a;      /* fondos suaves / imágenes */
+	--color-gray-200: #2b2b2b;      /* bordes de tarjetas y divisores */
+	--color-gray-300: #3a3a3a;      /* bordes de inputs */
+	--color-gray-400: #8f8f8f;      /* rótulos apagados */
+	--color-gray-500: #a2a2a2;      /* texto terciario */
+	--color-gray-600: #c6c6c6;      /* texto secundario */
+	--color-gray-700: #d8d8d8;      /* texto de párrafos largos */
 }
 
-/* ---- Superficies oscuras (clases que asumían fondo blanco) ---- */
+/* ---- Superficies oscuras (clases del tema que asumían fondo blanco) ---- */
+body { background-color: #0d0d0d; color: #e8e8e8; }
+.bg-white { background-color: #171717; }                       /* tarjetas y paneles */
+.bg-white\/95 { background-color: rgba(13, 13, 13, 0.9); }    /* barra del header */
+.bg-dark { background-color: #000; }                           /* footer, el más negro */
+.text-dark { color: #f4f4f4; }                                 /* títulos y labels claros */
+.text-gray-300 { color: #c6c6c6; }                             /* texto del footer */
+
+/* ---- El NARANJA toma protagonismo (utilidades que eran del primario) ---- */
+.text-primary { color: var(--color-accent); }                  /* links, precios, números, "View →" */
+.border-primary { border-color: var(--color-accent); }
+.bg-primary\/10 { background-color: rgba(242, 106, 33, 0.14); } /* círculos numerados */
+
+/* Campos de formulario con relleno propio sobre el negro. */
+form input:not([type="hidden"]), form select, form textarea {
+	background-color: #141414;
+	color: #ededed;
+}
+
+/* CTAs sólidos: relleno naranja con texto casi negro (look naranja+negro y
+   contraste AA, que el texto blanco sobre naranja no alcanza). Los botones
+   "bg-primary" (Sign In, Back to Home) pasan a naranja para que se vean. */
+a.bg-accent, button.bg-accent,
+a.bg-primary, button.bg-primary {
+	color: #160a02 !important;
+}
+a.bg-primary, button.bg-primary { background-color: var(--color-accent); }
+.hover\:bg-primary:hover { background-color: var(--color-accent) !important; color: #160a02 !important; }
+
+/* ===== Micro-interacciones del header (hover con el cursor) =====
+   Subrayado que crece, chevron que gira, dropdown con slide, sub-links que
+   se desplazan, logo con zoom y CTA con brillo + imán (el imán en main.js).
+   Todo scoped al <header> y desactivado con prefers-reduced-motion. */
+
+/* Logo: leve zoom/tilt. */
+header .site-logo { transition: transform .35s cubic-bezier(.2, .7, .3, 1); }
+header a:hover .site-logo { transform: scale(1.06) rotate(-1deg); }
+
+/* Links de nav (nivel superior): subrayado naranja que crece desde el centro
+   + micro-lift. */
+.site-nav > a,
+.site-nav > .group > a { position: relative; transition: color .2s ease, transform .2s ease; }
+.site-nav > a::after,
+.site-nav > .group > a::after {
+	content: "";
+	position: absolute;
+	left: 0; right: 0; bottom: 1.5rem;
+	height: 2px;
+	background: var(--color-accent);
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform .3s cubic-bezier(.2, .7, .3, 1);
+}
+.site-nav > a:hover::after,
+.site-nav > .group:hover > a::after,
+.site-nav > .group:focus-within > a::after { transform: scaleX(1); }
+.site-nav > a:hover,
+.site-nav > .group:hover > a { transform: translateY(-1px); }
+
+/* Icono guía de cada ítem del nav (Product, Financing, …). */
+.site-nav .mega-icon { width: 1.05rem; height: 1.05rem; flex: none; color: var(--color-accent); transition: transform .28s cubic-bezier(.2, .7, .3, 1); }
+#ironclad-mobile-nav .mega-icon { width: 1rem; height: 1rem; flex: none; color: var(--color-accent); }
+.site-nav > a:hover .mega-icon,
+.site-nav > .group:hover > a .mega-icon,
+.site-nav > .group:focus-within > a .mega-icon { transform: translateY(-1px) scale(1.08); }
+
+/* Chevron (el svg SIN clase .mega-icon): gira al abrir el menú. */
+.site-nav > .group > a svg:not(.mega-icon) { transition: transform .28s cubic-bezier(.2, .7, .3, 1); }
+.site-nav > .group:hover > a svg:not(.mega-icon),
+.site-nav > .group:focus-within > a svg:not(.mega-icon) { transform: rotate(180deg); }
+
+/* Dropdown: aparece con fade + slide hacia abajo. */
+.site-nav .group > div { transform: translateY(8px); transition: opacity .25s ease, transform .25s ease, visibility .25s; }
+.site-nav .group:hover > div,
+.site-nav .group:focus-within > div { transform: translateY(0); }
+
+/* Sub-links del dropdown: se desplazan a la derecha al hover. */
+.site-nav .group > div a { transition: background-color .2s ease, color .2s ease, transform .2s ease; }
+.site-nav .group > div a:hover { transform: translateX(4px); }
+
+/* Teléfono: micro-lift al hover. */
+header a[href^="tel:"] { transition: color .2s ease, transform .2s ease; }
+header a[href^="tel:"]:hover { transform: translateY(-1px); }
+
+/* CTA del header: brillo que barre (el lift/sombra vienen del hover de
+   bg-accent; el imán lo agrega main.js). */
+header a.bg-accent { position: relative; overflow: hidden; }
+header a.bg-accent::before {
+	content: "";
+	position: absolute;
+	top: 0; left: -120%;
+	width: 55%; height: 100%;
+	background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .4), transparent);
+	transform: skewX(-18deg);
+	transition: left .6s ease;
+	pointer-events: none;
+}
+header a.bg-accent:hover::before { left: 140%; }
+
+/* ===== Header rediseñado: barra de utilidad + main bar premium ===== */
+.site-header { border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: box-shadow .3s ease, background-color .3s ease; }
+/* Hairline naranja de atardecer bajo el header. */
+.site-header::after {
+	content: "";
+	position: absolute;
+	left: 0; right: 0; bottom: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(242, 106, 33, .55), rgba(249, 178, 74, .5), rgba(242, 106, 33, .55), transparent);
+	pointer-events: none;
+}
+.site-header.is-scrolled { box-shadow: 0 14px 34px -18px rgba(0, 0, 0, .75); background-color: rgba(10, 10, 10, .92); }
+
+/* Barra superior de utilidad (ubicación · garantía · email · redes).
+   Visible sólo en desktop vía media query propia (Tailwind compilado no
+   incluye lg:block, así que no lo usamos aquí). */
+.top-utility { display: none; background: rgba(0, 0, 0, .28); border-bottom: 1px solid rgba(255, 255, 255, 0.06); max-height: 3rem; overflow: hidden; transition: max-height .35s ease, opacity .3s ease; }
+@media (min-width: 1024px) { .top-utility { display: block; } }
+.top-utility .util-left, .top-utility .util-link, .top-utility .util-social { color: #9a9a9a; }
+.util-ic { width: .9rem; height: .9rem; color: var(--color-accent); flex: none; }
+.util-sep { color: rgba(255, 255, 255, .2); }
+.util-link { transition: color .2s ease; }
+.util-link:hover { color: var(--color-accent); }
+.util-social { display: inline-flex; width: 1.15rem; height: 1.15rem; transition: color .2s ease, transform .2s ease; }
+.util-social svg { width: 100%; height: 100%; }
+.util-social:hover { color: var(--color-accent); transform: translateY(-1px); }
+/* Al hacer scroll, la barra de utilidad se pliega (header más compacto). */
+.site-header.is-scrolled .top-utility { max-height: 0; opacity: 0; border-bottom-color: transparent; }
+
+/* Logo: leve resplandor cálido para que el emblema resalte sobre el negro. */
+.logo-badge { position: relative; }
+.logo-badge::before {
+	content: "";
+	position: absolute;
+	left: -10px; top: 50%;
+	width: 66px; height: 66px;
+	transform: translateY(-50%);
+	border-radius: 9999px;
+	background: radial-gradient(circle, rgba(242, 106, 33, .30), transparent 70%);
+	opacity: .45;
+	z-index: -1;
+	pointer-events: none;
+	transition: opacity .3s ease;
+}
+.logo-badge:hover::before { opacity: 1; }
+
+/* Teléfono como "pill" con ícono. */
+.phone-pill { border: 1px solid rgba(242, 106, 33, .35); border-radius: 9999px; padding: .5rem .95rem; font-size: .875rem; font-weight: 600; color: #f4f4f4; transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+.phone-pill .phone-ic { width: 1rem; height: 1rem; color: var(--color-accent); flex: none; }
+.phone-pill:hover { border-color: var(--color-accent); background: rgba(242, 106, 33, .1); }
+
+/* CTA "Get a Free Quote": más presencia + flecha que avanza al hover. */
+.cta-quote { border-radius: .6rem; padding: .7rem 1.2rem; font-size: .875rem; font-weight: 700; box-shadow: 0 8px 22px -10px rgba(242, 106, 33, .6); transition: box-shadow .25s ease, transform .2s ease; }
+.cta-quote .cta-arrow { width: 1rem; height: 1rem; flex: none; transition: transform .25s ease; }
+.cta-quote:hover { box-shadow: 0 12px 28px -8px rgba(242, 106, 33, .78); }
+.cta-quote:hover .cta-arrow { transform: translateX(3px); }
+
+/* Tarjetas de producto (Top Picks / grilla): flotación continua (arriba/abajo
+   + lateral) para que se vean dinámicas en reposo, un "brillo" que barre cada
+   tarjeta, y la inclinación 3D + foco que siguen al cursor. La flotación usa la
+   propiedad translate (independiente de transform) para que NO pelee con la
+   inclinación 3D de main.js ni con el hover-lift de Tailwind. */
+.js-tilt-card { position: relative; transform-style: preserve-3d; transition: transform .3s cubic-bezier(.2, .7, .3, 1), border-color .3s ease, box-shadow .3s ease; }
+.js-tilt-card.is-tilting { transition: transform .08s linear, border-color .3s ease, box-shadow .3s ease; }
+/* Foco de luz que sigue al cursor. */
+.js-tilt-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+	border-radius: inherit;
+	opacity: 0;
+	transition: opacity .3s ease;
+	background: radial-gradient(20rem 20rem at var(--mx, 50%) var(--my, 50%), rgba(242, 106, 33, .18), transparent 60%);
+}
+/* Brillo diagonal que barre la tarjeta en bucle. */
+.js-tilt-card::after {
+	content: "";
+	position: absolute;
+	top: 0; bottom: 0; left: 0;
+	width: 60%;
+	z-index: 3;
+	pointer-events: none;
+	border-radius: inherit;
+	opacity: 0;
+	background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .06) 45%, rgba(242, 106, 33, .10) 55%, transparent);
+	transform: translateX(-180%) skewX(-12deg);
+}
+.js-tilt-card:hover { border-color: rgba(242, 106, 33, .5); box-shadow: 0 16px 40px -20px rgba(242, 106, 33, .38); }
+.js-tilt-card:hover::before { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+	.js-tilt-card { animation: card-float 8s ease-in-out infinite; }
+	.js-tilt-card:nth-child(3n+2) { animation-delay: -2.8s; animation-duration: 9s; }
+	.js-tilt-card:nth-child(3n) { animation-delay: -5s; animation-duration: 8.6s; }
+	.js-tilt-card:hover { animation-play-state: paused; }
+	.js-tilt-card::after { animation: card-sheen 9s ease-in-out infinite; }
+	.js-tilt-card:nth-child(3n+2)::after { animation-delay: 3s; }
+	.js-tilt-card:nth-child(3n)::after { animation-delay: 5.5s; }
+}
+@keyframes card-float {
+	0%   { translate: 0 0; }
+	20%  { translate: 3px -5px; }
+	50%  { translate: 0 -7px; }
+	80%  { translate: -3px -5px; }
+	100% { translate: 0 0; }
+}
+@keyframes card-sheen {
+	0%   { transform: translateX(-180%) skewX(-12deg); opacity: 0; }
+	8%   { opacity: .7; }
+	28%  { transform: translateX(240%) skewX(-12deg); opacity: 0; }
+	100% { transform: translateX(240%) skewX(-12deg); opacity: 0; }
+}
+
+/* Botón flotante para silenciar el sonido de interfaz (lo inyecta sound.js). */
+.snd-toggle {
+	position: fixed;
+	right: 1rem;
+	bottom: 1rem;
+	z-index: 60;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 9999px;
+	border: 1px solid rgba(242, 106, 33, .4);
+	background: rgba(20, 20, 20, .8);
+	color: var(--color-accent);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .7);
+	cursor: pointer;
+	transition: transform .2s ease, border-color .2s ease, color .2s ease;
+}
+.snd-toggle svg { width: 1.25rem; height: 1.25rem; }
+.snd-toggle:hover { transform: translateY(-2px); border-color: var(--color-accent); }
+.snd-toggle.is-muted { color: #9a9a9a; border-color: rgba(255, 255, 255, .14); }
+@media (min-width: 1024px) { .snd-toggle { right: 1.5rem; bottom: 1.5rem; } }
+
+/* Reducir movimiento: sin desplazamientos ni brillos. */
+@media (prefers-reduced-motion: reduce) {
+	.js-tilt-card { animation: none !important; transform: none !important; translate: none !important; }
+	.js-tilt-card::before, .js-tilt-card::after { display: none; }
+	header .site-logo,
+	.site-nav > a, .site-nav > .group > a,
+	.site-nav .group > div, .site-nav .group > div a,
+	header a[href^="tel:"] { transition: none; transform: none; }
+	.site-nav > a::after, .site-nav > .group > a::after { transition: none; }
+	header a.bg-accent::before { display: none; }
+}
+
+/* ===== Testimonios: marquee vertical infinito (puerto del componente React
+   "TestimonialsColumn"). Cada columna se desliza sola en bucle y se PAUSA al
+   pasar el cursor; las tarjetas tienen micro-lift naranja. El bucle usa
+   margin-bottom (no gap) para que el -50% sea perfectamente continuo. ===== */
+.tcols {
+	display: flex;
+	justify-content: center;
+	gap: 1.5rem;
+	margin-top: 2.5rem;
+	max-height: 44rem;
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+	mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+.tcol { width: 100%; max-width: 22rem; }
+/* Columnas responsivas propias (la Tailwind compilada no trae md:block /
+   lg:block): 1 columna en móvil, 2 desde 768px, 3 desde 1024px. */
+.tcol--md, .tcol--lg { display: none; }
+@media (min-width: 768px) { .tcol--md { display: block; } }
+@media (min-width: 1024px) { .tcol--lg { display: block; } }
+.tcol-track {
+	display: flex;
+	flex-direction: column;
+	animation: tcol-scroll var(--dur, 26s) linear infinite;
+	will-change: transform;
+}
+.tcol-track > .tcard { margin-bottom: 1.5rem; }
+.tcol--reverse .tcol-track { animation-direction: reverse; }
+.tcol:hover .tcol-track { animation-play-state: paused; } /* pausa al pasar el cursor */
+
+@keyframes tcol-scroll {
+	from { transform: translateY(0); }
+	to { transform: translateY(-50%); }
+}
+
+/* Tarjetas de testimonio: micro-lift + borde/sombra naranja al hover. */
+.tcard { transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.tcard:hover {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, .55);
+	box-shadow: 0 14px 34px -14px rgba(242, 106, 33, .4);
+}
+
+/* Reducir movimiento: sin marquee. Se muestran todas las columnas y tarjetas
+   (sin duplicados) en un layout estático que envuelve en pantallas chicas. */
+@media (prefers-reduced-motion: reduce) {
+	.tcols {
+		max-height: none;
+		overflow: visible;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		-webkit-mask-image: none;
+		mask-image: none;
+	}
+	.tcol, .tcol--md, .tcol--lg { display: block; flex: 1 1 18rem; }
+	.tcol-track { animation: none; }
+	.tcol-track > .tdup { display: none; }
+	.tcard:hover { transform: none; }
+}
+
+/* ---- Sistema tipográfico (con carácter, no "de fábrica") ----
+   Títulos en Fraunces (serif display con personalidad — soft/wonky, óptico),
+   todo lo demás en Hanken Grotesk (grotesque humanista cálido). Deliberadamente
+   NO usamos Inter/Roboto ni Playfair (las opciones "por defecto" de lo premium).
+   Se cargan por <link> en el <head>. */
 body {
-	background-color: #121212;
-	color: #f5f5f5;
+	font-family: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
-.bg-white {
-	background-color: #1c2127; /* tarjetas y paneles */
+/* H1 / H2: serif display Fraunces. Peso 600, óptico automático (opsz) para que
+   en tamaños grandes gane presencia editorial; ligero tracking negativo. */
+h1, h2 {
+	font-family: "Fraunces", Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	font-optical-sizing: auto;
+	letter-spacing: -0.015em;
 }
 
-.bg-white\/95 {
-	background-color: rgba(18, 18, 18, 0.92); /* barra del header */
+/* H3–H6: Hanken Grotesk en negrita, contraste "galería" con el serif. */
+h3, h4, h5, h6 {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 }
 
-.bg-dark {
-	background-color: #0d0f12; /* footer, un paso más oscuro que el body */
+/* Contadores y precios: Hanken Grotesk con cifras tabulares (no "saltan"). */
+[data-counter] {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1;
 }
 
-.text-gray-300 {
-	color: #b8bec4; /* texto del footer (el var gray-300 ahora es un borde) */
+/* Menús de navegación y links del pie: Inter en MAYÚSCULAS con espaciado
+   amplio ("alta costura"). Sólo los ítems de menú, no los CTA ni el cuerpo. */
+.site-nav > a,
+.site-nav > .group > a,
+footer ul a {
+	text-transform: uppercase;
+	letter-spacing: 0.13em;
+}
+footer ul a { font-size: 0.75rem; }
+
+/* Selección de texto con el naranja de marca. */
+::selection {
+	background: rgba(194, 65, 12, 0.16);
 }
 
-/* ---- Acentos que eran azul primario sobre blanco ---- */
-.text-primary {
-	color: var(--color-accent); /* precios, contadores, enlaces "View →" */
+/* ---- Rótulos de sección (eyebrows) ---- */
+.eyebrow-red {
+	color: var(--color-accent);   /* atardecer sobre fondos claros */
 }
 
-.border-primary {
-	border-color: var(--color-accent);
+.eyebrow-amber {
+	color: var(--color-sun);      /* ámbar sobre secciones de acero */
 }
 
-.bg-primary\/10 {
-	background-color: rgba(216, 154, 31, 0.12); /* círculos numerados */
+/* ---- Botones sólidos (CTA de atardecer y de acero) ----
+   Transición suave, leve elevación y sombra cálida al pasar el mouse. */
+a.bg-accent, button.bg-accent,
+a.bg-primary, button.bg-primary {
+	transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
+a.bg-accent:hover, button.bg-accent:hover {
+	background-color: var(--color-accent-hover);
+	opacity: 1;
+	transform: translateY(-1px);
+	box-shadow: 0 10px 24px -8px rgba(194, 65, 12, 0.55);
+}
+
+a.bg-primary:hover, button.bg-primary:hover {
+	opacity: 1;
+	transform: translateY(-1px);
+	box-shadow: 0 10px 24px -10px rgba(20, 26, 33, 0.5);
+}
+
+/* En las tarjetas (enlaces con .group) el borde se tiñe de atardecer
+   al pasar el mouse, reforzando el "hover-lift" del diseño base. */
+a.group:hover {
+	border-color: rgba(194, 65, 12, 0.35);
+}
+
+/* Enlaces y textos que usaban el azul primario ahora van al atardecer
+   al pasar el mouse (nav, "quick links", etc.). */
+.hover\:text-primary:hover {
+	color: var(--color-accent);
+}
+
+/* Foco visible y cálido para navegación por teclado (accesibilidad). */
+a:focus-visible, button:focus-visible,
+input:focus-visible, select:focus-visible,
+textarea:focus-visible, summary:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Campos de formulario: foco en naranja de marca (en vez del azul base). */
 .focus\:border-primary:focus {
 	border-color: var(--color-accent);
 }
 
 .focus\:ring-primary:focus {
 	--tw-ring-color: var(--color-accent);
-}
-
-/* Hover de los enlaces del menú y textos que iban al azul primario:
-   ahora van al dorado (el primario oscuro no se vería sobre negro). */
-.hover\:text-primary:hover {
-	color: var(--color-accent);
-}
-
-/* Campos de formulario con relleno propio sobre el fondo negro. */
-form input:not([type="hidden"]),
-form select,
-form textarea {
-	background-color: #191d22;
-}
-
-/* Los botones dorados aclaran a #F4B400 (amarillo sol) al pasar el
-   mouse, en vez del efecto genérico de transparencia. */
-a.bg-accent:hover,
-button.bg-accent:hover {
-	background-color: #f4b400;
-	opacity: 1;
-}
-
-/* En las tarjetas de producto, el enlace dorado pasa a naranja al
-   hacer hover sobre la tarjeta. */
-.group:hover span.text-accent {
-	color: var(--color-brand-orange);
-}
-
-/* Rótulos de sección en naranja (el rojo del logo no contrasta
-   suficiente sobre fondo negro; queda para errores). */
-.eyebrow-red {
-	color: var(--color-brand-orange);
 }
 
 /* Permite abrir los desplegables del menú también con teclado (Tab),
@@ -145,3 +496,27 @@ button.bg-accent:hover {
 	white-space: nowrap;
 	border: 0;
 }
+
+/* ===== Scroll-to-expand media hero (.sxm-*) — puerto vanilla del componente
+   React "ScrollExpandMedia". Compartido por la portada (index) y "Our Work".
+   El JS (assets/js/scroll-expand.js) sólo actualiza tamaños y opacidades. ===== */
+.sxm { overflow-x: hidden; }
+.sxm-stage { position: relative; display: flex; flex-direction: column; align-items: center; min-height: 100dvh; }
+.sxm-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(120% 90% at 82% 0%, rgba(242, 106, 33, 0.42), rgba(242, 106, 33, 0) 58%), linear-gradient(160deg, #1a1a1a 0%, #0f0f0f 55%, #000 100%); }
+.sxm-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); }
+.sxm-container { position: relative; z-index: 10; width: 100%; max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
+.sxm-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; border-radius: 1rem; overflow: hidden; width: min(1100px, 95vw); height: min(78vh, 680px); max-width: 95vw; max-height: 85vh; box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6); }
+.sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+.sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
+.sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
+.sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
+.sxm-scroll { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; color: #c9cfd6; }
+.sxm.is-expanded .sxm-hint { opacity: 0; }
+.sxm-title { position: relative; z-index: 10; margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100%; text-align: center; }
+.sxm-title-first, .sxm-title-rest { display: block; margin: 0; color: #fff; font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.05; font-size: clamp(2.6rem, 7.2vw, 4.25rem); text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45); }
+.sxm-content { width: 100%; padding: 3rem 2rem 5rem; opacity: 0; }
+.sxm-media, .sxm-title-first, .sxm-title-rest, .sxm-date, .sxm-scroll { transition: none; }
+.sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
+.sxm-content { transition: opacity 0.7s ease; }
+@media (prefers-reduced-motion: reduce) { .sxm-content { opacity: 1; } .sxm-hint { display: none; } }

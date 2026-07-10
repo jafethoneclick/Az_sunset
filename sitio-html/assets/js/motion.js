@@ -2,10 +2,11 @@
  * Homepage motion design: scroll-triggered reveals, animated stat counters,
  * a subtle hero parallax, and smooth scrolling (Lenis + GSAP ScrollTrigger).
  *
- * Deliberately restrained — no custom cursor, no 3D/WebGL set pieces here.
- * The brief asked for a toned-down "premium but professional" feel, so
- * this sticks to elegant reveals, gentle parallax and a polished scroll
- * feel rather than agency-showcase-style flourishes.
+ * Premium but restrained: elegant scroll reveals with genuine 3D depth
+ * (cards hinge up from a tilted-back position via rotationX + perspective),
+ * animated counters, a subtle hero parallax and a polished scroll feel —
+ * without tipping into agency-showcase WebGL territory. The per-card cursor
+ * tilt lives in main.js (.js-tilt-card); this file owns the scroll reveals.
  *
  * Loaded only on the homepage for now (see functions.php) while the rest
  * of the site's sections are migrated to the same `[data-reveal]` /
@@ -147,7 +148,17 @@
 		});
 
 		Object.keys(groups).forEach(function (key) {
-			gsap.set(groups[key], { opacity: 0, y: 28 });
+			// Entrada 3D: las tarjetas arrancan inclinadas hacia atrás (rotationX)
+			// con perfil y perspectiva, y se "paran" hasta quedar planas — hinge
+			// desde el borde inferior para que se sientan levantándose del plano.
+			gsap.set(groups[key], {
+				opacity: 0,
+				y: 44,
+				z: -120,
+				rotationX: -32,
+				transformPerspective: 900,
+				transformOrigin: "center bottom",
+			});
 			window.ScrollTrigger.batch(groups[key], {
 				start: "top 85%",
 				once: true,
@@ -155,10 +166,13 @@
 					gsap.to(batch, {
 						opacity: 1,
 						y: 0,
-						duration: 0.7,
+						z: 0,
+						rotationX: 0,
+						duration: 0.9,
 						stagger: 0.12,
 						ease: "power3.out",
 						overwrite: true,
+						clearProps: "transform,transformPerspective",
 					});
 				},
 			});
@@ -168,13 +182,29 @@
 	// ---- Generic single-element reveals (section headings, etc.) ----
 	function initSimpleReveals() {
 		document.querySelectorAll("[data-reveal]").forEach(function (el) {
-			gsap.set(el, { opacity: 0, y: 24 });
+			// Reveal 3D sutil: el bloque entra ligeramente inclinado hacia atrás
+			// y se endereza (perspectiva desde el borde inferior).
+			gsap.set(el, {
+				opacity: 0,
+				y: 30,
+				rotationX: -18,
+				transformPerspective: 800,
+				transformOrigin: "center bottom",
+			});
 			window.ScrollTrigger.create({
 				trigger: el,
 				start: "top 88%",
 				once: true,
 				onEnter: function () {
-					gsap.to(el, { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", overwrite: true });
+					gsap.to(el, {
+						opacity: 1,
+						y: 0,
+						rotationX: 0,
+						duration: 0.8,
+						ease: "power3.out",
+						overwrite: true,
+						clearProps: "transform,transformPerspective",
+					});
 				},
 			});
 		});

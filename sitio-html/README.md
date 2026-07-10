@@ -15,7 +15,9 @@ sitio-html/
     css/site.css              Estilos propios compartidos (mega-menú del header)
     js/main.js                Menú móvil (todas las páginas)
     js/motion.js              Animaciones de scroll (solo portada)
-    js/shader-hero.js         Fondo animado WebGL del hero (solo portada)
+    video/hero.mp4            Video de fondo del hero (solo portada;
+                              con autoplay silencioso, respeta
+                              "reducir movimiento" del sistema)
     images/logo/              Logo real: logo.png (original) y
                               logo-header.png (versión liviana usada en
                               header, footer, portal y favicon)
@@ -69,11 +71,17 @@ responde "credenciales inválidas". El backend real va ahí.
 ## Cómo editar
 
 - **Textos**: directamente en el `.html` de cada carpeta.
-- **Colores de marca**: la paleta AZ Sunset vive en el bloque `:root`
-  de `assets/css/site.css` (oscuros #121212 / #2A2F35 / #5E666E /
-  #B8BEC4, dorado #D89A1F, sol #F4B400, naranja #D66C1D, rojo #98291E,
-  claro #F5F5F5) y pisa los valores por defecto de `main.css`.
+- **Colores de marca**: la paleta AZ Sunset (tema CLARO "Steel & Sunset")
+  vive en el bloque `:root` de `assets/css/site.css` — acero #141A21 /
+  #232B33 / #3A4650, atardecer #C2410C como acento/CTA (contraste AA sobre
+  blanco) con hover #A5370C, ámbar #F4A93C para brillos y estrellas, rojo
+  #98291E para errores — y pisa los valores por defecto de `main.css`.
   Cambiá ahí cualquier color.
+- **Formulario de cotización**: hoy funciona *solo en el front-end*
+  (`contact/contact.js`): valida y muestra el mensaje de éxito en el
+  navegador sin backend. Para recibir los leads por correo, conectá un
+  servicio de formularios (Formspree/Web3Forms/endpoint propio) en el
+  punto marcado con `TODO` dentro de `contact.js` (y `apply.js`).
 - **Estilos de una sola página**: en el `.css` de su carpeta.
 - **Imágenes**: reemplazá los SVG placeholder en `assets/images/`
   manteniendo el mismo nombre de archivo.

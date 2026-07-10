@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Custom steel garages, carports and barns silhouetted against an Arizona sunset">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#120b20"/>
+      <stop offset="0.34" stop-color="#3d183a"/>
+      <stop offset="0.52" stop-color="#7c2a25"/>
+      <stop offset="0.62" stop-color="#c94a1c"/>
+      <stop offset="0.70" stop-color="#f39238"/>
+      <stop offset="0.82" stop-color="#f9b24a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe9bf"/>
+      <stop offset="0.45" stop-color="#ffbe57"/>
+      <stop offset="1" stop-color="#ffb44e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b1017"/>
+      <stop offset="1" stop-color="#070406"/>
+    </linearGradient>
+    <radialGradient id="vig" cx="0.5" cy="0.42" r="0.78">
+      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d0d0d" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0d0d0d"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <g><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(-84 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(-72 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(-60 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(-48 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(-36 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(-24 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(-12 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(0 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(12 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(24 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(36 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(48 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(60 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.05" transform="rotate(72 800 565)"/><polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="0.1" transform="rotate(84 800 565)"/></g>
+  <circle cx="800" cy="565" r="360" fill="url(#sun)"/>
+  <circle cx="800" cy="565" r="90" fill="#ffd587"/>
+
+  <g stroke="#3a1c14" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7">
+    <path d="M1120 300 q12 -10 24 0 q12 -10 24 0"/>
+    <path d="M1182 332 q9 -8 18 0 q9 -8 18 0"/>
+    <path d="M1090 344 q8 -7 16 0 q8 -7 16 0"/>
+  </g>
+
+  <path d="M0 648 L180 612 L340 636 L520 596 L700 632 L900 604 L1090 638 L1280 606 L1460 634 L1600 616 L1600 706 L0 706 Z" fill="#5f2331" opacity="0.85"/>
+  <path d="M0 672 L220 640 L430 668 L640 634 L860 666 L1080 642 L1300 670 L1520 648 L1600 660 L1600 720 L0 720 Z" fill="#39121f"/>
+  <rect x="0" y="640" width="1600" height="10" fill="#ffca73" opacity="0.22"/>
+  <rect x="0" y="700" width="1600" height="300" fill="url(#ground)"/>
+
+  <!-- sombras de contacto -->
+  <ellipse cx="465" cy="814" rx="150" ry="16" fill="#050303" opacity="0.7"/>
+  <ellipse cx="800" cy="802" rx="175" ry="18" fill="#050303" opacity="0.7"/>
+  <ellipse cx="1150" cy="814" rx="165" ry="16" fill="#050303" opacity="0.7"/>
+
+  <!-- cactus izquierdo -->
+  <g stroke="#080707" stroke-width="24" fill="none" stroke-linecap="round">
+    <path d="M210 762 V486"/>
+    <path d="M210 628 C178 628 170 616 170 588 V560"/>
+    <path d="M210 600 C244 600 252 588 252 562 V532"/>
+  </g>
+  <!-- cactus derecho -->
+  <g stroke="#080707" stroke-width="22" fill="none" stroke-linecap="round">
+    <path d="M1392 770 V520"/>
+    <path d="M1392 648 C1362 648 1355 636 1355 612 V586"/>
+  </g>
+
+  <!-- cochera / carport (izquierda) -->
+  <g fill="#0b0b0b">
+    <rect x="342" y="700" width="14" height="112"/>
+    <rect x="586" y="700" width="14" height="112"/>
+    <rect x="470" y="672" width="10" height="140" opacity="0.7"/>
+    <polygon points="330,700 465,656 600,700 600,714 465,672 330,714"/>
+    <rect x="384" y="756" width="176" height="56" rx="10" fill="#111111"/>
+    <rect x="384" y="748" width="52" height="20" rx="6" fill="#111111"/>
+  </g>
+  <path d="M330 700 L465 656 L600 700" fill="none" stroke="#f26a21" stroke-width="4" stroke-linejoin="round" opacity="0.8"/>
+
+  <!-- taller / garaje (centro) -->
+  <polygon points="655,800 655,655 800,580 945,655 945,800" fill="#0b0b0b"/>
+  <path d="M655 655 L800 580 L945 655" fill="none" stroke="#f26a21" stroke-width="5" stroke-linejoin="round" opacity="0.9"/>
+  <path d="M655 655 V800" stroke="#f26a21" stroke-width="3" opacity="0.35"/>
+  <rect x="676" y="676" width="118" height="124" fill="#161616"/>
+  <rect x="806" y="676" width="118" height="124" fill="#161616"/>
+  <g stroke="#242424" stroke-width="2">
+    <path d="M676 708 H794 M676 740 H794 M676 772 H794"/>
+    <path d="M806 708 H924 M806 740 H924 M806 772 H924"/>
+  </g>
+  <rect x="676" y="794" width="248" height="6" fill="#f26a21" opacity="0.75"/>
+
+  <!-- granero (derecha) -->
+  <polygon points="1010,812 1010,672 1150,596 1290,672 1290,812" fill="#0b0b0b"/>
+  <rect x="1136" y="576" width="28" height="24" fill="#0b0b0b"/>
+  <polygon points="1130,576 1150,560 1170,576" fill="#0b0b0b"/>
+  <path d="M1010 672 L1150 596 L1290 672" fill="none" stroke="#f26a21" stroke-width="5" stroke-linejoin="round" opacity="0.85"/>
+  <path d="M1130 576 L1150 560 L1170 576" fill="none" stroke="#f26a21" stroke-width="3" opacity="0.7"/>
+  <rect x="1119" y="700" width="62" height="112" fill="#161616"/>
+  <rect x="1119" y="806" width="62" height="6" fill="#f26a21" opacity="0.7"/>
+
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+  <rect x="0" y="720" width="1600" height="280" fill="url(#fade)"/>
+</svg>

@@ -10,19 +10,25 @@ const THEME = "C:/Users/Jafeth/Desktop/html_diseño/wp-content/themes/ironclad-s
 const site = {
   name: "AZ Sunset Steel Structures & Carports",
   shortName: "AZ Sunset",
+  // Dominio placeholder — cambialo por el real antes de publicar (se usa en
+  // las URLs absolutas de Open Graph y del schema LocalBusiness).
+  url: "https://www.azsunsetsteel.com",
   tagline: "Giving Life to Your Projects",
   shortTagline: "Custom-built steel structures, delivered and installed",
-  phone: "(800) 555-0142",
-  phoneHref: "+18005550142",
-  email: "quotes@azsunsetsteel.example",
-  address1: "123 Industrial Pkwy",
-  city: "Dallas",
-  state: "TX",
-  zip: "75201",
-  hoursWeekday: "8:00 AM – 8:00 PM",
-  hoursSaturday: "9:00 AM – 5:00 PM",
+  phone: "(480) 555-0199",
+  phoneHref: "+14805550199",
+  email: "quotes@azsunsetsteel.com",
+  address1: "2450 W Deer Valley Rd, Suite 12",
+  city: "Phoenix",
+  state: "AZ",
+  zip: "85027",
+  hoursWeekday: "8:00 AM – 6:00 PM",
+  hoursSaturday: "9:00 AM – 4:00 PM",
   hoursSunday: "Closed",
-  states: ["TX", "OK", "LA", "AR", "NM", "MS", "AL", "GA", "TN", "MO"],
+  // Ciudades y regiones de Arizona donde se entrega e instala (antes eran
+  // estados; ahora la empresa es 100% Arizona). Se usan como "chips" en la
+  // sección "Where We Build" y para el contador de cobertura.
+  states: ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale", "Gilbert", "Glendale", "Flagstaff", "Prescott", "Yuma", "Casa Grande", "Kingman"],
   warrantyYears: "20",
   completedCount: 4200,
   bbbRating: "5.0",
@@ -197,27 +203,57 @@ const menuProducts = productOrder.filter((s) => menuLabels[s]).map((s) => produc
 const testimonials = [
   {
     name: "Kenny R.",
-    location: "Tyler, TX",
+    location: "Phoenix, AZ",
     quote:
-      "From the first call to the final install, the team walked us through every option. Our garage went up in under a week and it looks better than we imagined.",
+      "From the first call to the final install, the team walked us through every option. Our garage went up in under a week and it handles the Phoenix heat without a creak.",
   },
   {
-    name: "Matt D.",
-    location: "Shreveport, LA",
+    name: "Marisol D.",
+    location: "Tucson, AZ",
     quote:
-      "Great price, great communication, and the crew that installed our barn was fast and professional. Would recommend to anyone in the area.",
+      "Great price, great communication, and the crew that installed our barn was fast and professional. Would recommend to anyone in Southern Arizona.",
   },
   {
     name: "Dusty H.",
-    location: "Norman, OK",
+    location: "Mesa, AZ",
     quote:
       "The financing options made it easy to get exactly the size building we needed without waiting years to save up. Couldn't be happier.",
   },
   {
     name: "Dakota S.",
-    location: "Little Rock, AR",
+    location: "Prescott, AZ",
     quote:
-      "Our RV cover has held up through two hail storms already without a scratch. Solid steel, solid company.",
+      "Our RV cover has already shrugged off two monsoon storms without a scratch. Solid steel, solid company — built for Arizona weather.",
+  },
+  {
+    name: "Carlos M.",
+    location: "Gilbert, AZ",
+    quote:
+      "The shade carport dropped our patio temperature by what feels like twenty degrees. Clean install, on schedule, and the crew hauled away every scrap.",
+  },
+  {
+    name: "Angela T.",
+    location: "Chandler, AZ",
+    quote:
+      "I turned my extra bay into a real workshop. They helped me spec the right height and door, and the whole thing was permitted without a headache.",
+  },
+  {
+    name: "Ray V.",
+    location: "Flagstaff, AZ",
+    quote:
+      "Up here the snow load matters, and they engineered the roof for it. Two winters in and it hasn't budged an inch. Worth every penny.",
+  },
+  {
+    name: "Priya S.",
+    location: "Scottsdale, AZ",
+    quote:
+      "We needed a commercial building fast for the business, and their team handled engineering, delivery and install end to end. Truly one point of contact.",
+  },
+  {
+    name: "Jesse W.",
+    location: "Yuma, AZ",
+    quote:
+      "Yuma sun is brutal on everything, but the finish still looks brand new. Great value and the price they quoted was the price we paid.",
   },
 ];
 
@@ -232,7 +268,7 @@ const faqs = [
   },
   {
     q: "What areas do you service?",
-    a: "We currently deliver and install across the states listed on our homepage. Contact us to confirm availability in your area.",
+    a: "We deliver and install across all of Arizona — from Phoenix, Mesa and Tucson to the high country around Flagstaff and Prescott. Contact us to confirm scheduling in your area.",
   },
   {
     q: "Can I customize the size, color and features of my building?",
@@ -347,6 +383,7 @@ function navColumns(prefix) {
       icon: navIcons.about,
       href: `${prefix}about/about.html`,
       links: [
+        { label: "Our Work", href: `${prefix}our-work/our-work.html` },
         { label: "Area", href: `${prefix}index.html#where-we-build` },
         { label: "Staff", href: `${prefix}about/about.html` },
         { label: "Reviews", href: `${prefix}index.html#customer-stories` },
@@ -364,7 +401,7 @@ function header(prefix) {
   const navItems = columns
     .map((c) => {
       if (!c.links.length) {
-        return `\t\t\t<a href="${c.href}" class="text-sm font-semibold text-dark hover:text-primary">${c.label}</a>`;
+        return `\t\t\t<a href="${c.href}" class="flex h-20 items-center gap-1.5 text-sm font-semibold text-dark hover:text-primary">${c.icon}${c.label}</a>`;
       }
       const links = c.links
         .map(
@@ -373,8 +410,8 @@ function header(prefix) {
         )
         .join("\n");
       return `\t\t\t<div class="group relative">
-				<a href="${c.href}" class="flex h-20 items-center gap-1 text-sm font-semibold text-dark hover:text-primary" aria-haspopup="true">
-					${c.label}
+				<a href="${c.href}" class="flex h-20 items-center gap-1.5 text-sm font-semibold text-dark hover:text-primary" aria-haspopup="true">
+					${c.icon}${c.label}
 					<svg class="h-3 w-3" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.5"/></svg>
 				</a>
 				<div class="invisible absolute left-0 top-full w-56 rounded-md border border-gray-100 bg-white p-2 opacity-0 shadow-lg transition group-hover:visible group-hover:opacity-100">
@@ -392,46 +429,74 @@ ${links}
             `\t\t\t\t<a href="${l.href}" class="rounded px-2 py-2.5 text-sm font-medium text-dark hover:bg-gray-50">${l.label}</a>`
         )
         .join("\n");
-      return `\t\t<p class="mt-4 mb-2 text-xs font-semibold uppercase tracking-wide text-gray-400">${c.label}</p>
+      return `\t\t<p class="mt-4 mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-gray-400">${c.icon}${c.label}</p>
 		<div class="flex flex-col">
 ${links}
 		</div>`;
     })
     .join("\n");
 
-  return `<header class="sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur">
-	<div class="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-		<a href="${prefix}index.html" class="flex items-center gap-2 text-xl font-bold text-primary">
-			<img src="${prefix}assets/images/logo/logo-header.png" alt="${site.name}" class="site-logo">
-			<span class="sr-only">${site.name}</span>
-		</a>
+  const icPin = '<svg class="util-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1.6a4.4 4.4 0 0 0-4.4 4.4c0 3.1 4.4 8 4.4 8s4.4-4.9 4.4-8A4.4 4.4 0 0 0 8 1.6z"/><circle cx="8" cy="6" r="1.6"/></svg>';
+  const icMail = '<svg class="util-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="2" y="3.5" width="12" height="9" rx="1.6"/><path d="M2.6 4.6 8 8.4l5.4-3.8"/></svg>';
+  const icPhone = '<svg class="phone-ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="M4 3h3l1.4 3.9-2 1.4a10 10 0 0 0 5 5l1.4-2 3.9 1.4V17a1.5 1.5 0 0 1-1.6 1.5A14 14 0 0 1 2.5 5.6 1.5 1.5 0 0 1 4 4z"/></svg>';
+  const icArrow = '<svg class="cta-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h9M8.5 4.5 12 8l-3.5 3.5"/></svg>';
+  const icFb = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-8h2.7l.4-3h-3.1V8c0-.9.3-1.5 1.6-1.5H17V3.9c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.1H8v3h2.8v8z"/></svg>';
+  const icIg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="4.6"/><circle cx="12" cy="12" r="3.8"/><circle cx="17.1" cy="6.9" r="1" fill="currentColor" stroke="none"/></svg>';
+  const icLi = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0zM3.3 8.3h3.28V21H3.3zM9.2 8.3h3.14v1.74h.05c.44-.83 1.5-1.71 3.1-1.71 3.3 0 3.9 2.18 3.9 5V21h-3.27v-6.8c0-1.62-.03-3.7-2.26-3.7-2.26 0-2.6 1.77-2.6 3.6V21H9.2z"/></svg>';
 
-		<nav class="site-nav hidden h-20 items-center gap-8 lg:flex" aria-label="Main">
-${navItems}
-		</nav>
+  return `<header class="site-header sticky top-0 z-50 bg-white/95 backdrop-blur">
+		<div class="top-utility">
+			<div class="mx-auto flex h-9 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 text-xs">
+				<p class="util-left flex items-center gap-2">
+					${icPin}
+					<span>Proudly serving ${site.city} &amp; all of Arizona</span>
+					<span class="util-sep">·</span>
+					<span>${site.warrantyYears}-Year Warranty</span>
+				</p>
+				<div class="flex items-center gap-4">
+					<a href="mailto:${site.email}" class="util-link flex items-center gap-1.5">${icMail}<span>${site.email}</span></a>
+					<span class="util-sep">·</span>
+					<span class="flex items-center gap-2.5">
+						<a href="${site.facebook}" class="util-social" aria-label="Facebook" target="_blank" rel="noopener">${icFb}</a>
+						<a href="${site.instagram}" class="util-social" aria-label="Instagram" target="_blank" rel="noopener">${icIg}</a>
+						<a href="${site.linkedin}" class="util-social" aria-label="LinkedIn" target="_blank" rel="noopener">${icLi}</a>
+					</span>
+				</div>
+			</div>
+		</div>
 
-		<div class="hidden items-center gap-4 lg:flex">
-			<a href="tel:${site.phoneHref}" class="text-sm font-semibold text-dark hover:text-primary">${site.phone}</a>
-			<a href="${prefix}contact/contact.html" class="rounded-md bg-accent px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:opacity-90">
-				Get a Free Quote
+		<div class="header-main mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+			<a href="${prefix}index.html" class="logo-badge flex items-center gap-2 text-xl font-bold text-primary">
+				<img src="${prefix}assets/images/logo/logo-header.png" alt="${site.name}" class="site-logo">
+				<span class="sr-only">${site.name}</span>
 			</a>
+
+			<nav class="site-nav hidden h-20 items-center gap-8 lg:flex" aria-label="Main">
+${navItems}
+			</nav>
+
+			<div class="hidden items-center gap-3 lg:flex">
+				<a href="tel:${site.phoneHref}" class="phone-pill flex items-center gap-2">${icPhone}<span>${site.phone}</span></a>
+				<a href="${prefix}contact/contact.html" class="cta-quote bg-accent flex items-center gap-2">
+					<span>Get a Free Quote</span>${icArrow}
+				</a>
+			</div>
+
+			<div class="lg:hidden">
+				<button type="button" id="ironclad-mobile-nav-toggle" aria-label="Toggle menu" aria-expanded="false" class="flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-dark">
+					<svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+				</button>
+			</div>
 		</div>
 
-		<div class="lg:hidden">
-			<button type="button" id="ironclad-mobile-nav-toggle" aria-label="Toggle menu" aria-expanded="false" class="flex h-10 w-10 items-center justify-center rounded-md border border-gray-200 text-dark">
-				<svg class="h-5 w-5" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-			</button>
-		</div>
-	</div>
-
-	<div id="ironclad-mobile-nav" class="hidden absolute left-0 right-0 top-20 max-h-[calc(100vh-5rem)] overflow-y-auto border-b border-gray-200 bg-white px-4 pb-6 shadow-lg lg:hidden">
+		<div id="ironclad-mobile-nav" class="hidden absolute left-0 right-0 top-20 max-h-[calc(100vh-5rem)] overflow-y-auto border-b border-gray-200 bg-white px-4 pb-6 shadow-lg lg:hidden">
 ${mobileGroups}
-		<div class="mt-4 flex flex-col gap-3 border-t border-gray-100 pt-4">
-			<a href="tel:${site.phoneHref}" class="text-sm font-semibold text-dark">${site.phone}</a>
-			<a href="${prefix}contact/contact.html" class="rounded-md bg-accent px-5 py-2.5 text-center text-sm font-semibold text-white shadow-sm">Get a Free Quote</a>
+			<div class="mt-4 flex flex-col gap-3 border-t border-gray-100 pt-4">
+				<a href="tel:${site.phoneHref}" class="phone-pill inline-flex items-center justify-center gap-2">${icPhone}<span>${site.phone}</span></a>
+				<a href="${prefix}contact/contact.html" class="cta-quote bg-accent inline-flex items-center justify-center gap-2"><span>Get a Free Quote</span>${icArrow}</a>
+			</div>
 		</div>
-	</div>
-</header>`;
+	</header>`;
 }
 
 function footer(prefix) {
@@ -470,6 +535,7 @@ ${footProducts}
 		<div>
 			<p class="text-sm font-semibold uppercase tracking-wide text-white">Quick Links</p>
 			<ul class="mt-4 space-y-2 text-sm">
+				<li><a href="${prefix}our-work/our-work.html" class="hover:text-white">Our Work</a></li>
 				<li><a href="${prefix}financing/financing.html" class="hover:text-white">Financing</a></li>
 				<li><a href="${prefix}faqs/faqs.html" class="hover:text-white">FAQs</a></li>
 				<li><a href="${prefix}about/about.html" class="hover:text-white">About Us</a></li>
@@ -499,7 +565,7 @@ ${footProducts}
 }
 
 function sectionHeading(eyebrow, title, subtitle = "", light = false) {
-  const eyebrowClass = light ? "text-blue-200" : "eyebrow-red";
+  const eyebrowClass = light ? "eyebrow-amber" : "eyebrow-red";
   const titleClass = light ? "text-white" : "text-dark";
   const subtitleClass = light ? "text-blue-100" : "text-gray-600";
   return `<div class="max-w-2xl mx-auto text-center" data-reveal>
@@ -521,10 +587,27 @@ ${subtext ? `\t\t<p class="max-w-xl text-lg text-blue-100">${subtext}</p>` : ""}
 </section>`;
 }
 
+// Fotos reales de productos (prueba). Si un producto está acá, se usa la foto;
+// si no, se cae al placeholder SVG animado. Reemplazá/agregá fotos manteniendo
+// el nombre "photo.<ext>" dentro de assets/images/products/<slug>/.
+const productPhotos = {
+  garages: "photo.jpg",
+  carports: "photo.jpg",
+  barns: "photo.avif",
+  commercial: "photo.webp",
+  "utility-units": "photo.jpg",
+};
+function productImage(prefix, p) {
+  const photo = productPhotos[p.slug];
+  return photo
+    ? `${prefix}assets/images/products/${p.slug}/${photo}`
+    : `${prefix}assets/images/products/${p.slug}/card-placeholder.svg`;
+}
+
 function productCard(prefix, p) {
-  return `<a href="${productHref(prefix, p)}" class="js-reveal-card group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-reveal-group="products">
+  return `<a href="${productHref(prefix, p)}" class="js-reveal-card js-tilt-card group flex flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-reveal-group="products">
 					<div class="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
-						<img src="${prefix}assets/images/products/${p.slug}/card-placeholder.svg" alt="${p.title}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+						<img src="${productImage(prefix, p)}" alt="${p.title}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
 					</div>
 					<div class="flex flex-1 flex-col p-5">
 						<h3 class="text-lg font-bold text-dark">${p.title}</h3>
@@ -532,6 +615,39 @@ function productCard(prefix, p) {
 						<span class="mt-4 text-sm font-semibold text-primary group-hover:underline">View ${p.title} →</span>
 					</div>
 				</a>`;
+}
+
+// Datos estructurados schema.org para SEO local (rich results de Google:
+// nombre, dirección, teléfono, horarios, zona de servicio y rating). Va en la
+// portada. OJO: usa site.url (dominio placeholder) — cambialo por el real.
+function localBusinessJsonLd() {
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "GeneralContractor",
+    name: site.name,
+    image: `${site.url}/assets/images/logo/logo-header.png`,
+    logo: `${site.url}/assets/images/logo/logo-header.png`,
+    url: site.url,
+    telephone: site.phoneHref,
+    email: site.email,
+    priceRange: "$$",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: site.address1,
+      addressLocality: site.city,
+      addressRegion: site.state,
+      postalCode: site.zip,
+      addressCountry: "US",
+    },
+    areaServed: site.states.map((c) => ({ "@type": "City", name: `${c}, AZ` })),
+    openingHoursSpecification: [
+      { "@type": "OpeningHoursSpecification", dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"], opens: "08:00", closes: "18:00" },
+      { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "16:00" },
+    ],
+    aggregateRating: { "@type": "AggregateRating", ratingValue: site.googleRating, reviewCount: site.googleReviews },
+    sameAs: [site.facebook, site.instagram, site.linkedin],
+  };
+  return `<script type="application/ld+json">${JSON.stringify(data)}</script>\n`;
 }
 
 function page({ title, description, prefix, main, extraHead = "", extraScripts = "", cssFile, jsFile }) {
@@ -542,7 +658,20 @@ function page({ title, description, prefix, main, extraHead = "", extraScripts =
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>${title}</title>
 	<meta name="description" content="${description}">
+	<meta name="theme-color" content="#0d0d0d">
 	<link rel="icon" type="image/png" href="${prefix}assets/images/logo/logo-header.png">
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="${site.name}">
+	<meta property="og:title" content="${title}">
+	<meta property="og:description" content="${description}">
+	<meta property="og:image" content="${site.url}/assets/images/logo/logo-header.png">
+	<meta name="twitter:card" content="summary_large_image">
+	<meta name="twitter:title" content="${title}">
+	<meta name="twitter:description" content="${description}">
+	<meta name="twitter:image" content="${site.url}/assets/images/logo/logo-header.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap">
 	<link rel="stylesheet" href="${prefix}assets/css/main.css">
 	<link rel="stylesheet" href="${prefix}assets/css/site.css">
 	<link rel="stylesheet" href="${cssFile}">
@@ -558,6 +687,7 @@ ${main}
 ${footer(prefix)}
 
 <script src="${prefix}assets/js/main.js"></script>
+<script src="${prefix}assets/js/sound.js"></script>
 ${jsFile ? `<script src="${jsFile}"></script>\n` : ""}${extraScripts}</body>
 </html>
 `;
@@ -571,108 +701,459 @@ files["assets/css/site.css"] = `/* Estilos compartidos propios del sitio (se car
    después de main.css). El menú del header usa clases Tailwind de
    main.css; aquí solo va lo que Tailwind compilado no cubre. */
 
-/* ============ Paleta de marca AZ Sunset ============
-   Oscuros: #121212 · #2A2F35 · #5E666E · #B8BEC4
-   Cálidos: #D89A1F (dorado) · #F4B400 (sol) · #D66C1D (naranja) · #98291E (rojo)
-   Claro:   #F5F5F5
-   Estas variables pisan las de main.css (este archivo carga después). */
+/* ============ Paleta de marca AZ Sunset — Steel & Sunset ============
+   Tema NEGRO + NARANJA: lienzo casi negro con el naranja de marca como color
+   PROTAGONISTA (CTAs, links, precios, números, estrellas, eyebrows, brillos),
+   y texto claro para lectura. Estas variables pisan las de main.css (este
+   archivo carga después), así que casi todo el re-tematizado sucede acá sin
+   tocar el Tailwind ya compilado.
+     Negro:   #0D0D0D fondo · #141414 / #171717 superficies · #000 footer
+     Naranja: #F26A21 marca/CTA/acento · #FF8033 hover · #F9B24A ámbar/brillo
+     Texto:   #E8E8E8 cuerpo · #F4F4F4 títulos/labels */
 :root {
-	--color-primary: #2a2f35;       /* acero oscuro: fondos de heros/CTA, rellenos hover */
-	--color-primary-dark: #121212;  /* extremo oscuro del degradado del hero */
-	--color-primary-light: #5e666e; /* acero medio */
-	--color-accent: #d89a1f;        /* dorado: botones CTA, estrellas, enlaces destacados */
+	--color-primary: #161616;       /* casi negro: fondo de secciones "bg-primary" (heros, CTA, footer alterno) */
+	--color-primary-dark: #0d0d0d;  /* negro: extremo del degradado del hero */
+	--color-primary-light: #2a2a2a; /* gris muy oscuro */
+	--color-accent: #f26a21;        /* NARANJA protagonista: CTA, links, precios, números */
+	--color-accent-hover: #ff8033;  /* naranja más brillante: hover de los CTA */
+	--color-sun: #f9b24a;           /* ámbar: brillo del hero, estrellas, detalles cálidos */
 	--color-brand-red: #98291e;     /* rojo del logo: errores de formulario */
-	--color-brand-orange: #d66c1d;  /* naranja: rótulos de sección, hovers */
 
-	/* TEMA OSCURO — el sitio entero usa fondo negro. Estas variables
-	   remapean los grises del tema (que asumían fondo blanco). */
-	--color-dark: #f5f5f5;          /* "text-dark" (títulos) ahora es claro */
-	--color-blue-100: #f5f5f5;      /* subtítulos sobre heros oscuros */
-	--color-blue-200: #b8bec4;
-	--color-gray-50: #191d22;       /* secciones alternas y hover de menús */
-	--color-gray-100: #23282e;      /* bordes suaves, fondos de imagen */
-	--color-gray-200: #2f353c;      /* bordes de tarjetas y divisores */
-	--color-gray-300: #3d444d;      /* bordes de inputs */
-	--color-gray-400: #8a929a;      /* rótulos apagados */
-	--color-gray-500: #9aa2aa;      /* texto terciario */
-	--color-gray-600: #b8bec4;      /* texto secundario */
-	--color-gray-700: #cdd2d6;      /* texto de párrafos largos */
+	--color-dark: #f4f4f4;          /* "text-dark" (títulos/labels) ahora es claro sobre negro */
+
+	/* Texto claro sobre superficies negras (hero y secciones bg-primary). */
+	--color-blue-100: #ededed;      /* subtítulos */
+	--color-blue-200: #bdbdbd;      /* rótulos apagados */
+
+	/* Escala de grises remapeada a oscuro (el tema base asumía fondo blanco). */
+	--color-gray-50: #141414;       /* secciones alternas */
+	--color-gray-100: #1a1a1a;      /* fondos suaves / imágenes */
+	--color-gray-200: #2b2b2b;      /* bordes de tarjetas y divisores */
+	--color-gray-300: #3a3a3a;      /* bordes de inputs */
+	--color-gray-400: #8f8f8f;      /* rótulos apagados */
+	--color-gray-500: #a2a2a2;      /* texto terciario */
+	--color-gray-600: #c6c6c6;      /* texto secundario */
+	--color-gray-700: #d8d8d8;      /* texto de párrafos largos */
 }
 
-/* ---- Superficies oscuras (clases que asumían fondo blanco) ---- */
+/* ---- Superficies oscuras (clases del tema que asumían fondo blanco) ---- */
+body { background-color: #0d0d0d; color: #e8e8e8; }
+.bg-white { background-color: #171717; }                       /* tarjetas y paneles */
+.bg-white\\/95 { background-color: rgba(13, 13, 13, 0.9); }    /* barra del header */
+.bg-dark { background-color: #000; }                           /* footer, el más negro */
+.text-dark { color: #f4f4f4; }                                 /* títulos y labels claros */
+.text-gray-300 { color: #c6c6c6; }                             /* texto del footer */
+
+/* ---- El NARANJA toma protagonismo (utilidades que eran del primario) ---- */
+.text-primary { color: var(--color-accent); }                  /* links, precios, números, "View →" */
+.border-primary { border-color: var(--color-accent); }
+.bg-primary\\/10 { background-color: rgba(242, 106, 33, 0.14); } /* círculos numerados */
+
+/* Campos de formulario con relleno propio sobre el negro. */
+form input:not([type="hidden"]), form select, form textarea {
+	background-color: #141414;
+	color: #ededed;
+}
+
+/* CTAs sólidos: relleno naranja con texto casi negro (look naranja+negro y
+   contraste AA, que el texto blanco sobre naranja no alcanza). Los botones
+   "bg-primary" (Sign In, Back to Home) pasan a naranja para que se vean. */
+a.bg-accent, button.bg-accent,
+a.bg-primary, button.bg-primary {
+	color: #160a02 !important;
+}
+a.bg-primary, button.bg-primary { background-color: var(--color-accent); }
+.hover\\:bg-primary:hover { background-color: var(--color-accent) !important; color: #160a02 !important; }
+
+/* ===== Micro-interacciones del header (hover con el cursor) =====
+   Subrayado que crece, chevron que gira, dropdown con slide, sub-links que
+   se desplazan, logo con zoom y CTA con brillo + imán (el imán en main.js).
+   Todo scoped al <header> y desactivado con prefers-reduced-motion. */
+
+/* Logo: leve zoom/tilt. */
+header .site-logo { transition: transform .35s cubic-bezier(.2, .7, .3, 1); }
+header a:hover .site-logo { transform: scale(1.06) rotate(-1deg); }
+
+/* Links de nav (nivel superior): subrayado naranja que crece desde el centro
+   + micro-lift. */
+.site-nav > a,
+.site-nav > .group > a { position: relative; transition: color .2s ease, transform .2s ease; }
+.site-nav > a::after,
+.site-nav > .group > a::after {
+	content: "";
+	position: absolute;
+	left: 0; right: 0; bottom: 1.5rem;
+	height: 2px;
+	background: var(--color-accent);
+	transform: scaleX(0);
+	transform-origin: center;
+	transition: transform .3s cubic-bezier(.2, .7, .3, 1);
+}
+.site-nav > a:hover::after,
+.site-nav > .group:hover > a::after,
+.site-nav > .group:focus-within > a::after { transform: scaleX(1); }
+.site-nav > a:hover,
+.site-nav > .group:hover > a { transform: translateY(-1px); }
+
+/* Icono guía de cada ítem del nav (Product, Financing, …). */
+.site-nav .mega-icon { width: 1.05rem; height: 1.05rem; flex: none; color: var(--color-accent); transition: transform .28s cubic-bezier(.2, .7, .3, 1); }
+#ironclad-mobile-nav .mega-icon { width: 1rem; height: 1rem; flex: none; color: var(--color-accent); }
+.site-nav > a:hover .mega-icon,
+.site-nav > .group:hover > a .mega-icon,
+.site-nav > .group:focus-within > a .mega-icon { transform: translateY(-1px) scale(1.08); }
+
+/* Chevron (el svg SIN clase .mega-icon): gira al abrir el menú. */
+.site-nav > .group > a svg:not(.mega-icon) { transition: transform .28s cubic-bezier(.2, .7, .3, 1); }
+.site-nav > .group:hover > a svg:not(.mega-icon),
+.site-nav > .group:focus-within > a svg:not(.mega-icon) { transform: rotate(180deg); }
+
+/* Dropdown: aparece con fade + slide hacia abajo. */
+.site-nav .group > div { transform: translateY(8px); transition: opacity .25s ease, transform .25s ease, visibility .25s; }
+.site-nav .group:hover > div,
+.site-nav .group:focus-within > div { transform: translateY(0); }
+
+/* Sub-links del dropdown: se desplazan a la derecha al hover. */
+.site-nav .group > div a { transition: background-color .2s ease, color .2s ease, transform .2s ease; }
+.site-nav .group > div a:hover { transform: translateX(4px); }
+
+/* Teléfono: micro-lift al hover. */
+header a[href^="tel:"] { transition: color .2s ease, transform .2s ease; }
+header a[href^="tel:"]:hover { transform: translateY(-1px); }
+
+/* CTA del header: brillo que barre (el lift/sombra vienen del hover de
+   bg-accent; el imán lo agrega main.js). */
+header a.bg-accent { position: relative; overflow: hidden; }
+header a.bg-accent::before {
+	content: "";
+	position: absolute;
+	top: 0; left: -120%;
+	width: 55%; height: 100%;
+	background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .4), transparent);
+	transform: skewX(-18deg);
+	transition: left .6s ease;
+	pointer-events: none;
+}
+header a.bg-accent:hover::before { left: 140%; }
+
+/* ===== Header rediseñado: barra de utilidad + main bar premium ===== */
+.site-header { border-bottom: 1px solid rgba(255, 255, 255, 0.08); transition: box-shadow .3s ease, background-color .3s ease; }
+/* Hairline naranja de atardecer bajo el header. */
+.site-header::after {
+	content: "";
+	position: absolute;
+	left: 0; right: 0; bottom: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(242, 106, 33, .55), rgba(249, 178, 74, .5), rgba(242, 106, 33, .55), transparent);
+	pointer-events: none;
+}
+.site-header.is-scrolled { box-shadow: 0 14px 34px -18px rgba(0, 0, 0, .75); background-color: rgba(10, 10, 10, .92); }
+
+/* Barra superior de utilidad (ubicación · garantía · email · redes).
+   Visible sólo en desktop vía media query propia (Tailwind compilado no
+   incluye lg:block, así que no lo usamos aquí). */
+.top-utility { display: none; background: rgba(0, 0, 0, .28); border-bottom: 1px solid rgba(255, 255, 255, 0.06); max-height: 3rem; overflow: hidden; transition: max-height .35s ease, opacity .3s ease; }
+@media (min-width: 1024px) { .top-utility { display: block; } }
+.top-utility .util-left, .top-utility .util-link, .top-utility .util-social { color: #9a9a9a; }
+.util-ic { width: .9rem; height: .9rem; color: var(--color-accent); flex: none; }
+.util-sep { color: rgba(255, 255, 255, .2); }
+.util-link { transition: color .2s ease; }
+.util-link:hover { color: var(--color-accent); }
+.util-social { display: inline-flex; width: 1.15rem; height: 1.15rem; transition: color .2s ease, transform .2s ease; }
+.util-social svg { width: 100%; height: 100%; }
+.util-social:hover { color: var(--color-accent); transform: translateY(-1px); }
+/* Al hacer scroll, la barra de utilidad se pliega (header más compacto). */
+.site-header.is-scrolled .top-utility { max-height: 0; opacity: 0; border-bottom-color: transparent; }
+
+/* Logo: leve resplandor cálido para que el emblema resalte sobre el negro. */
+.logo-badge { position: relative; }
+.logo-badge::before {
+	content: "";
+	position: absolute;
+	left: -10px; top: 50%;
+	width: 66px; height: 66px;
+	transform: translateY(-50%);
+	border-radius: 9999px;
+	background: radial-gradient(circle, rgba(242, 106, 33, .30), transparent 70%);
+	opacity: .45;
+	z-index: -1;
+	pointer-events: none;
+	transition: opacity .3s ease;
+}
+.logo-badge:hover::before { opacity: 1; }
+
+/* Teléfono como "pill" con ícono. */
+.phone-pill { border: 1px solid rgba(242, 106, 33, .35); border-radius: 9999px; padding: .5rem .95rem; font-size: .875rem; font-weight: 600; color: #f4f4f4; transition: border-color .2s ease, background-color .2s ease, transform .2s ease; }
+.phone-pill .phone-ic { width: 1rem; height: 1rem; color: var(--color-accent); flex: none; }
+.phone-pill:hover { border-color: var(--color-accent); background: rgba(242, 106, 33, .1); }
+
+/* CTA "Get a Free Quote": más presencia + flecha que avanza al hover. */
+.cta-quote { border-radius: .6rem; padding: .7rem 1.2rem; font-size: .875rem; font-weight: 700; box-shadow: 0 8px 22px -10px rgba(242, 106, 33, .6); transition: box-shadow .25s ease, transform .2s ease; }
+.cta-quote .cta-arrow { width: 1rem; height: 1rem; flex: none; transition: transform .25s ease; }
+.cta-quote:hover { box-shadow: 0 12px 28px -8px rgba(242, 106, 33, .78); }
+.cta-quote:hover .cta-arrow { transform: translateX(3px); }
+
+/* Tarjetas de producto (Top Picks / grilla): flotación continua (arriba/abajo
+   + lateral) para que se vean dinámicas en reposo, un "brillo" que barre cada
+   tarjeta, y la inclinación 3D + foco que siguen al cursor. La flotación usa la
+   propiedad translate (independiente de transform) para que NO pelee con la
+   inclinación 3D de main.js ni con el hover-lift de Tailwind. */
+.js-tilt-card { position: relative; transform-style: preserve-3d; transition: transform .3s cubic-bezier(.2, .7, .3, 1), border-color .3s ease, box-shadow .3s ease; }
+.js-tilt-card.is-tilting { transition: transform .08s linear, border-color .3s ease, box-shadow .3s ease; }
+/* Foco de luz que sigue al cursor. */
+.js-tilt-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+	border-radius: inherit;
+	opacity: 0;
+	transition: opacity .3s ease;
+	background: radial-gradient(20rem 20rem at var(--mx, 50%) var(--my, 50%), rgba(242, 106, 33, .18), transparent 60%);
+}
+/* Brillo diagonal que barre la tarjeta en bucle. */
+.js-tilt-card::after {
+	content: "";
+	position: absolute;
+	top: 0; bottom: 0; left: 0;
+	width: 60%;
+	z-index: 3;
+	pointer-events: none;
+	border-radius: inherit;
+	opacity: 0;
+	background: linear-gradient(105deg, transparent, rgba(255, 255, 255, .06) 45%, rgba(242, 106, 33, .10) 55%, transparent);
+	transform: translateX(-180%) skewX(-12deg);
+}
+.js-tilt-card:hover { border-color: rgba(242, 106, 33, .5); box-shadow: 0 16px 40px -20px rgba(242, 106, 33, .38); }
+.js-tilt-card:hover::before { opacity: 1; }
+@media (hover: hover) and (pointer: fine) {
+	.js-tilt-card { animation: card-float 8s ease-in-out infinite; }
+	.js-tilt-card:nth-child(3n+2) { animation-delay: -2.8s; animation-duration: 9s; }
+	.js-tilt-card:nth-child(3n) { animation-delay: -5s; animation-duration: 8.6s; }
+	.js-tilt-card:hover { animation-play-state: paused; }
+	.js-tilt-card::after { animation: card-sheen 9s ease-in-out infinite; }
+	.js-tilt-card:nth-child(3n+2)::after { animation-delay: 3s; }
+	.js-tilt-card:nth-child(3n)::after { animation-delay: 5.5s; }
+}
+@keyframes card-float {
+	0%   { translate: 0 0; }
+	20%  { translate: 3px -5px; }
+	50%  { translate: 0 -7px; }
+	80%  { translate: -3px -5px; }
+	100% { translate: 0 0; }
+}
+@keyframes card-sheen {
+	0%   { transform: translateX(-180%) skewX(-12deg); opacity: 0; }
+	8%   { opacity: .7; }
+	28%  { transform: translateX(240%) skewX(-12deg); opacity: 0; }
+	100% { transform: translateX(240%) skewX(-12deg); opacity: 0; }
+}
+
+/* Botón flotante para silenciar el sonido de interfaz (lo inyecta sound.js). */
+.snd-toggle {
+	position: fixed;
+	right: 1rem;
+	bottom: 1rem;
+	z-index: 60;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	border-radius: 9999px;
+	border: 1px solid rgba(242, 106, 33, .4);
+	background: rgba(20, 20, 20, .8);
+	color: var(--color-accent);
+	-webkit-backdrop-filter: blur(6px);
+	backdrop-filter: blur(6px);
+	box-shadow: 0 8px 24px -10px rgba(0, 0, 0, .7);
+	cursor: pointer;
+	transition: transform .2s ease, border-color .2s ease, color .2s ease;
+}
+.snd-toggle svg { width: 1.25rem; height: 1.25rem; }
+.snd-toggle:hover { transform: translateY(-2px); border-color: var(--color-accent); }
+.snd-toggle.is-muted { color: #9a9a9a; border-color: rgba(255, 255, 255, .14); }
+@media (min-width: 1024px) { .snd-toggle { right: 1.5rem; bottom: 1.5rem; } }
+
+/* Reducir movimiento: sin desplazamientos ni brillos. */
+@media (prefers-reduced-motion: reduce) {
+	.js-tilt-card { animation: none !important; transform: none !important; translate: none !important; }
+	.js-tilt-card::before, .js-tilt-card::after { display: none; }
+	header .site-logo,
+	.site-nav > a, .site-nav > .group > a,
+	.site-nav .group > div, .site-nav .group > div a,
+	header a[href^="tel:"] { transition: none; transform: none; }
+	.site-nav > a::after, .site-nav > .group > a::after { transition: none; }
+	header a.bg-accent::before { display: none; }
+}
+
+/* ===== Testimonios: marquee vertical infinito (puerto del componente React
+   "TestimonialsColumn"). Cada columna se desliza sola en bucle y se PAUSA al
+   pasar el cursor; las tarjetas tienen micro-lift naranja. El bucle usa
+   margin-bottom (no gap) para que el -50% sea perfectamente continuo. ===== */
+.tcols {
+	display: flex;
+	justify-content: center;
+	gap: 1.5rem;
+	margin-top: 2.5rem;
+	max-height: 44rem;
+	overflow: hidden;
+	-webkit-mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+	mask-image: linear-gradient(to bottom, transparent, #000 20%, #000 80%, transparent);
+}
+.tcol { width: 100%; max-width: 22rem; }
+/* Columnas responsivas propias (la Tailwind compilada no trae md:block /
+   lg:block): 1 columna en móvil, 2 desde 768px, 3 desde 1024px. */
+.tcol--md, .tcol--lg { display: none; }
+@media (min-width: 768px) { .tcol--md { display: block; } }
+@media (min-width: 1024px) { .tcol--lg { display: block; } }
+.tcol-track {
+	display: flex;
+	flex-direction: column;
+	animation: tcol-scroll var(--dur, 26s) linear infinite;
+	will-change: transform;
+}
+.tcol-track > .tcard { margin-bottom: 1.5rem; }
+.tcol--reverse .tcol-track { animation-direction: reverse; }
+.tcol:hover .tcol-track { animation-play-state: paused; } /* pausa al pasar el cursor */
+
+@keyframes tcol-scroll {
+	from { transform: translateY(0); }
+	to { transform: translateY(-50%); }
+}
+
+/* Tarjetas de testimonio: micro-lift + borde/sombra naranja al hover. */
+.tcard { transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease; }
+.tcard:hover {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, .55);
+	box-shadow: 0 14px 34px -14px rgba(242, 106, 33, .4);
+}
+
+/* Reducir movimiento: sin marquee. Se muestran todas las columnas y tarjetas
+   (sin duplicados) en un layout estático que envuelve en pantallas chicas. */
+@media (prefers-reduced-motion: reduce) {
+	.tcols {
+		max-height: none;
+		overflow: visible;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		-webkit-mask-image: none;
+		mask-image: none;
+	}
+	.tcol, .tcol--md, .tcol--lg { display: block; flex: 1 1 18rem; }
+	.tcol-track { animation: none; }
+	.tcol-track > .tdup { display: none; }
+	.tcard:hover { transform: none; }
+}
+
+/* ---- Sistema tipográfico (con carácter, no "de fábrica") ----
+   Títulos en Fraunces (serif display con personalidad — soft/wonky, óptico),
+   todo lo demás en Hanken Grotesk (grotesque humanista cálido). Deliberadamente
+   NO usamos Inter/Roboto ni Playfair (las opciones "por defecto" de lo premium).
+   Se cargan por <link> en el <head>. */
 body {
-	background-color: #121212;
-	color: #f5f5f5;
+	font-family: "Hanken Grotesk", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+	font-weight: 400;
+	-webkit-font-smoothing: antialiased;
+	text-rendering: optimizeLegibility;
 }
 
-.bg-white {
-	background-color: #1c2127; /* tarjetas y paneles */
+/* H1 / H2: serif display Fraunces. Peso 600, óptico automático (opsz) para que
+   en tamaños grandes gane presencia editorial; ligero tracking negativo. */
+h1, h2 {
+	font-family: "Fraunces", Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	font-optical-sizing: auto;
+	letter-spacing: -0.015em;
 }
 
-.bg-white\\/95 {
-	background-color: rgba(18, 18, 18, 0.92); /* barra del header */
+/* H3–H6: Hanken Grotesk en negrita, contraste "galería" con el serif. */
+h3, h4, h5, h6 {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-weight: 700;
+	letter-spacing: -0.01em;
 }
 
-.bg-dark {
-	background-color: #0d0f12; /* footer, un paso más oscuro que el body */
+/* Contadores y precios: Hanken Grotesk con cifras tabulares (no "saltan"). */
+[data-counter] {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-variant-numeric: tabular-nums;
+	font-feature-settings: "tnum" 1;
 }
 
-.text-gray-300 {
-	color: #b8bec4; /* texto del footer (el var gray-300 ahora es un borde) */
+/* Menús de navegación y links del pie: Inter en MAYÚSCULAS con espaciado
+   amplio ("alta costura"). Sólo los ítems de menú, no los CTA ni el cuerpo. */
+.site-nav > a,
+.site-nav > .group > a,
+footer ul a {
+	text-transform: uppercase;
+	letter-spacing: 0.13em;
+}
+footer ul a { font-size: 0.75rem; }
+
+/* Selección de texto con el naranja de marca. */
+::selection {
+	background: rgba(194, 65, 12, 0.16);
 }
 
-/* ---- Acentos que eran azul primario sobre blanco ---- */
-.text-primary {
-	color: var(--color-accent); /* precios, contadores, enlaces "View →" */
+/* ---- Rótulos de sección (eyebrows) ---- */
+.eyebrow-red {
+	color: var(--color-accent);   /* atardecer sobre fondos claros */
 }
 
-.border-primary {
-	border-color: var(--color-accent);
+.eyebrow-amber {
+	color: var(--color-sun);      /* ámbar sobre secciones de acero */
 }
 
-.bg-primary\\/10 {
-	background-color: rgba(216, 154, 31, 0.12); /* círculos numerados */
+/* ---- Botones sólidos (CTA de atardecer y de acero) ----
+   Transición suave, leve elevación y sombra cálida al pasar el mouse. */
+a.bg-accent, button.bg-accent,
+a.bg-primary, button.bg-primary {
+	transition: background-color .2s ease, box-shadow .2s ease, transform .2s ease;
 }
 
+a.bg-accent:hover, button.bg-accent:hover {
+	background-color: var(--color-accent-hover);
+	opacity: 1;
+	transform: translateY(-1px);
+	box-shadow: 0 10px 24px -8px rgba(194, 65, 12, 0.55);
+}
+
+a.bg-primary:hover, button.bg-primary:hover {
+	opacity: 1;
+	transform: translateY(-1px);
+	box-shadow: 0 10px 24px -10px rgba(20, 26, 33, 0.5);
+}
+
+/* En las tarjetas (enlaces con .group) el borde se tiñe de atardecer
+   al pasar el mouse, reforzando el "hover-lift" del diseño base. */
+a.group:hover {
+	border-color: rgba(194, 65, 12, 0.35);
+}
+
+/* Enlaces y textos que usaban el azul primario ahora van al atardecer
+   al pasar el mouse (nav, "quick links", etc.). */
+.hover\\:text-primary:hover {
+	color: var(--color-accent);
+}
+
+/* Foco visible y cálido para navegación por teclado (accesibilidad). */
+a:focus-visible, button:focus-visible,
+input:focus-visible, select:focus-visible,
+textarea:focus-visible, summary:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: 2px;
+	border-radius: 4px;
+}
+
+/* Campos de formulario: foco en naranja de marca (en vez del azul base). */
 .focus\\:border-primary:focus {
 	border-color: var(--color-accent);
 }
 
 .focus\\:ring-primary:focus {
 	--tw-ring-color: var(--color-accent);
-}
-
-/* Hover de los enlaces del menú y textos que iban al azul primario:
-   ahora van al dorado (el primario oscuro no se vería sobre negro). */
-.hover\\:text-primary:hover {
-	color: var(--color-accent);
-}
-
-/* Campos de formulario con relleno propio sobre el fondo negro. */
-form input:not([type="hidden"]),
-form select,
-form textarea {
-	background-color: #191d22;
-}
-
-/* Los botones dorados aclaran a #F4B400 (amarillo sol) al pasar el
-   mouse, en vez del efecto genérico de transparencia. */
-a.bg-accent:hover,
-button.bg-accent:hover {
-	background-color: #f4b400;
-	opacity: 1;
-}
-
-/* En las tarjetas de producto, el enlace dorado pasa a naranja al
-   hacer hover sobre la tarjeta. */
-.group:hover span.text-accent {
-	color: var(--color-brand-orange);
-}
-
-/* Rótulos de sección en naranja (el rojo del logo no contrasta
-   suficiente sobre fondo negro; queda para errores). */
-.eyebrow-red {
-	color: var(--color-brand-orange);
 }
 
 /* Permite abrir los desplegables del menú también con teclado (Tab),
@@ -714,6 +1195,30 @@ button.bg-accent:hover {
 	white-space: nowrap;
 	border: 0;
 }
+
+/* ===== Scroll-to-expand media hero (.sxm-*) — puerto vanilla del componente
+   React "ScrollExpandMedia". Compartido por la portada (index) y "Our Work".
+   El JS (assets/js/scroll-expand.js) sólo actualiza tamaños y opacidades. ===== */
+.sxm { overflow-x: hidden; }
+.sxm-stage { position: relative; display: flex; flex-direction: column; align-items: center; min-height: 100dvh; }
+.sxm-bg { position: absolute; inset: 0; z-index: 0; background: radial-gradient(120% 90% at 82% 0%, rgba(242, 106, 33, 0.42), rgba(242, 106, 33, 0) 58%), linear-gradient(160deg, #1a1a1a 0%, #0f0f0f 55%, #000 100%); }
+.sxm-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); }
+.sxm-container { position: relative; z-index: 10; width: 100%; max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
+.sxm-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; border-radius: 1rem; overflow: hidden; width: min(1100px, 95vw); height: min(78vh, 680px); max-width: 95vw; max-height: 85vh; box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6); }
+.sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+.sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
+.sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
+.sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
+.sxm-scroll { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; color: #c9cfd6; }
+.sxm.is-expanded .sxm-hint { opacity: 0; }
+.sxm-title { position: relative; z-index: 10; margin: 0; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100%; text-align: center; }
+.sxm-title-first, .sxm-title-rest { display: block; margin: 0; color: #fff; font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.05; font-size: clamp(2.6rem, 7.2vw, 4.25rem); text-shadow: 0 2px 24px rgba(0, 0, 0, 0.45); }
+.sxm-content { width: 100%; padding: 3rem 2rem 5rem; opacity: 0; }
+.sxm-media, .sxm-title-first, .sxm-title-rest, .sxm-date, .sxm-scroll { transition: none; }
+.sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
+.sxm-content { transition: opacity 0.7s ease; }
+@media (prefers-reduced-motion: reduce) { .sxm-content { opacity: 1; } .sxm-hint { display: none; } }
 `;
 
 // ---- Home (index.html, en la raíz) ----
@@ -726,9 +1231,9 @@ button.bg-accent:hover {
     .map((p) => {
       const model = p.models[0];
       const compact = `${compactSize(model.size)} ${singularize(p.title)}`;
-      return `\t\t\t<a href="${productHref(prefix, p)}" class="js-reveal-card group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-reveal-group="top-picks">
+      return `\t\t\t<a href="${productHref(prefix, p)}" class="js-reveal-card js-tilt-card group overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-xl" data-reveal-group="top-picks">
 				<div class="relative aspect-[4/3] w-full overflow-hidden bg-gray-100">
-					<img src="${prefix}assets/images/products/${p.slug}/card-placeholder.svg" alt="${compact}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
+					<img src="${productImage(prefix, p)}" alt="${compact}" class="h-full w-full object-cover transition duration-300 group-hover:scale-105" loading="lazy">
 				</div>
 				<div class="flex items-center justify-between p-5">
 					<h3 class="text-lg font-bold text-dark">${compact}</h3>
@@ -742,7 +1247,7 @@ button.bg-accent:hover {
 
   const whyUsCards = whyUs
     .map(
-      (item, i) => `\t\t\t\t<div class="js-reveal-card rounded-xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg" data-reveal-group="why-us">
+      (item, i) => `\t\t\t\t<div class="js-reveal-card js-tilt-card overflow-hidden rounded-xl bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg" data-reveal-group="why-us">
 					<div class="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">${i + 1}</div>
 					<h3 class="mt-4 text-base font-bold text-dark">${item.title}</h3>
 					<p class="mt-2 text-sm text-gray-600">${item.desc}</p>
@@ -752,7 +1257,7 @@ button.bg-accent:hover {
 
   const purchaseCards = purchaseOptions
     .map(
-      (opt) => `\t\t\t\t<div class="flex flex-col rounded-xl border border-gray-200 p-8 text-center">
+      (opt) => `\t\t\t\t<div class="js-reveal-card js-tilt-card overflow-hidden flex flex-col rounded-xl border border-gray-200 p-8 text-center" data-reveal-group="purchase">
 					<h3 class="text-xl font-bold text-dark">${opt.title}</h3>
 					<p class="mt-3 flex-1 text-sm text-gray-600">${opt.desc}</p>
 					<a href="${prefix}financing/financing.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">See options</a>
@@ -767,89 +1272,110 @@ button.bg-accent:hover {
     )
     .join("\n");
 
-  const testimonialCards = testimonials
-    .map(
-      (t) => `\t\t\t\t<figure class="flex flex-col rounded-xl border border-gray-200 p-6">
-					<blockquote class="flex-1 text-sm text-gray-600">&ldquo;${t.quote}&rdquo;</blockquote>
-					<figcaption class="mt-4 flex items-center gap-3">
-						<span class="relative h-10 w-10 overflow-hidden rounded-full bg-gray-100">
-							<img src="${prefix}assets/images/testimonials/avatar-placeholder.svg" alt="" class="h-full w-full object-cover">
-						</span>
-						<div>
-							<p class="text-sm font-semibold text-dark">${t.name}</p>
-							<p class="text-xs text-gray-500">${t.location}</p>
-						</div>
-					</figcaption>
-				</figure>`
-    )
-    .join("\n");
+  // Testimonios en columnas con marquee vertical (puerto vanilla del
+  // componente React "TestimonialsColumn"): cada columna se desplaza sola en
+  // bucle infinito y se pausa al pasar el cursor. El track duplica las
+  // tarjetas (clase .tdup) para que el bucle sea perfecto.
+  const testimonialCard = (t, dup) =>
+    `\t\t\t\t\t<figure class="tcard${dup ? " tdup" : ""} flex flex-col rounded-2xl border border-gray-200 bg-white p-6">
+						<blockquote class="flex-1 text-sm text-gray-600">&ldquo;${t.quote}&rdquo;</blockquote>
+						<figcaption class="mt-5 flex items-center gap-3">
+							<span class="relative h-10 w-10 shrink-0 overflow-hidden rounded-full bg-gray-100">
+								<img src="${prefix}assets/images/testimonials/avatar-placeholder.svg" alt="" class="h-full w-full object-cover" loading="lazy">
+							</span>
+							<div>
+								<p class="text-sm font-semibold text-dark">${t.name}</p>
+								<p class="text-xs text-gray-500">${t.location}</p>
+							</div>
+						</figcaption>
+					</figure>`;
+
+  const testimonialColumn = (list, dur, extraClass, reverse) => {
+    const set = (dup) => list.map((t) => testimonialCard(t, dup)).join("\n");
+    return `\t\t\t<div class="tcol${extraClass ? " " + extraClass : ""}${reverse ? " tcol--reverse" : ""}" style="--dur: ${dur}s">
+				<div class="tcol-track">
+${set(false)}
+${set(true)}
+				</div>
+			</div>`;
+  };
+
+  const testimonialMarquee = [
+    testimonialColumn(testimonials.slice(0, 3), 26, "", false),
+    testimonialColumn(testimonials.slice(3, 6), 32, "tcol--md", true),
+    testimonialColumn(testimonials.slice(6, 9), 29, "tcol--lg", false),
+  ].join("\n");
 
   const main = `
-<section class="relative overflow-hidden bg-primary" data-hero>
-	<div class="absolute inset-0">
-		<img src="${prefix}assets/images/hero/hero-placeholder.svg" alt="" class="h-full w-full object-cover opacity-30">
-		<canvas id="ironclad-hero-shader" class="hidden absolute inset-0 h-full w-full touch-none mix-blend-luminosity opacity-70" aria-hidden="true"></canvas>
-		<div class="absolute inset-0 bg-gradient-to-r from-primary-dark/95 via-primary/90 to-primary/80"></div>
-	</div>
-
-	<div class="relative mx-auto flex min-h-[560px] w-full max-w-7xl flex-col justify-center px-4 py-20 sm:px-6 lg:px-8" data-hero-parallax>
-		<p class="text-sm font-semibold uppercase tracking-widest text-blue-200" data-hero-eyebrow>
-			${count}+ Buildings Delivered
-		</p>
-		<h1 class="mt-4 max-w-2xl text-4xl font-extrabold leading-tight text-white sm:text-5xl lg:text-6xl" data-hero-heading>
-			${site.tagline}
-		</h1>
-		<p class="mt-6 max-w-xl text-lg text-blue-100" data-hero-subtitle>
-			Custom steel garages, barns, carports and commercial buildings — engineered to last, priced to fit your budget, and backed by a ${site.warrantyYears}-year warranty.
-		</p>
-		<div class="mt-8 flex flex-col gap-4 sm:flex-row" data-hero-actions>
-			<a href="${prefix}contact/contact.html" class="inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90">Get a Free Quote</a>
-			<a href="${productHref(prefix, products[0])}" class="inline-flex items-center justify-center rounded-md border border-white/40 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur transition hover:bg-white/20">View Products</a>
-		</div>
-
-		<div class="mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3" data-hero-trust>
-			<div class="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
-				<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-xs font-extrabold text-primary">BBB</span>
-				<div>
-					<p class="text-xs font-semibold text-blue-100">BBB Rating</p>
-					<div class="flex items-center gap-1.5">
-						<span class="text-sm font-bold text-white">${site.bbbRating}</span>
-						${starRow()}
+<div class="sxm" data-scroll-expand>
+	<section class="sxm-stage">
+		<div class="sxm-bg" aria-hidden="true"></div>
+		<div class="sxm-container">
+			<div class="sxm-center">
+				<div class="sxm-media">
+					<img class="sxm-scene" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom 30x40 steel ranch building on an Arizona property" decoding="async">
+					<div class="sxm-veil" aria-hidden="true"></div>
+					<div class="sxm-hint">
+						<p class="sxm-date">Arizona's Custom Steel Builder · ${count}+ Delivered</p>
+						<p class="sxm-scroll">Scroll to expand</p>
 					</div>
-					<p class="text-[11px] text-blue-200">${site.bbbReviews} reviews</p>
 				</div>
+				<h1 class="sxm-title">
+					<span class="sxm-title-first">Giving Life</span>
+					<span class="sxm-title-rest">to Your Projects</span>
+				</h1>
 			</div>
 
-			<div class="flex flex-col items-center justify-center rounded-xl border border-white/15 bg-white/10 px-4 py-3 text-center backdrop-blur">
-				<p class="text-2xl font-extrabold text-accent" data-counter="${site.completedCount}">${count}</p>
-				<p class="text-[11px] font-semibold uppercase tracking-wide text-blue-100">Completed Projects</p>
-			</div>
-
-			<div class="flex items-center gap-3 rounded-xl border border-white/15 bg-white/10 px-4 py-3 backdrop-blur">
-				<svg class="h-9 w-9 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
-					<path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.6H24v9.1h11.9c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.5-9.4 6.5-16.7z"/>
-					<path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.7-3.9-12.4-9.1H4.3v5.7C7.9 41.1 15.3 46 24 46z"/>
-					<path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.2-2.9.7-4.2v-5.7H4.3C2.8 17 2 20.4 2 24s.8 7 2.3 9.9z"/>
-					<path fill="#EA4335" d="M24 10.7c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.3 2 7.9 6.9 4.3 14.1l7.3 5.7c1.7-5.2 6.6-9.1 12.4-9.1z"/>
-				</svg>
-				<div>
-					<p class="text-xs font-semibold text-blue-100">Google Rating</p>
-					<div class="flex items-center gap-1.5">
-						<span class="text-sm font-bold text-white">${site.googleRating}</span>
-						${starRow()}
+			<section class="sxm-content">
+				<div class="mx-auto max-w-3xl text-center">
+					<p class="text-lg text-gray-600 sm:text-xl">
+						Custom steel garages, carports, barns and commercial buildings — engineered for the Arizona sun and monsoon season, priced to fit your budget, and backed by a ${site.warrantyYears}-year warranty.
+					</p>
+					<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+						<a href="${prefix}contact/contact.html" class="inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm">Get a Free Quote</a>
+						<a href="#our-products" class="inline-flex items-center justify-center rounded-md border border-primary px-8 py-3.5 text-base font-semibold text-primary transition hover:bg-primary hover:text-white">View Products</a>
 					</div>
-					<p class="text-[11px] text-blue-200">${site.googleReviews} reviews</p>
-				</div>
-			</div>
-		</div>
-	</div>
 
-	<div class="absolute inset-x-0 bottom-6 flex justify-center" data-scroll-indicator>
-		<svg class="h-6 w-6 text-white/70" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-			<path d="M12 5v14M12 19l-6-6M12 19l6-6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
-		</svg>
-	</div>
-</section>
+					<div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
+						<div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm">
+							<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white">BBB</span>
+							<div>
+								<p class="text-xs font-semibold text-gray-500">BBB Rating</p>
+								<div class="flex items-center gap-1.5">
+									<span class="text-sm font-bold text-dark">${site.bbbRating}</span>
+									${starRow()}
+								</div>
+								<p class="text-[11px] text-gray-400">${site.bbbReviews} reviews</p>
+							</div>
+						</div>
+
+						<div class="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 text-center shadow-sm">
+							<p class="text-2xl font-extrabold text-accent" data-counter="${site.completedCount}" data-suffix="+">${count}+</p>
+							<p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Completed Projects</p>
+						</div>
+
+						<div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm">
+							<svg class="h-9 w-9 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
+								<path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.6H24v9.1h11.9c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.5-9.4 6.5-16.7z"/>
+								<path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.7-3.9-12.4-9.1H4.3v5.7C7.9 41.1 15.3 46 24 46z"/>
+								<path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.2-2.9.7-4.2v-5.7H4.3C2.8 17 2 20.4 2 24s.8 7 2.3 9.9z"/>
+								<path fill="#EA4335" d="M24 10.7c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.3 2 7.9 6.9 4.3 14.1l7.3 5.7c1.7-5.2 6.6-9.1 12.4-9.1z"/>
+							</svg>
+							<div>
+								<p class="text-xs font-semibold text-gray-500">Google Rating</p>
+								<div class="flex items-center gap-1.5">
+									<span class="text-sm font-bold text-dark">${site.googleRating}</span>
+									${starRow()}
+								</div>
+								<p class="text-[11px] text-gray-400">${site.googleReviews} reviews</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+		</div>
+	</section>
+</div>
 
 <section class="border-y border-gray-100 bg-gray-50 py-12">
 	<div class="mx-auto grid w-full max-w-7xl grid-cols-2 gap-8 px-4 text-center sm:grid-cols-4 sm:px-6 lg:px-8">
@@ -862,8 +1388,8 @@ button.bg-accent:hover {
 			<p class="mt-1 text-sm text-gray-600">Years of Warranty</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
-			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${statesCount}">${statesCount}</p>
-			<p class="mt-1 text-sm text-gray-600">States Served</p>
+			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${statesCount}" data-suffix="+">${statesCount}+</p>
+			<p class="mt-1 text-sm text-gray-600">AZ Cities Served</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl">4-8 wks</p>
@@ -915,7 +1441,7 @@ ${purchaseCards}
 
 <section id="where-we-build" class="scroll-mt-24 bg-primary py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		${sectionHeading("Where We Build", "Proudly Serving Your Region", "We currently deliver and install in the following states.", true)}
+		${sectionHeading("Where We Build", "Proudly Serving All of Arizona", "From the low desert to the high country, we deliver and install statewide.", true)}
 		<div class="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-3">
 ${stateChips}
 		</div>
@@ -925,8 +1451,8 @@ ${stateChips}
 <section id="customer-stories" class="scroll-mt-24 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 		${sectionHeading("Customer Stories", "What Our Customers Say")}
-		<div class="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-${testimonialCards}
+		<div class="tcols" aria-label="Customer testimonials">
+${testimonialMarquee}
 		</div>
 	</div>
 </section>
@@ -950,16 +1476,97 @@ ${ctaBanner(prefix, "Ready to Build?", "Get a free, no-obligation quote from our
     prefix,
     main,
     cssFile: "index.css",
-    extraScripts: `<script src="${prefix}assets/js/shader-hero.js"></script>
+    extraHead: localBusinessJsonLd(),
+    extraScripts: `<script>
+// Video del hero: dos cuidados de performance/accesibilidad.
+//  · "reducir movimiento" -> lo pausamos (scroll-expand ya deja el media
+//    expandido y accesible).
+//  · Conexión lenta / "ahorro de datos" (Save-Data) -> NO descargamos los
+//    2.5 MB del video; queda el poster (la escena SVG del atardecer).
+(function () {
+	var v = document.querySelector(".sxm-video");
+	if (!v) return;
+	var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+	var conn = navigator.connection || {};
+	var save = conn.saveData === true || /(^|-)2g$/.test(conn.effectiveType || "");
+	if (reduce) { v.removeAttribute("autoplay"); if (v.pause) v.pause(); }
+	if (save) {
+		v.removeAttribute("autoplay");
+		v.preload = "none";
+		var s = v.querySelector("source");
+		if (s) s.remove();
+		try { v.load(); } catch (e) {}
+	}
+})();
+</script>
+<script src="${prefix}assets/js/scroll-expand.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
 <script src="${prefix}assets/js/motion.js"></script>
 `,
   });
 
   files["index.css"] = `/* Estilos específicos de la portada (index.html).
    El diseño base compartido vive en assets/css/main.css. */
+
+/* Video de fondo del hero (assets/video/hero.mp4).
+   object-fit: cover hace que siempre llene el área sin deformarse,
+   recortando lo que sobre desde el centro, en cualquier pantalla. */
+.hero-video {
+	opacity: 0.6;
+	object-fit: cover;
+	object-position: center;
+}
+
+/* Altura del hero adaptable al dispositivo (mobile-first):
+   en celulares ocupa ~3/4 de la pantalla; en pantallas más grandes
+   crece hasta un máximo cómodo. El video siempre acompaña porque
+   cubre el 100% del contenedor. */
+[data-hero-parallax] {
+	min-height: 70vh;  /* respaldo para navegadores sin svh */
+	min-height: min(78svh, 560px);
+}
+
+@media (min-width: 40rem) {
+	[data-hero-parallax] {
+		min-height: min(80svh, 620px);
+	}
+}
+
+@media (min-width: 64rem) {
+	[data-hero-parallax] {
+		min-height: min(85svh, 720px);
+	}
+}
+
+/* Velo acero + brillo de atardecer sobre el video. Dos capas:
+   1. Un degradado de acero (más denso a la izquierda, donde va el titular)
+      que mantiene el texto blanco legible sin apagar del todo el video.
+   2. Un brillo radial ámbar arriba a la derecha: el "atardecer de Arizona"
+      que da el toque cálido y premium. */
+.hero-overlay {
+	background:
+		linear-gradient(
+			100deg,
+			rgba(20, 26, 33, 0.93) 0%,
+			rgba(22, 28, 34, 0.80) 40%,
+			rgba(28, 37, 46, 0.52) 72%,
+			rgba(35, 43, 51, 0.36) 100%
+		),
+		radial-gradient(
+			115% 90% at 88% 6%,
+			rgba(244, 169, 60, 0.40),
+			rgba(244, 169, 60, 0) 55%
+		);
+}
+
+/* Con "reducir movimiento" activado se oculta el video (además el JS
+   de la página lo pausa) y queda la imagen estática de respaldo. */
+@media (prefers-reduced-motion: reduce) {
+	.hero-video {
+		display: none;
+	}
+}
 `;
 }
 
@@ -994,7 +1601,7 @@ for (const p of products) {
   const main = `
 <section class="relative bg-primary">
 	<div class="absolute inset-0">
-		<img src="${prefix}assets/images/products/${p.slug}/hero-placeholder.svg" alt="" class="h-full w-full object-cover opacity-30">
+		<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="h-full w-full object-cover opacity-30">
 		<div class="absolute inset-0 bg-primary/70"></div>
 	</div>
 	<div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
@@ -1063,7 +1670,7 @@ ${ctaBanner(prefix, `Ready for Your New ${p.title.replace(/s$/, "")}?`, "Request
 
 <section class="py-20">
 	<div class="mx-auto w-full max-w-3xl space-y-6 px-4 text-gray-700 sm:px-6 lg:px-8">
-		<p>${site.name} was built on a simple idea: every home and business deserves a durable, affordable steel structure without the hassle. From our first garage to hundreds of buildings delivered across ${site.states.length} states, our team handles design, engineering, delivery and installation in-house — so you get one point of contact from quote to completion.</p>
+		<p>${site.name} was built on a simple idea: every home and business in Arizona deserves a durable, affordable steel structure without the hassle. From our first garage to thousands of buildings delivered across the state, our team handles design, engineering, delivery and installation in-house — so you get one point of contact from quote to completion.</p>
 		<p>We stand behind every build with a ${site.warrantyYears}-year structural warranty and a support team that's with you from your first quote through final installation.</p>
 	</div>
 </section>
@@ -1306,10 +1913,11 @@ ${options}
 }
 `;
 
-  files["contact/contact.js"] = `// Lógica de la página Contact:
-// 1. Muestra el aviso de éxito/error según ?quote=success|error
-//    (contact.php redirige de vuelta aquí con ese parámetro).
-// 2. Validación ligera en el cliente antes de enviar.
+  files["contact/contact.js"] = `// Lógica de la página Contact — versión FRONT-END ONLY.
+// El formulario muestra su estado de éxito directamente en el navegador,
+// sin depender de un backend. Cuando conectes un servicio real de
+// formularios (Formspree, Web3Forms, tu propio endpoint…), enviá los datos
+// en el punto marcado con TODO más abajo y luego llamá a showSuccess().
 (function () {
 	var params = new URLSearchParams(window.location.search);
 	var status = params.get("quote");
@@ -1317,20 +1925,54 @@ ${options}
 	var success = document.getElementById("quote-success");
 	var error = document.getElementById("quote-error");
 
-	if (status === "success" && success && form) {
-		success.classList.remove("hidden");
-		form.classList.add("hidden");
+	function showSuccess() {
+		if (error) error.classList.add("hidden");
+		if (form) form.classList.add("hidden");
+		if (success) {
+			success.classList.remove("hidden");
+			success.setAttribute("tabindex", "-1");
+			success.focus();
+			success.scrollIntoView({ behavior: "smooth", block: "center" });
+		}
+	}
+
+	// Compatibilidad: si algún día se usa un backend que redirige con
+	// ?quote=success|error, respetamos ese parámetro.
+	if (status === "success") {
+		showSuccess();
 	} else if (status === "error" && error) {
 		error.classList.remove("hidden");
 	}
 
 	if (form) {
 		form.addEventListener("submit", function (event) {
+			// Sin backend por ahora: manejamos el envío en el cliente.
+			event.preventDefault();
+
+			// Honeypot anti-spam: si el campo oculto está lleno, es un bot;
+			// fingimos éxito y no hacemos nada más.
+			var honeypot = form.querySelector("#website");
+			if (honeypot && honeypot.value) { showSuccess(); return; }
+
 			if (!form.checkValidity()) {
-				event.preventDefault();
 				form.classList.add("was-validated");
 				if (error) error.classList.remove("hidden");
+				var firstInvalid = form.querySelector(":invalid");
+				if (firstInvalid) firstInvalid.focus();
+				return;
 			}
+
+			// TODO (entrega del lead): acá va el envío real. Ejemplo con
+			// Formspree / Web3Forms (reemplazá la URL por la tuya):
+			//   fetch("https://formspree.io/f/XXXXXXXX", {
+			//     method: "POST",
+			//     headers: { Accept: "application/json" },
+			//     body: new FormData(form)
+			//   }).then(showSuccess).catch(function () {
+			//     if (error) error.classList.remove("hidden");
+			//   });
+			// Mientras no haya endpoint, mostramos el éxito directamente:
+			showSuccess();
 		});
 	}
 })();
@@ -1549,9 +2191,9 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 }
 `;
 
-  files["dealers/apply/apply.js"] = `// Lógica de la página Dealer Application:
-// muestra éxito/error según ?apply=success|error (apply.php redirige aquí)
-// y valida en el cliente antes de enviar.
+  files["dealers/apply/apply.js"] = `// Lógica de la página Dealer Application — versión FRONT-END ONLY.
+// Igual que contact.js: el éxito se muestra en el cliente y el envío real
+// del lead va en el punto marcado con TODO (conectar Formspree/endpoint).
 (function () {
 	var params = new URLSearchParams(window.location.search);
 	var status = params.get("apply");
@@ -1559,20 +2201,41 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 	var success = document.getElementById("apply-success");
 	var error = document.getElementById("apply-error");
 
-	if (status === "success" && success && form) {
-		success.classList.remove("hidden");
-		form.classList.add("hidden");
+	function showSuccess() {
+		if (error) error.classList.add("hidden");
+		if (form) form.classList.add("hidden");
+		if (success) {
+			success.classList.remove("hidden");
+			success.setAttribute("tabindex", "-1");
+			success.focus();
+			success.scrollIntoView({ behavior: "smooth", block: "center" });
+		}
+	}
+
+	if (status === "success") {
+		showSuccess();
 	} else if (status === "error" && error) {
 		error.classList.remove("hidden");
 	}
 
 	if (form) {
 		form.addEventListener("submit", function (event) {
+			event.preventDefault();
+
+			var honeypot = form.querySelector("#website");
+			if (honeypot && honeypot.value) { showSuccess(); return; }
+
 			if (!form.checkValidity()) {
-				event.preventDefault();
 				form.classList.add("was-validated");
 				if (error) error.classList.remove("hidden");
+				var firstInvalid = form.querySelector(":invalid");
+				if (firstInvalid) firstInvalid.focus();
+				return;
 			}
+
+			// TODO (entrega del lead): enviar a un endpoint real aquí, luego
+			// llamar a showSuccess() (ver ejemplo en contact/contact.js).
+			showSuccess();
 		});
 	}
 })();
@@ -1768,6 +2431,247 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 `;
 }
 
+// ---- Our Work (scroll-to-expand media hero, portado a vanilla) ----
+// Recreación del componente React "ScrollExpandMedia" con HTML/CSS/JS
+// planos: mientras no está expandido, el "scroll" (rueda/touch) no mueve la
+// página sino que agranda el video y separa el título; al llegar al 100% se
+// libera el scroll y aparece el contenido. El JS vive en
+// assets/js/scroll-expand.js y respeta prefers-reduced-motion.
+{
+  const prefix = "../";
+  const main = `
+<div class="sxm" data-scroll-expand>
+	<section class="sxm-stage">
+		<div class="sxm-bg" aria-hidden="true"></div>
+		<div class="sxm-container">
+			<div class="sxm-center">
+				<div class="sxm-media">
+					<video class="sxm-video" autoplay muted loop playsinline preload="auto" poster="${prefix}assets/images/hero/hero-placeholder.svg">
+						<source src="${prefix}assets/video/hero.mp4" type="video/mp4">
+					</video>
+					<div class="sxm-veil" aria-hidden="true"></div>
+					<div class="sxm-hint">
+						<p class="sxm-date">Arizona Steel · Built On-Site</p>
+						<p class="sxm-scroll">Scroll to expand</p>
+					</div>
+				</div>
+				<div class="sxm-title">
+					<h2 class="sxm-title-first">Built</h2>
+					<h2 class="sxm-title-rest">to Last</h2>
+				</div>
+			</div>
+
+			<section class="sxm-content">
+				<div class="mx-auto max-w-3xl text-center">
+					<p class="text-sm font-semibold uppercase tracking-wide eyebrow-red">Our Work</p>
+					<h2 class="mt-2 text-3xl font-bold tracking-tight text-dark sm:text-4xl">Craftsmanship you can see from the road</h2>
+					<p class="mt-5 text-lg text-gray-600">Every AZ Sunset structure is engineered for the Arizona climate and raised on your property by our own crews — from a single-car carport to a full commercial warehouse. Heavy-gauge steel, certified wind and snow ratings, and a ${site.warrantyYears}-year structural warranty on every build.</p>
+					<p class="mt-4 text-lg text-gray-600">Scroll through the video above to get a feel for the scale and finish of what we deliver, then tell us about your project and we'll send a free, no-obligation quote.</p>
+					<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+						<a href="${prefix}contact/contact.html" class="inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm">Get a Free Quote</a>
+						<a href="${prefix}index.html#our-products" class="inline-flex items-center justify-center rounded-md border border-primary px-8 py-3.5 text-base font-semibold text-primary transition hover:bg-primary hover:text-white">Explore Products</a>
+					</div>
+				</div>
+			</section>
+		</div>
+	</section>
+</div>
+`;
+  files["our-work/our-work.html"] = page({
+    title: `Our Work — ${site.name}`,
+    description: "An immersive look at the custom steel structures we design, build and install across Arizona.",
+    prefix,
+    main,
+    cssFile: "our-work.css",
+    extraScripts: `<script src="${prefix}assets/js/scroll-expand.js"></script>\n`,
+  });
+
+  files["our-work/our-work.css"] = `/* ===== Scroll-to-expand media hero (portado a vanilla desde el componente
+   React "ScrollExpandMedia"). El JS (assets/js/scroll-expand.js) sólo
+   actualiza tamaños y opacidades; toda la estructura vive en el HTML. ===== */
+.sxm { overflow-x: hidden; }
+.sxm-stage { position: relative; display: flex; flex-direction: column; align-items: center; min-height: 100dvh; }
+
+.sxm-bg {
+	position: absolute; inset: 0; z-index: 0;
+	background:
+		radial-gradient(120% 90% at 82% 0%, rgba(244, 169, 60, 0.38), rgba(244, 169, 60, 0) 55%),
+		linear-gradient(160deg, #1d2630 0%, #141a21 55%, #0f141a 100%);
+}
+.sxm-bg::after { content: ""; position: absolute; inset: 0; background: rgba(0, 0, 0, 0.12); }
+
+.sxm-container { position: relative; z-index: 10; width: 100%; max-width: 80rem; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+.sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
+
+.sxm-media {
+	position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+	z-index: 0; border-radius: 1rem; overflow: hidden;
+	width: min(1100px, 95vw); height: min(78vh, 680px); /* respaldo si el JS no corre */
+	max-width: 95vw; max-height: 85vh;
+	box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6);
+}
+.sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+.sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
+
+.sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
+.sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
+.sxm-scroll { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.02em; color: #c9cfd6; }
+.sxm.is-expanded .sxm-hint { opacity: 0; }
+
+.sxm-title { position: relative; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; width: 100%; text-align: center; }
+.sxm-title h2 { margin: 0; color: #fff; font-family: "Fraunces", Georgia, "Times New Roman", serif; font-weight: 600; line-height: 1.05; font-size: clamp(2.8rem, 8vw, 4.75rem); text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
+
+.sxm-content { width: 100%; padding: 3rem 2rem 5rem; opacity: 0; }
+
+/* El tamaño del media y el desplazamiento del título siguen el "scroll" sin
+   easing (instantáneo), igual que el original; el resto sí atenúa. */
+.sxm-media, .sxm-title h2, .sxm-date, .sxm-scroll { transition: none; }
+.sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
+.sxm-content { transition: opacity 0.7s ease; }
+
+/* Reducir movimiento: el JS deja el media expandido y el contenido visible;
+   acá garantizamos que el contenido se vea aunque el JS no corra. */
+@media (prefers-reduced-motion: reduce) {
+	.sxm-content { opacity: 1; }
+	.sxm-hint { display: none; }
+}
+`;
+
+  // Módulo vanilla (sin dependencias). Se auto-inicializa sobre
+  // [data-scroll-expand]; no construye DOM, sólo lo anima.
+  files["assets/js/scroll-expand.js"] = `// Scroll-to-expand media hero — puerto vanilla del componente React
+// "ScrollExpandMedia". Mientras no está expandido, intercepta rueda/touch
+// para agrandar el media y separar el título en lugar de desplazar la
+// página; al 100% libera el scroll y muestra el contenido. Respeta
+// prefers-reduced-motion (queda expandido y accesible, sin secuestrar el
+// scroll).
+(function () {
+	"use strict";
+
+	var root = document.querySelector("[data-scroll-expand]");
+	if (!root) return;
+
+	var bg = root.querySelector(".sxm-bg");
+	var media = root.querySelector(".sxm-media");
+	var veil = root.querySelector(".sxm-veil");
+	var isVideo = !!root.querySelector(".sxm-video");
+	var titleFirst = root.querySelector(".sxm-title-first");
+	var titleRest = root.querySelector(".sxm-title-rest");
+	var dateEl = root.querySelector(".sxm-date");
+	var scrollEl = root.querySelector(".sxm-scroll");
+	var content = root.querySelector(".sxm-content");
+
+	var progress = 0;
+	var expanded = false;
+	var touchStartY = 0;
+	var isMobile = window.innerWidth < 768;
+	var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+	function apply() {
+		var w = 300 + progress * (isMobile ? 650 : 1250);
+		var h = 400 + progress * (isMobile ? 200 : 400);
+		media.style.width = w + "px";
+		media.style.height = h + "px";
+		if (bg) bg.style.opacity = String(1 - progress);
+		if (veil) veil.style.opacity = String((isVideo ? 0.5 : 0.32) - progress * 0.3);
+		var t = progress * (isMobile ? 180 : 150);
+		if (titleFirst) titleFirst.style.transform = "translateX(-" + t + "vw)";
+		if (titleRest) titleRest.style.transform = "translateX(" + t + "vw)";
+		if (dateEl) dateEl.style.transform = "translateX(-" + t + "vw)";
+		if (scrollEl) scrollEl.style.transform = "translateX(" + t + "vw)";
+	}
+
+	function setContent(show) {
+		if (!content) return;
+		content.style.opacity = show ? "1" : "0";
+		content.style.pointerEvents = show ? "auto" : "none";
+		// Mientras está colapsado, el contenido queda fuera del orden de
+		// tabulación (inert) para no atrapar a usuarios de teclado.
+		content.inert = !show;
+	}
+
+	function expand() { expanded = true; root.classList.add("is-expanded"); setContent(true); }
+	function collapse() { expanded = false; root.classList.remove("is-expanded"); setContent(false); }
+
+	// Con "reducir movimiento": expandido de entrada, sin secuestrar scroll.
+	if (reduce) { progress = 1; apply(); expand(); return; }
+
+	apply();
+	setContent(false);
+
+	// Tween suave del progreso: en vez de secuestrar el scroll tick a tick
+	// (lo que hacía que se sintiera "pegado"), UN gesto hacia abajo expande el
+	// hero en una animación corta y LUEGO libera el scroll normal de la página.
+	var animating = false;
+	function tweenTo(target, dur, done) {
+		animating = true;
+		var start = progress;
+		var t0 = (window.performance && performance.now) ? performance.now() : Date.now();
+		function step() {
+			var now = (window.performance && performance.now) ? performance.now() : Date.now();
+			var k = Math.min(1, (now - t0) / dur);
+			var e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2; // easeInOutQuad
+			progress = start + (target - start) * e;
+			apply();
+			try { if (window.AZSound) window.AZSound.heroProgress(progress); } catch (err) {}
+			if (k < 1) { requestAnimationFrame(step); }
+			else { progress = target; apply(); animating = false; if (done) done(); }
+		}
+		requestAnimationFrame(step);
+	}
+	function doExpand() { if (!expanded && !animating) tweenTo(1, 650, expand); }
+	function doCollapse() { if (expanded && !animating) tweenTo(0, 480, collapse); }
+
+	function onWheel(e) {
+		if (!expanded) {
+			// Antes de expandir: cualquier scroll hacia abajo dispara la
+			// animación (y bloqueamos el scroll SÓLO durante esa animación).
+			if (e.deltaY > 0 || animating) e.preventDefault();
+			if (e.deltaY > 0) doExpand();
+		} else if (e.deltaY < 0 && window.scrollY <= 0 && !animating) {
+			// Ya expandido y arriba del todo: subir colapsa (efecto reversible).
+			e.preventDefault();
+			doCollapse();
+		}
+	}
+
+	function onTouchStart(e) { touchStartY = e.touches[0].clientY; }
+	function onTouchMove(e) {
+		if (!touchStartY) return;
+		var d = touchStartY - e.touches[0].clientY; // >0 = intención de bajar
+		if (!expanded) {
+			if (d > 8 || animating) e.preventDefault();
+			if (d > 8) doExpand();
+		} else if (d < -8 && window.scrollY <= 0 && !animating) {
+			e.preventDefault();
+			doCollapse();
+		}
+	}
+	function onTouchEnd() { touchStartY = 0; }
+
+	// Accesibilidad: operable con teclado. Abajo/Re Pág/Espacio/Fin expanden;
+	// Arriba/Av Pág/Inicio (estando arriba del todo) colapsan.
+	function onKey(e) {
+		var k = e.key;
+		if (!expanded && (k === "ArrowDown" || k === "PageDown" || k === " " || k === "Spacebar" || k === "End")) {
+			e.preventDefault();
+			doExpand();
+		} else if (expanded && (k === "ArrowUp" || k === "PageUp" || k === "Home") && window.scrollY <= 0 && !animating) {
+			e.preventDefault();
+			doCollapse();
+		}
+	}
+
+	window.addEventListener("resize", function () { isMobile = window.innerWidth < 768; apply(); });
+	window.addEventListener("wheel", onWheel, { passive: false });
+	window.addEventListener("keydown", onKey);
+	window.addEventListener("touchstart", onTouchStart, { passive: false });
+	window.addEventListener("touchmove", onTouchMove, { passive: false });
+	window.addEventListener("touchend", onTouchEnd);
+})();
+`;
+}
+
 // ---- 404 ----
 {
   const prefix = "../";
@@ -1811,7 +2715,9 @@ sitio-html/
     css/site.css              Estilos propios compartidos (mega-menú del header)
     js/main.js                Menú móvil (todas las páginas)
     js/motion.js              Animaciones de scroll (solo portada)
-    js/shader-hero.js         Fondo animado WebGL del hero (solo portada)
+    video/hero.mp4            Video de fondo del hero (solo portada;
+                              con autoplay silencioso, respeta
+                              "reducir movimiento" del sistema)
     images/logo/              Logo real: logo.png (original) y
                               logo-header.png (versión liviana usada en
                               header, footer, portal y favicon)
@@ -1865,11 +2771,17 @@ responde "credenciales inválidas". El backend real va ahí.
 ## Cómo editar
 
 - **Textos**: directamente en el \`.html\` de cada carpeta.
-- **Colores de marca**: la paleta AZ Sunset vive en el bloque \`:root\`
-  de \`assets/css/site.css\` (oscuros #121212 / #2A2F35 / #5E666E /
-  #B8BEC4, dorado #D89A1F, sol #F4B400, naranja #D66C1D, rojo #98291E,
-  claro #F5F5F5) y pisa los valores por defecto de \`main.css\`.
+- **Colores de marca**: la paleta AZ Sunset (tema CLARO "Steel & Sunset")
+  vive en el bloque \`:root\` de \`assets/css/site.css\` — acero #141A21 /
+  #232B33 / #3A4650, atardecer #C2410C como acento/CTA (contraste AA sobre
+  blanco) con hover #A5370C, ámbar #F4A93C para brillos y estrellas, rojo
+  #98291E para errores — y pisa los valores por defecto de \`main.css\`.
   Cambiá ahí cualquier color.
+- **Formulario de cotización**: hoy funciona *solo en el front-end*
+  (\`contact/contact.js\`): valida y muestra el mensaje de éxito en el
+  navegador sin backend. Para recibir los leads por correo, conectá un
+  servicio de formularios (Formspree/Web3Forms/endpoint propio) en el
+  punto marcado con \`TODO\` dentro de \`contact.js\` (y \`apply.js\`).
 - **Estilos de una sola página**: en el \`.css\` de su carpeta.
 - **Imágenes**: reemplazá los SVG placeholder en \`assets/images/\`
   manteniendo el mismo nombre de archivo.
@@ -1882,18 +2794,320 @@ que no existan ya en ese archivo, agregá la regla equivalente en el
 \`.css\` de la página.
 `;
 
-// Placeholders SVG con la paleta de marca (fondos negros, líneas doradas).
-function placeholderSvg(label, w, h, bg) {
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-  <rect width="100%" height="100%" fill="${bg}"/>
-  <g fill="none" stroke="#d89a1f" stroke-width="2" opacity="0.35">
-    <line x1="0" y1="0" x2="${w}" y2="${h}"/>
-    <line x1="${w}" y1="0" x2="0" y2="${h}"/>
+// Placeholders SVG en estilo "blueprint" claro, acordes al tema Steel &
+// Sunset: fondo gris muy claro con una grilla técnica sutil, la silueta de
+// una nave/edificio en acero y un "sol" ámbar de atardecer. Reemplazá estos
+// archivos por fotos reales manteniendo el mismo nombre. (El 4º argumento
+// de color ya no se usa; se conserva por compatibilidad con las llamadas.)
+function placeholderSvg(label, w, h) {
+  // Avatares de testimonios (sin etiqueta): silueta neutra sobre acero claro.
+  if (!label) {
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="Avatar">
+  <rect width="100%" height="100%" fill="#1c1c1c"/>
+  <circle cx="${w / 2}" cy="${h * 0.4}" r="${w * 0.16}" fill="#4a4a4a"/>
+  <path d="M${w * 0.2} ${h * 0.95} a${w * 0.3} ${w * 0.3} 0 0 1 ${w * 0.6} 0 Z" fill="#4a4a4a"/>
+</svg>
+`;
+  }
+  const cx = w / 2;
+  // NOTA: las animaciones (CSS @keyframes + SMIL en el patrón) SÍ corren aunque
+  // el SVG se cargue con <img>, lo que da vida a las tarjetas de producto: sol
+  // que late y sube, grilla que deriva y base naranja que respira.
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1e1e1e"/>
+      <stop offset="1" stop-color="#101010"/>
+    </linearGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#2e2e2e" stroke-width="1" opacity="0.7"/>
+      <animateTransform attributeName="patternTransform" type="translate" from="0 0" to="40 40" dur="14s" repeatCount="indefinite"/>
+    </pattern>
+    <style>
+      .sun, .halo { transform-box: fill-box; transform-origin: center; }
+      .sun { animation: sunBob 6s ease-in-out infinite; }
+      .halo { animation: sunHalo 4.5s ease-in-out infinite; }
+      .base { transform-box: fill-box; transform-origin: center; animation: baseGlow 3.6s ease-in-out infinite; }
+      .frame { animation: frameGlow 6s ease-in-out infinite; }
+      @keyframes sunBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+      @keyframes sunHalo { 0% { transform: scale(1); opacity: .32; } 70% { opacity: 0; } 100% { transform: scale(1.55); opacity: 0; } }
+      @keyframes baseGlow { 0%, 100% { opacity: 1; transform: scaleX(1); } 50% { opacity: .6; transform: scaleX(.97); } }
+      @keyframes frameGlow { 0%, 100% { opacity: .88; } 50% { opacity: 1; } }
+      @media (prefers-reduced-motion: reduce) { .sun, .halo, .base, .frame { animation: none; } }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)"/>
+  <rect width="100%" height="100%" fill="url(#grid)"/>
+  <g class="sun">
+    <circle class="halo" cx="${cx}" cy="${h * 0.3}" r="${h * 0.055}" fill="#f9b24a" opacity="0.4"/>
+    <circle cx="${cx}" cy="${h * 0.3}" r="${h * 0.055}" fill="#f9b24a"/>
   </g>
-  <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Arial, sans-serif" font-size="28" fill="#ffffff" opacity="0.85">${label}</text>
+  <g class="frame" fill="none" stroke="#7a7a7a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+    <path d="M${w * 0.26} ${h * 0.66} V${h * 0.44} L${cx} ${h * 0.32} L${w * 0.74} ${h * 0.44} V${h * 0.66}"/>
+    <path d="M${w * 0.26} ${h * 0.66} H${w * 0.74}"/>
+    <path d="M${w * 0.44} ${h * 0.66} V${h * 0.54} H${w * 0.56} V${h * 0.66}"/>
+  </g>
+  <rect class="base" x="${w * 0.24}" y="${h * 0.68}" width="${w * 0.52}" height="3" fill="#f26a21"/>
+  <text x="50%" y="84%" dominant-baseline="middle" text-anchor="middle" font-family="'Segoe UI', Arial, sans-serif" font-size="${Math.round(w / 24)}" font-weight="700" fill="#c6c6c6" opacity="0.95">${label}</text>
 </svg>
 `;
 }
+// Escena principal del hero (reemplaza el video): atardecer de Arizona con
+// siluetas de estructuras de acero (taller/garaje, cochera y granero) — hecha
+// a mano en SVG para que sea nítida, ligera y 100% on-brand (negro + naranja).
+function heroSceneSvg() {
+  let rays = "";
+  for (let i = 0; i < 15; i++) {
+    const ang = -84 + i * 12;
+    const op = i % 2 === 0 ? 0.1 : 0.05;
+    rays += `<polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="${op}" transform="rotate(${ang} 800 565)"/>`;
+  }
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Custom steel garages, carports and barns silhouetted against an Arizona sunset">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#120b20"/>
+      <stop offset="0.34" stop-color="#3d183a"/>
+      <stop offset="0.52" stop-color="#7c2a25"/>
+      <stop offset="0.62" stop-color="#c94a1c"/>
+      <stop offset="0.70" stop-color="#f39238"/>
+      <stop offset="0.82" stop-color="#f9b24a"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ffe9bf"/>
+      <stop offset="0.45" stop-color="#ffbe57"/>
+      <stop offset="1" stop-color="#ffb44e" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b1017"/>
+      <stop offset="1" stop-color="#070406"/>
+    </linearGradient>
+    <radialGradient id="vig" cx="0.5" cy="0.42" r="0.78">
+      <stop offset="0.55" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.55"/>
+    </radialGradient>
+    <linearGradient id="fade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0d0d0d" stop-opacity="0"/>
+      <stop offset="1" stop-color="#0d0d0d"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sky)"/>
+  <g>${rays}</g>
+  <circle cx="800" cy="565" r="360" fill="url(#sun)"/>
+  <circle cx="800" cy="565" r="90" fill="#ffd587"/>
+
+  <g stroke="#3a1c14" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.7">
+    <path d="M1120 300 q12 -10 24 0 q12 -10 24 0"/>
+    <path d="M1182 332 q9 -8 18 0 q9 -8 18 0"/>
+    <path d="M1090 344 q8 -7 16 0 q8 -7 16 0"/>
+  </g>
+
+  <path d="M0 648 L180 612 L340 636 L520 596 L700 632 L900 604 L1090 638 L1280 606 L1460 634 L1600 616 L1600 706 L0 706 Z" fill="#5f2331" opacity="0.85"/>
+  <path d="M0 672 L220 640 L430 668 L640 634 L860 666 L1080 642 L1300 670 L1520 648 L1600 660 L1600 720 L0 720 Z" fill="#39121f"/>
+  <rect x="0" y="640" width="1600" height="10" fill="#ffca73" opacity="0.22"/>
+  <rect x="0" y="700" width="1600" height="300" fill="url(#ground)"/>
+
+  <!-- sombras de contacto -->
+  <ellipse cx="465" cy="814" rx="150" ry="16" fill="#050303" opacity="0.7"/>
+  <ellipse cx="800" cy="802" rx="175" ry="18" fill="#050303" opacity="0.7"/>
+  <ellipse cx="1150" cy="814" rx="165" ry="16" fill="#050303" opacity="0.7"/>
+
+  <!-- cactus izquierdo -->
+  <g stroke="#080707" stroke-width="24" fill="none" stroke-linecap="round">
+    <path d="M210 762 V486"/>
+    <path d="M210 628 C178 628 170 616 170 588 V560"/>
+    <path d="M210 600 C244 600 252 588 252 562 V532"/>
+  </g>
+  <!-- cactus derecho -->
+  <g stroke="#080707" stroke-width="22" fill="none" stroke-linecap="round">
+    <path d="M1392 770 V520"/>
+    <path d="M1392 648 C1362 648 1355 636 1355 612 V586"/>
+  </g>
+
+  <!-- cochera / carport (izquierda) -->
+  <g fill="#0b0b0b">
+    <rect x="342" y="700" width="14" height="112"/>
+    <rect x="586" y="700" width="14" height="112"/>
+    <rect x="470" y="672" width="10" height="140" opacity="0.7"/>
+    <polygon points="330,700 465,656 600,700 600,714 465,672 330,714"/>
+    <rect x="384" y="756" width="176" height="56" rx="10" fill="#111111"/>
+    <rect x="384" y="748" width="52" height="20" rx="6" fill="#111111"/>
+  </g>
+  <path d="M330 700 L465 656 L600 700" fill="none" stroke="#f26a21" stroke-width="4" stroke-linejoin="round" opacity="0.8"/>
+
+  <!-- taller / garaje (centro) -->
+  <polygon points="655,800 655,655 800,580 945,655 945,800" fill="#0b0b0b"/>
+  <path d="M655 655 L800 580 L945 655" fill="none" stroke="#f26a21" stroke-width="5" stroke-linejoin="round" opacity="0.9"/>
+  <path d="M655 655 V800" stroke="#f26a21" stroke-width="3" opacity="0.35"/>
+  <rect x="676" y="676" width="118" height="124" fill="#161616"/>
+  <rect x="806" y="676" width="118" height="124" fill="#161616"/>
+  <g stroke="#242424" stroke-width="2">
+    <path d="M676 708 H794 M676 740 H794 M676 772 H794"/>
+    <path d="M806 708 H924 M806 740 H924 M806 772 H924"/>
+  </g>
+  <rect x="676" y="794" width="248" height="6" fill="#f26a21" opacity="0.75"/>
+
+  <!-- granero (derecha) -->
+  <polygon points="1010,812 1010,672 1150,596 1290,672 1290,812" fill="#0b0b0b"/>
+  <rect x="1136" y="576" width="28" height="24" fill="#0b0b0b"/>
+  <polygon points="1130,576 1150,560 1170,576" fill="#0b0b0b"/>
+  <path d="M1010 672 L1150 596 L1290 672" fill="none" stroke="#f26a21" stroke-width="5" stroke-linejoin="round" opacity="0.85"/>
+  <path d="M1130 576 L1150 560 L1170 576" fill="none" stroke="#f26a21" stroke-width="3" opacity="0.7"/>
+  <rect x="1119" y="700" width="62" height="112" fill="#161616"/>
+  <rect x="1119" y="806" width="62" height="6" fill="#f26a21" opacity="0.7"/>
+
+  <rect width="1600" height="1000" fill="url(#vig)"/>
+  <rect x="0" y="720" width="1600" height="280" fill="url(#fade)"/>
+</svg>
+`;
+}
+files["assets/images/hero/hero-scene.svg"] = heroSceneSvg();
+
+// Sonido de interfaz (clic + hover) sintetizado con Web Audio API — sin
+// archivos de audio que descargar. Estilo "UI moderno": tonos cortos, limpios
+// y discretos. Incluye botón flotante de silencio que recuerda la preferencia.
+files["assets/js/sound.js"] = `// Sonido de interfaz para AZ Sunset — sintetizado con la Web Audio API (sin
+// assets de audio). Todo cálido y suave, SIN campanas ni audio de fondo:
+//   1) UI: clic (gota de madera grave). Sólo en el clic.
+//   2) Hero: al hacer scroll en el video, una ráfaga de viento CÁLIDA que
+//      crece con el scroll.
+// Los navegadores bloquean el audio hasta el primer gesto del usuario, por eso
+// el AudioContext se crea/reanuda en el primer pointerdown/tecla/touch. Todo
+// pasa por un "master" que el botón de silencio baja a 0.
+(function () {
+  "use strict";
+
+  var STORAGE = "azsnd-muted-v2";
+  var muted = false;
+  try { muted = localStorage.getItem(STORAGE) === "1"; } catch (e) {}
+
+  var ctx = null, master = null, noiseBuf = null;
+  var heroWind = null, heroResolved = false;
+
+  function ensureCtx() {
+    if (!ctx) {
+      var AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      master = ctx.createGain();
+      master.gain.value = muted ? 0 : 1;
+      master.connect(ctx.destination);
+    }
+    if (ctx.state === "suspended") ctx.resume();
+    return ctx;
+  }
+
+  // Ruido marrón (integrado) en un buffer reutilizable: base del viento.
+  function makeNoise() {
+    if (noiseBuf || !ctx) return noiseBuf;
+    var len = Math.floor(ctx.sampleRate * 3);
+    noiseBuf = ctx.createBuffer(1, len, ctx.sampleRate);
+    var d = noiseBuf.getChannelData(0), last = 0;
+    for (var i = 0; i < len; i++) {
+      var white = Math.random() * 2 - 1;
+      last = (last + 0.02 * white) / 1.02;
+      d[i] = last * 3.2;
+    }
+    return noiseBuf;
+  }
+
+  // Tono corto y suave (UI). f0/f1: barrido; dur en s; vol pico.
+  function blip(f0, f1, dur, vol, type) {
+    var c = ensureCtx(); if (!c) return;
+    var t = c.currentTime;
+    var osc = c.createOscillator(), gain = c.createGain(), lp = c.createBiquadFilter();
+    lp.type = "lowpass"; lp.frequency.value = 2400;
+    osc.type = type || "sine";
+    osc.frequency.setValueAtTime(f0, t);
+    osc.frequency.exponentialRampToValueAtTime(Math.max(f1, 1), t + dur);
+    gain.gain.setValueAtTime(0.0001, t);
+    gain.gain.exponentialRampToValueAtTime(vol, t + 0.02);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    osc.connect(lp); lp.connect(gain); gain.connect(master);
+    osc.start(t); osc.stop(t + dur + 0.05);
+  }
+
+  // Sonido de interfaz (cálido pero audible, sin campanas). Sólo en el clic.
+  function playClick() { blip(440, 250, 0.16, 0.30, "triangle"); }
+
+  // ---- Sonido del hero al hacer scroll (lo llama scroll-expand.js) ----
+  // Sólo una ráfaga de viento cálida que crece con el scroll. Sin notas.
+  function heroProgress(p) {
+    var c = ensureCtx(); if (!c) return;
+    if (!heroWind && p > 0.01 && !muted) {
+      makeNoise();
+      var src = c.createBufferSource(); src.buffer = noiseBuf; src.loop = true;
+      var lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 600; // cálido, sin silbido
+      var g = c.createGain(); g.gain.value = 0.0001;
+      src.connect(lp); lp.connect(g); g.connect(master);
+      src.start();
+      heroWind = { src: src, gain: g };
+    }
+    if (heroWind) {
+      var target = muted ? 0.0001 : Math.max(0.0001, p * 0.14); // crece con el scroll
+      heroWind.gain.setTargetAtTime(target, c.currentTime, 0.15);
+    }
+    if (p >= 0.999 && !heroResolved) {
+      heroResolved = true; // al expandir: leve soplo cálido y luego se asienta
+      if (heroWind) {
+        heroWind.gain.setTargetAtTime(0.18, c.currentTime, 0.12);
+        heroWind.gain.setTargetAtTime(0.03, c.currentTime + 0.5, 0.9);
+      }
+    }
+    if (p < 0.9) heroResolved = false;
+  }
+  window.AZSound = { heroProgress: heroProgress };
+
+  // Primer gesto: desbloquea el audio y arranca el viento de fondo.
+  function unlock() { ensureCtx(); }
+  window.addEventListener("wheel", function () { unlock(); }, { passive: true, once: true });
+
+  // Dónde suena la UI: SÓLO clic en accionables (el hover ya no suena, para que
+  // el audio "susurre" en vez de saturar).
+  var CLICK_SEL = "a, button, [role=button], input[type=submit], summary";
+
+  document.addEventListener("pointerdown", function (e) {
+    unlock();
+    if (e.target.closest && e.target.closest(CLICK_SEL)) playClick();
+  }, { passive: true });
+
+  document.addEventListener("keydown", function (e) {
+    unlock();
+    if ((e.key === "Enter" || e.key === " ") && document.activeElement &&
+        document.activeElement.closest && document.activeElement.closest(CLICK_SEL)) {
+      playClick();
+    }
+  });
+
+  // ---- Botón flotante de silencio ----
+  function icon(on) {
+    return on
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 8.5a5 5 0 0 1 0 7"/><path d="M18.7 6a8 8 0 0 1 0 12"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>';
+  }
+  var btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "snd-toggle";
+  function sync() {
+    btn.innerHTML = icon(!muted);
+    btn.setAttribute("aria-label", muted ? "Activar sonido de la interfaz" : "Silenciar sonido de la interfaz");
+    btn.setAttribute("aria-pressed", String(muted));
+    btn.classList.toggle("is-muted", muted);
+  }
+  btn.addEventListener("click", function () {
+    muted = !muted;
+    try { localStorage.setItem(STORAGE, muted ? "1" : "0"); } catch (e) {}
+    sync();
+    var c = ensureCtx();
+    if (c && master) master.gain.setTargetAtTime(muted ? 0 : 1, c.currentTime, 0.08);
+    if (!muted) playClick();
+  });
+  sync();
+  if (document.body) document.body.appendChild(btn);
+  else document.addEventListener("DOMContentLoaded", function () { document.body.appendChild(btn); });
+})();
+`;
+
 for (const p of products) {
   files[`assets/images/products/${p.slug}/card-placeholder.svg`] = placeholderSvg(p.title, 800, 600, "#2a2f35");
   files[`assets/images/products/${p.slug}/hero-placeholder.svg`] = placeholderSvg(p.title, 1600, 700, "#121212");
