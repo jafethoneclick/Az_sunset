@@ -503,13 +503,18 @@ function footer(prefix) {
   const footProducts = products
     .map(
       (p) =>
-        `\t\t\t\t\t<li><a href="${productHref(prefix, p)}" class="hover:text-white">${p.title}</a></li>`
+        `\t\t\t\t\t<li><a href="${productHref(prefix, p)}" class="footer-link hover:text-white">${p.title}</a></li>`
     )
     .join("\n");
 
-  return `<footer class="mt-auto bg-dark text-gray-300">
+  const icFb = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.557-.14-2.857-.14C11.928 2 10 3.657 10 6.7v2.8H7v4h3V22h4v-8.5z"/></svg>`;
+  const icIg = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2c2.717 0 3.056.01 4.122.06 1.065.05 1.79.217 2.428.465.66.254 1.216.598 1.772 1.153a4.9 4.9 0 0 1 1.153 1.772c.247.637.415 1.363.465 2.428.047 1.066.06 1.405.06 4.122 0 2.717-.01 3.056-.06 4.122-.05 1.065-.218 1.79-.465 2.428a4.88 4.88 0 0 1-1.153 1.772 4.9 4.9 0 0 1-1.772 1.153c-.637.247-1.363.415-2.428.465-1.066.047-1.405.06-4.122.06-2.717 0-3.056-.01-4.122-.06-1.065-.05-1.79-.218-2.428-.465a4.89 4.89 0 0 1-1.772-1.153 4.9 4.9 0 0 1-1.153-1.772c-.248-.637-.415-1.363-.465-2.428C2.013 15.056 2 14.717 2 12c0-2.717.01-3.056.06-4.122.05-1.066.217-1.79.465-2.428a4.9 4.9 0 0 1 1.153-1.772A4.9 4.9 0 0 1 5.45 2.525c.638-.248 1.363-.415 2.428-.465C8.944 2.013 9.283 2 12 2zm0 5a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm6.5-.25a1.25 1.25 0 1 0-2.5 0 1.25 1.25 0 0 0 2.5 0zM12 9a3 3 0 1 1 0 6 3 3 0 0 1 0-6z"/></svg>`;
+  const icLi = `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 5a2 2 0 1 1-4-.002 2 2 0 0 1 4 .002zM7 8.48H3V21h4V8.48zm6.32 0H9.34V21h3.94v-6.57c0-3.66 4.77-4 4.77 0V21H22v-7.93c0-6.17-7.06-5.94-8.72-2.91l.04-1.68z"/></svg>`;
+
+  return `<footer class="site-footer mt-auto bg-dark text-gray-300">
+	<span class="footer-hairline" aria-hidden="true"></span>
 	<div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-10 px-4 py-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
-		<div>
+		<div class="footer-col" data-footer-reveal>
 			<img src="${prefix}assets/images/logo/logo-header.png" alt="" class="footer-logo">
 			<p class="mt-4 text-lg font-bold text-white">${site.name}</p>
 			<p class="mt-3 text-sm text-gray-400">${site.shortTagline}</p>
@@ -518,40 +523,40 @@ function footer(prefix) {
 				<p><span class="text-gray-400">Saturday:</span> ${site.hoursSaturday}</p>
 				<p><span class="text-gray-400">Sunday:</span> ${site.hoursSunday}</p>
 			</div>
-			<div class="mt-4 flex gap-4">
-				<a href="${site.facebook}" class="text-gray-400 hover:text-white">Facebook</a>
-				<a href="${site.instagram}" class="text-gray-400 hover:text-white">Instagram</a>
-				<a href="${site.linkedin}" class="text-gray-400 hover:text-white">LinkedIn</a>
+			<div class="mt-5 flex gap-3">
+				<a href="${site.facebook}" class="footer-social" aria-label="Facebook">${icFb}</a>
+				<a href="${site.instagram}" class="footer-social" aria-label="Instagram">${icIg}</a>
+				<a href="${site.linkedin}" class="footer-social" aria-label="LinkedIn">${icLi}</a>
 			</div>
 		</div>
 
-		<div>
-			<p class="text-sm font-semibold uppercase tracking-wide text-white">Products</p>
+		<div class="footer-col" data-footer-reveal>
+			<p class="footer-col-title text-sm font-semibold uppercase tracking-wide text-white">Products</p>
 			<ul class="mt-4 space-y-2 text-sm">
 ${footProducts}
 			</ul>
 		</div>
 
-		<div>
-			<p class="text-sm font-semibold uppercase tracking-wide text-white">Quick Links</p>
+		<div class="footer-col" data-footer-reveal>
+			<p class="footer-col-title text-sm font-semibold uppercase tracking-wide text-white">Quick Links</p>
 			<ul class="mt-4 space-y-2 text-sm">
-				<li><a href="${prefix}our-work/our-work.html" class="hover:text-white">Our Work</a></li>
-				<li><a href="${prefix}financing/financing.html" class="hover:text-white">Financing</a></li>
-				<li><a href="${prefix}faqs/faqs.html" class="hover:text-white">FAQs</a></li>
-				<li><a href="${prefix}about/about.html" class="hover:text-white">About Us</a></li>
-				<li><a href="${prefix}contact/contact.html" class="hover:text-white">Contact</a></li>
+				<li><a href="${prefix}our-work/our-work.html" class="footer-link hover:text-white">Our Work</a></li>
+				<li><a href="${prefix}financing/financing.html" class="footer-link hover:text-white">Financing</a></li>
+				<li><a href="${prefix}faqs/faqs.html" class="footer-link hover:text-white">FAQs</a></li>
+				<li><a href="${prefix}about/about.html" class="footer-link hover:text-white">About Us</a></li>
+				<li><a href="${prefix}contact/contact.html" class="footer-link hover:text-white">Contact</a></li>
 			</ul>
 		</div>
 
-		<div>
-			<p class="text-sm font-semibold uppercase tracking-wide text-white">Company</p>
+		<div class="footer-col" data-footer-reveal>
+			<p class="footer-col-title text-sm font-semibold uppercase tracking-wide text-white">Company</p>
 			<ul class="mt-4 space-y-2 text-sm">
-				<li><a href="${prefix}contact/contact.html" class="hover:text-white">Get a Quote</a></li>
-				<li><a href="${prefix}terms/terms.html" class="hover:text-white">Terms &amp; Conditions</a></li>
-				<li><a href="${prefix}privacy/privacy.html" class="hover:text-white">Privacy Policy</a></li>
+				<li><a href="${prefix}contact/contact.html" class="footer-link hover:text-white">Get a Quote</a></li>
+				<li><a href="${prefix}terms/terms.html" class="footer-link hover:text-white">Terms &amp; Conditions</a></li>
+				<li><a href="${prefix}privacy/privacy.html" class="footer-link hover:text-white">Privacy Policy</a></li>
 			</ul>
-			<p class="mt-6 text-sm"><a href="tel:${site.phoneHref}" class="hover:text-white">${site.phone}</a></p>
-			<p class="text-sm"><a href="mailto:${site.email}" class="hover:text-white">${site.email}</a></p>
+			<p class="mt-6 text-sm"><a href="tel:${site.phoneHref}" class="footer-link hover:text-white">${site.phone}</a></p>
+			<p class="text-sm"><a href="mailto:${site.email}" class="footer-link hover:text-white">${site.email}</a></p>
 		</div>
 	</div>
 
@@ -892,6 +897,44 @@ header a.bg-accent:hover::before { left: 140%; }
 .cta-quote:hover { box-shadow: 0 12px 28px -8px rgba(242, 106, 33, .78); }
 .cta-quote:hover .cta-arrow { transform: translateX(3px); }
 
+/* ===== Visor 3D del garaje (Three.js) ===== */
+.g3d-stage {
+	position: relative;
+	width: 100%;
+	height: 380px;
+	border-radius: 1.25rem;
+	overflow: hidden;
+	background: radial-gradient(120% 100% at 50% 0%, #2a1d12 0%, #141414 55%, #0d0d0d 100%);
+	border: 1px solid rgba(242, 106, 33, .2);
+	box-shadow: inset 0 0 60px rgba(0, 0, 0, .5);
+	cursor: grab;
+	touch-action: pan-y;
+}
+.g3d-stage:active { cursor: grabbing; }
+.g3d-stage canvas { display: block; }
+@media (min-width: 768px) { .g3d-stage { height: 520px; } }
+.g3d-hint {
+	position: absolute;
+	bottom: .85rem; left: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
+	pointer-events: none;
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+	padding: .4rem .85rem;
+	border-radius: 9999px;
+	background: rgba(0, 0, 0, .45);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	border: 1px solid rgba(255, 255, 255, .1);
+	font-size: .72rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	color: #cfcfcf;
+}
+.g3d-hint-ic { color: var(--color-accent); font-size: .95rem; }
+
 /* Tarjetas de producto (Top Picks / grilla): flotación continua (arriba/abajo
    + lateral) para que se vean dinámicas en reposo, un "brillo" que barre cada
    tarjeta, y la inclinación 3D + foco que siguen al cursor. La flotación usa la
@@ -1174,6 +1217,292 @@ textarea:focus-visible, summary:focus-visible {
 	height: 4.5rem;
 	width: auto;
 	border-radius: 0.375rem;
+	animation: footerFloat 6s ease-in-out infinite;
+}
+@keyframes footerFloat {
+	0%, 100% { transform: translateY(0); }
+	50%      { transform: translateY(-6px); }
+}
+
+/* ============ PIE DE PÁGINA DINÁMICO ============
+   Aurora de atardecer que "respira", hairline naranja que recorre el borde,
+   columnas que entran al hacer scroll, enlaces con marcador deslizante y
+   redes sociales como píldoras que se elevan. */
+.site-footer {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+/* Resplandor de atardecer que sube desde el borde superior y late suave. */
+.site-footer::before {
+	content: "";
+	position: absolute;
+	top: -160px;
+	left: 50%;
+	width: 130%;
+	height: 340px;
+	transform: translateX(-50%);
+	background: radial-gradient(60% 100% at 50% 100%,
+		rgba(242, 106, 33, 0.22), rgba(242, 106, 33, 0.06) 45%, transparent 72%);
+	pointer-events: none;
+	z-index: -1;
+	animation: footerAurora 9s ease-in-out infinite;
+}
+@keyframes footerAurora {
+	0%, 100% { opacity: 0.5;  transform: translateX(-50%) scale(1); }
+	50%      { opacity: 1;    transform: translateX(-50%) scale(1.08); }
+}
+/* Filamento naranja que barre el borde superior del pie. */
+.footer-hairline {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(242, 106, 33, 0.95), transparent);
+	background-size: 45% 100%;
+	background-repeat: no-repeat;
+	animation: footerSweep 6s linear infinite;
+}
+@keyframes footerSweep {
+	0%   { background-position: -45% 0; }
+	100% { background-position: 145% 0; }
+}
+
+/* Entrada de columnas al hacer scroll (main.js pone .is-in). */
+.footer-col {
+	opacity: 0;
+	transform: translateY(26px);
+	transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.footer-col.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* Título de columna con barra de acento que crece al pasar el mouse. */
+.footer-col-title {
+	position: relative;
+	display: inline-block;
+}
+.footer-col-title::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -6px;
+	height: 2px;
+	width: 0;
+	background: var(--color-accent);
+	transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.footer-col:hover .footer-col-title::after {
+	width: 100%;
+}
+
+/* Enlaces del pie: aparece un marcador naranja y el texto se desliza. */
+.footer-link {
+	position: relative;
+	display: inline-block;
+	transition: color 0.25s ease, transform 0.25s ease, padding-left 0.25s ease;
+}
+.footer-link::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 1.5px;
+	background: var(--color-accent);
+	transform: translateY(-50%);
+	transition: width 0.25s ease;
+}
+.footer-link:hover {
+	color: #fff;
+	transform: translateX(2px);
+	padding-left: 18px;
+}
+.footer-link:hover::before {
+	width: 12px;
+}
+
+/* Redes sociales como píldoras circulares que se elevan. */
+.footer-social {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 9999px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	color: #c6c6c6;
+	transition: transform 0.25s ease, background-color 0.25s ease,
+		border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.footer-social svg {
+	width: 18px;
+	height: 18px;
+}
+.footer-social:hover {
+	transform: translateY(-3px);
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	color: #fff;
+	box-shadow: 0 12px 24px -8px rgba(242, 106, 33, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.footer-logo,
+	.site-footer::before,
+	.footer-hairline {
+		animation: none;
+	}
+	.footer-col {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+/* ============ REVELADO GENÉRICO AL HACER SCROLL ============
+   Para páginas internas (sin GSAP). main.js añade .is-in cuando el elemento
+   entra en pantalla; el escalonado (transition-delay) también lo pone main.js
+   según la posición entre hermanos. */
+.reveal-rise {
+	opacity: 0;
+	transform: translateY(28px);
+	transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+	will-change: transform, opacity;
+}
+.reveal-rise.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* ============ PÁGINA DE PRODUCTO DINÁMICA ============ */
+/* Hero: la foto de fondo hace un "Ken Burns" lento + un resplandor de marca. */
+.product-hero-img {
+	animation: kenBurns 20s ease-in-out infinite alternate;
+	transform-origin: center;
+}
+@keyframes kenBurns {
+	from { transform: scale(1); }
+	to   { transform: scale(1.12) translateY(-1.5%); }
+}
+.product-hero-glow {
+	position: absolute;
+	top: -20%;
+	right: -10%;
+	width: 55%;
+	height: 140%;
+	background: radial-gradient(45% 50% at 50% 50%,
+		rgba(242, 106, 33, 0.28), transparent 70%);
+	pointer-events: none;
+	animation: heroGlowDrift 12s ease-in-out infinite;
+}
+@keyframes heroGlowDrift {
+	0%, 100% { opacity: 0.55; transform: translate(0, 0); }
+	50%      { opacity: 1;    transform: translate(-6%, 4%); }
+}
+
+/* Lista de características: cada ítem se desliza y el check "salta" al hover. */
+.feature-item {
+	transition: transform 0.25s ease, color 0.25s ease;
+}
+.feature-item:hover {
+	transform: translateX(5px);
+	color: #111827;
+}
+.feature-check {
+	display: inline-block;
+	transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.feature-item:hover .feature-check {
+	transform: scale(1.35);
+}
+
+/* Tarjetas de tamaños: se elevan, borde de acento, barra lateral que crece
+   y el precio hace un leve "punch". */
+.size-card {
+	position: relative;
+	overflow: hidden;
+	/* Sin fondo propio: se funde con el fondo de la sección (claro u oscuro). */
+	background: transparent;
+	transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+		border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.size-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 3px;
+	background: var(--color-accent);
+	transform: scaleY(0);
+	transform-origin: bottom;
+	transition: transform 0.3s ease;
+}
+.size-card:hover {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, 0.4);
+	box-shadow: 0 18px 34px -20px rgba(0, 0, 0, 0.45);
+}
+.size-card:hover::before {
+	transform: scaleY(1);
+}
+.size-price {
+	display: inline-block;
+	transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.size-card:hover .size-price {
+	transform: scale(1.08);
+}
+
+/* ============ TARJETAS CON ELEVACIÓN (páginas internas) ============
+   Se elevan al hover, con una barra de acento que se despliega arriba.
+   Usadas en Financiamiento (opciones y socios) y reutilizables en más páginas. */
+.lift-card {
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+		border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.lift-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--color-accent), var(--color-sun));
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.35s ease;
+}
+.lift-card:hover {
+	transform: translateY(-6px);
+	border-color: rgba(242, 106, 33, 0.4);
+	box-shadow: 0 22px 42px -26px rgba(0, 0, 0, 0.6);
+}
+.lift-card:hover::before {
+	transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+	.lift-card {
+		transition: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal-rise {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+	.product-hero-img,
+	.product-hero-glow {
+		animation: none;
+	}
 }
 
 .portal-logo {
@@ -1459,10 +1788,13 @@ ${testimonialMarquee}
 
 <section class="bg-gray-50 py-16">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-gray-300 bg-white p-10 text-center">
-			<p class="text-sm font-semibold uppercase tracking-wide text-accent">Coming Soon</p>
-			<h2 class="text-2xl font-bold text-dark">Design Your Building in 3D</h2>
-			<p class="max-w-xl text-sm text-gray-600">We're working on an interactive 3D builder so you can customize size, color and features before you request a quote. In the meantime, our team will walk you through every option by phone or email.</p>
+		<div class="mb-8 text-center" data-reveal>
+			<p class="text-sm font-semibold uppercase tracking-wide text-accent">Interactive Preview</p>
+			<h2 class="mt-2 text-3xl font-bold text-dark sm:text-4xl">See Your Steel Garage in 3D</h2>
+			<p class="mx-auto mt-3 max-w-xl text-sm text-gray-600">Drag to spin it around and explore it from every angle. A fully custom 3D builder — pick size, color and doors — is coming soon.</p>
+		</div>
+		<div id="garage3d" class="g3d-stage" role="img" aria-label="Interactive 3D model of a custom steel garage. Drag to rotate.">
+			<div class="g3d-hint"><span class="g3d-hint-ic">⟲</span> Drag to rotate · scroll to zoom</div>
 		</div>
 	</div>
 </section>
@@ -1503,6 +1835,8 @@ ${ctaBanner(prefix, "Ready to Build?", "Get a free, no-obligation quote from our
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="${prefix}assets/js/motion.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+<script src="${prefix}assets/js/garage3d.js" defer></script>
 `,
   });
 
@@ -1577,8 +1911,8 @@ for (const p of products) {
 
   const featureItems = p.features
     .map(
-      (f) => `\t\t\t\t\t<li class="flex gap-3 text-sm text-gray-700">
-						<span class="mt-0.5 text-primary">&#10003;</span>
+      (f) => `\t\t\t\t\t<li class="feature-item reveal-rise flex gap-3 text-sm text-gray-700">
+						<span class="feature-check mt-0.5 text-accent">&#10003;</span>
 						${f}
 					</li>`
     )
@@ -1586,12 +1920,12 @@ for (const p of products) {
 
   const modelItems = p.models
     .map(
-      (m) => `\t\t\t\t\t<div class="flex items-center justify-between rounded-lg border border-gray-200 p-4">
+      (m) => `\t\t\t\t\t<div class="size-card reveal-rise flex items-center justify-between rounded-lg border border-gray-200 p-4">
 						<div>
 							<p class="font-semibold text-dark">${m.name}</p>
 							<p class="text-sm text-gray-500">${m.size}</p>
 						</div>
-						<p class="text-sm font-semibold text-primary">${m.price}</p>
+						<p class="size-price text-sm font-semibold text-accent">${m.price}</p>
 					</div>`
     )
     .join("\n");
@@ -1599,33 +1933,34 @@ for (const p of products) {
   const relatedCards = related.map((r) => `\t\t\t\t${productCard(prefix, r)}`).join("\n");
 
   const main = `
-<section class="relative bg-primary">
+<section class="product-hero relative overflow-hidden bg-primary">
 	<div class="absolute inset-0">
-		<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="h-full w-full object-cover opacity-30">
+		<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
 		<div class="absolute inset-0 bg-primary/70"></div>
+		<span class="product-hero-glow" aria-hidden="true"></span>
 	</div>
 	<div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-		<p class="text-sm font-semibold uppercase tracking-widest text-blue-200">Products</p>
-		<h1 class="mt-2 max-w-2xl text-4xl font-extrabold text-white sm:text-5xl">${p.title}</h1>
-		<p class="mt-4 max-w-xl text-lg text-blue-100">${p.excerpt}</p>
-		<a href="${prefix}contact/contact.html" class="mt-8 inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90">Get a Free Quote</a>
+		<p class="reveal-rise text-sm font-semibold uppercase tracking-widest text-blue-200">Products</p>
+		<h1 class="reveal-rise mt-2 max-w-2xl text-4xl font-extrabold text-white sm:text-5xl">${p.title}</h1>
+		<p class="reveal-rise mt-4 max-w-xl text-lg text-blue-100">${p.excerpt}</p>
+		<a href="${prefix}contact/contact.html" class="reveal-rise mt-8 inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90">Get a Free Quote</a>
 	</div>
 </section>
 
 <section class="py-20">
 	<div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
 		<div>
-			<h2 class="text-2xl font-bold text-dark">Overview</h2>
-			<div class="mt-4 text-sm text-gray-700"><p>${p.content}</p></div>
+			<h2 class="reveal-rise text-2xl font-bold text-dark">Overview</h2>
+			<div class="reveal-rise mt-4 text-sm text-gray-700"><p>${p.content}</p></div>
 
-			<h2 class="mt-8 text-2xl font-bold text-dark">Features</h2>
+			<h2 class="reveal-rise mt-8 text-2xl font-bold text-dark">Features</h2>
 			<ul class="mt-6 space-y-3">
 ${featureItems}
 			</ul>
 		</div>
 
 		<div>
-			<h2 class="text-2xl font-bold text-dark">Popular Sizes</h2>
+			<h2 class="reveal-rise text-2xl font-bold text-dark">Popular Sizes</h2>
 			<div class="mt-6 space-y-4">
 ${modelItems}
 			</div>
@@ -1635,7 +1970,7 @@ ${modelItems}
 
 <section class="bg-gray-50 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		<h2 class="text-2xl font-bold text-dark">You Might Also Like</h2>
+		<h2 class="reveal-rise text-2xl font-bold text-dark">You Might Also Like</h2>
 		<div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
 ${relatedCards}
 		</div>
@@ -1694,7 +2029,7 @@ ${ctaBanner(prefix, "Let's build something together", "", "Get a Free Quote")}
   const prefix = "../";
   const cards = purchaseOptions
     .map(
-      (opt) => `\t\t\t<div class="rounded-xl border border-gray-200 p-8">
+      (opt) => `\t\t\t<div class="lift-card reveal-rise rounded-xl border border-gray-200 p-8">
 				<h2 class="text-xl font-bold text-dark">${opt.title}</h2>
 				<p class="mt-3 text-sm text-gray-600">${opt.desc}</p>
 			</div>`
@@ -1718,17 +2053,17 @@ ${cards}
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 		${sectionHeading("Our Partners", "Financing Partners", "We work with trusted rent-to-own and financing partners to make your building affordable.")}
 		<div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
-			<div id="heartland-capital-rto" class="scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
+			<div id="heartland-capital-rto" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">Heartland Capital RTO</h2>
 				<p class="mt-3 text-sm text-gray-600">Rent-to-own plans up to $20,000 with no credit check and affordable monthly payments — with the option to buy out anytime.</p>
 				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
-			<div id="hsf-portal" class="scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
+			<div id="hsf-portal" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">HSF Portal</h2>
 				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
 				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
-			<div id="rto-national" class="scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
+			<div id="rto-national" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">RTO National</h2>
 				<p class="mt-3 text-sm text-gray-600">A nationwide rent-to-own program with flexible terms and early purchase options, available in most of the states we serve.</p>
 				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>

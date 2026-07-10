@@ -44,6 +44,63 @@
   });
 })();
 
+// Pie de página: las cuatro columnas entran escalonadas al hacer scroll hasta
+// la parte baja de la página. Funciona en todo el sitio (main.js está en todas
+// las páginas). Respeta "reducir movimiento": si está activo, se muestran ya.
+(function () {
+  var cols = document.querySelectorAll("[data-footer-reveal]");
+  if (!cols.length) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !window.IntersectionObserver) {
+    Array.prototype.forEach.call(cols, function (c) { c.classList.add("is-in"); });
+    return;
+  }
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      var el = en.target;
+      var i = Number(el.getAttribute("data-i")) || 0;
+      setTimeout(function () { el.classList.add("is-in"); }, i * 120);
+      io.unobserve(el);
+    });
+  }, { threshold: 0.15 });
+  Array.prototype.forEach.call(cols, function (c, i) {
+    c.setAttribute("data-i", i);
+    io.observe(c);
+  });
+})();
+
+// Revelado genérico al hacer scroll para páginas internas (sin GSAP). Todo
+// elemento con .reveal-rise se levanta y aparece al entrar en pantalla, con un
+// escalonado según su posición entre hermanos .reveal-rise. Respeta "reducir
+// movimiento" (se muestran de una).
+(function () {
+  var els = document.querySelectorAll(".reveal-rise");
+  if (!els.length) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !window.IntersectionObserver) {
+    Array.prototype.forEach.call(els, function (el) { el.classList.add("is-in"); });
+    return;
+  }
+  // Escalonado: cada elemento recibe un retraso según su índice entre los
+  // hermanos .reveal-rise de su mismo contenedor.
+  Array.prototype.forEach.call(els, function (el) {
+    var parent = el.parentElement;
+    if (!parent) return;
+    var sibs = parent.querySelectorAll(":scope > .reveal-rise");
+    var idx = Array.prototype.indexOf.call(sibs, el);
+    if (idx > 0) el.style.transitionDelay = (idx * 80) + "ms";
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("is-in");
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.12 });
+  Array.prototype.forEach.call(els, function (el) { io.observe(el); });
+})();
+
 // Tarjetas de producto (Top Picks / grilla): inclinación 3D sutil + un foco
 // de luz naranja que siguen al cursor. El vaivén lateral en reposo lo pone el
 // CSS (animación card-sway); aquí sólo agregamos la reacción al puntero.

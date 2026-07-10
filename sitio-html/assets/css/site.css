@@ -193,6 +193,44 @@ header a.bg-accent:hover::before { left: 140%; }
 .cta-quote:hover { box-shadow: 0 12px 28px -8px rgba(242, 106, 33, .78); }
 .cta-quote:hover .cta-arrow { transform: translateX(3px); }
 
+/* ===== Visor 3D del garaje (Three.js) ===== */
+.g3d-stage {
+	position: relative;
+	width: 100%;
+	height: 380px;
+	border-radius: 1.25rem;
+	overflow: hidden;
+	background: radial-gradient(120% 100% at 50% 0%, #2a1d12 0%, #141414 55%, #0d0d0d 100%);
+	border: 1px solid rgba(242, 106, 33, .2);
+	box-shadow: inset 0 0 60px rgba(0, 0, 0, .5);
+	cursor: grab;
+	touch-action: pan-y;
+}
+.g3d-stage:active { cursor: grabbing; }
+.g3d-stage canvas { display: block; }
+@media (min-width: 768px) { .g3d-stage { height: 520px; } }
+.g3d-hint {
+	position: absolute;
+	bottom: .85rem; left: 50%;
+	transform: translateX(-50%);
+	z-index: 2;
+	pointer-events: none;
+	display: inline-flex;
+	align-items: center;
+	gap: .4rem;
+	padding: .4rem .85rem;
+	border-radius: 9999px;
+	background: rgba(0, 0, 0, .45);
+	-webkit-backdrop-filter: blur(4px);
+	backdrop-filter: blur(4px);
+	border: 1px solid rgba(255, 255, 255, .1);
+	font-size: .72rem;
+	letter-spacing: .04em;
+	text-transform: uppercase;
+	color: #cfcfcf;
+}
+.g3d-hint-ic { color: var(--color-accent); font-size: .95rem; }
+
 /* Tarjetas de producto (Top Picks / grilla): flotación continua (arriba/abajo
    + lateral) para que se vean dinámicas en reposo, un "brillo" que barre cada
    tarjeta, y la inclinación 3D + foco que siguen al cursor. La flotación usa la
@@ -475,6 +513,292 @@ textarea:focus-visible, summary:focus-visible {
 	height: 4.5rem;
 	width: auto;
 	border-radius: 0.375rem;
+	animation: footerFloat 6s ease-in-out infinite;
+}
+@keyframes footerFloat {
+	0%, 100% { transform: translateY(0); }
+	50%      { transform: translateY(-6px); }
+}
+
+/* ============ PIE DE PÁGINA DINÁMICO ============
+   Aurora de atardecer que "respira", hairline naranja que recorre el borde,
+   columnas que entran al hacer scroll, enlaces con marcador deslizante y
+   redes sociales como píldoras que se elevan. */
+.site-footer {
+	position: relative;
+	overflow: hidden;
+	isolation: isolate;
+}
+/* Resplandor de atardecer que sube desde el borde superior y late suave. */
+.site-footer::before {
+	content: "";
+	position: absolute;
+	top: -160px;
+	left: 50%;
+	width: 130%;
+	height: 340px;
+	transform: translateX(-50%);
+	background: radial-gradient(60% 100% at 50% 100%,
+		rgba(242, 106, 33, 0.22), rgba(242, 106, 33, 0.06) 45%, transparent 72%);
+	pointer-events: none;
+	z-index: -1;
+	animation: footerAurora 9s ease-in-out infinite;
+}
+@keyframes footerAurora {
+	0%, 100% { opacity: 0.5;  transform: translateX(-50%) scale(1); }
+	50%      { opacity: 1;    transform: translateX(-50%) scale(1.08); }
+}
+/* Filamento naranja que barre el borde superior del pie. */
+.footer-hairline {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(242, 106, 33, 0.95), transparent);
+	background-size: 45% 100%;
+	background-repeat: no-repeat;
+	animation: footerSweep 6s linear infinite;
+}
+@keyframes footerSweep {
+	0%   { background-position: -45% 0; }
+	100% { background-position: 145% 0; }
+}
+
+/* Entrada de columnas al hacer scroll (main.js pone .is-in). */
+.footer-col {
+	opacity: 0;
+	transform: translateY(26px);
+	transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.footer-col.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* Título de columna con barra de acento que crece al pasar el mouse. */
+.footer-col-title {
+	position: relative;
+	display: inline-block;
+}
+.footer-col-title::after {
+	content: "";
+	position: absolute;
+	left: 0;
+	bottom: -6px;
+	height: 2px;
+	width: 0;
+	background: var(--color-accent);
+	transition: width 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.footer-col:hover .footer-col-title::after {
+	width: 100%;
+}
+
+/* Enlaces del pie: aparece un marcador naranja y el texto se desliza. */
+.footer-link {
+	position: relative;
+	display: inline-block;
+	transition: color 0.25s ease, transform 0.25s ease, padding-left 0.25s ease;
+}
+.footer-link::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 50%;
+	width: 0;
+	height: 1.5px;
+	background: var(--color-accent);
+	transform: translateY(-50%);
+	transition: width 0.25s ease;
+}
+.footer-link:hover {
+	color: #fff;
+	transform: translateX(2px);
+	padding-left: 18px;
+}
+.footer-link:hover::before {
+	width: 12px;
+}
+
+/* Redes sociales como píldoras circulares que se elevan. */
+.footer-social {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 9999px;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	color: #c6c6c6;
+	transition: transform 0.25s ease, background-color 0.25s ease,
+		border-color 0.25s ease, color 0.25s ease, box-shadow 0.25s ease;
+}
+.footer-social svg {
+	width: 18px;
+	height: 18px;
+}
+.footer-social:hover {
+	transform: translateY(-3px);
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	color: #fff;
+	box-shadow: 0 12px 24px -8px rgba(242, 106, 33, 0.6);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.footer-logo,
+	.site-footer::before,
+	.footer-hairline {
+		animation: none;
+	}
+	.footer-col {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}
+
+/* ============ REVELADO GENÉRICO AL HACER SCROLL ============
+   Para páginas internas (sin GSAP). main.js añade .is-in cuando el elemento
+   entra en pantalla; el escalonado (transition-delay) también lo pone main.js
+   según la posición entre hermanos. */
+.reveal-rise {
+	opacity: 0;
+	transform: translateY(28px);
+	transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+	will-change: transform, opacity;
+}
+.reveal-rise.is-in {
+	opacity: 1;
+	transform: none;
+}
+
+/* ============ PÁGINA DE PRODUCTO DINÁMICA ============ */
+/* Hero: la foto de fondo hace un "Ken Burns" lento + un resplandor de marca. */
+.product-hero-img {
+	animation: kenBurns 20s ease-in-out infinite alternate;
+	transform-origin: center;
+}
+@keyframes kenBurns {
+	from { transform: scale(1); }
+	to   { transform: scale(1.12) translateY(-1.5%); }
+}
+.product-hero-glow {
+	position: absolute;
+	top: -20%;
+	right: -10%;
+	width: 55%;
+	height: 140%;
+	background: radial-gradient(45% 50% at 50% 50%,
+		rgba(242, 106, 33, 0.28), transparent 70%);
+	pointer-events: none;
+	animation: heroGlowDrift 12s ease-in-out infinite;
+}
+@keyframes heroGlowDrift {
+	0%, 100% { opacity: 0.55; transform: translate(0, 0); }
+	50%      { opacity: 1;    transform: translate(-6%, 4%); }
+}
+
+/* Lista de características: cada ítem se desliza y el check "salta" al hover. */
+.feature-item {
+	transition: transform 0.25s ease, color 0.25s ease;
+}
+.feature-item:hover {
+	transform: translateX(5px);
+	color: #111827;
+}
+.feature-check {
+	display: inline-block;
+	transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.feature-item:hover .feature-check {
+	transform: scale(1.35);
+}
+
+/* Tarjetas de tamaños: se elevan, borde de acento, barra lateral que crece
+   y el precio hace un leve "punch". */
+.size-card {
+	position: relative;
+	overflow: hidden;
+	/* Sin fondo propio: se funde con el fondo de la sección (claro u oscuro). */
+	background: transparent;
+	transition: transform 0.28s cubic-bezier(0.2, 0.8, 0.2, 1),
+		border-color 0.28s ease, box-shadow 0.28s ease;
+}
+.size-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	width: 3px;
+	background: var(--color-accent);
+	transform: scaleY(0);
+	transform-origin: bottom;
+	transition: transform 0.3s ease;
+}
+.size-card:hover {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, 0.4);
+	box-shadow: 0 18px 34px -20px rgba(0, 0, 0, 0.45);
+}
+.size-card:hover::before {
+	transform: scaleY(1);
+}
+.size-price {
+	display: inline-block;
+	transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.size-card:hover .size-price {
+	transform: scale(1.08);
+}
+
+/* ============ TARJETAS CON ELEVACIÓN (páginas internas) ============
+   Se elevan al hover, con una barra de acento que se despliega arriba.
+   Usadas en Financiamiento (opciones y socios) y reutilizables en más páginas. */
+.lift-card {
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1),
+		border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.lift-card::before {
+	content: "";
+	position: absolute;
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 3px;
+	background: linear-gradient(90deg, var(--color-accent), var(--color-sun));
+	transform: scaleX(0);
+	transform-origin: left;
+	transition: transform 0.35s ease;
+}
+.lift-card:hover {
+	transform: translateY(-6px);
+	border-color: rgba(242, 106, 33, 0.4);
+	box-shadow: 0 22px 42px -26px rgba(0, 0, 0, 0.6);
+}
+.lift-card:hover::before {
+	transform: scaleX(1);
+}
+@media (prefers-reduced-motion: reduce) {
+	.lift-card {
+		transition: none;
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.reveal-rise {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+	.product-hero-img,
+	.product-hero-glow {
+		animation: none;
+	}
 }
 
 .portal-logo {
