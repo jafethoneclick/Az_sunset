@@ -29,136 +29,200 @@
   if (THREE.sRGBEncoding) renderer.outputEncoding = THREE.sRGBEncoding;
   mount.appendChild(renderer.domElement);
 
-  // --- Luces: fill suave + sol calido (atardecer) + rim naranja de marca ---
-  scene.add(new THREE.HemisphereLight(0xfff1e0, 0x140f0a, 0.85));
-  var sun = new THREE.DirectionalLight(0xffd9a0, 1.6);
-  sun.position.set(7, 11, 6);
+  // --- Luces: día soleado (cielo + sol cálido + relleno suave) ---
+  scene.add(new THREE.HemisphereLight(0xbfd6ef, 0x3f5c2c, 0.85));
+  var sun = new THREE.DirectionalLight(0xfff2df, 1.85);
+  sun.position.set(-8, 12, 9);
   sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024);
+  sun.shadow.mapSize.set(2048, 2048);
   sun.shadow.camera.near = 1;
   sun.shadow.camera.far = 60;
-  sun.shadow.camera.left = -14;
-  sun.shadow.camera.right = 14;
-  sun.shadow.camera.top = 14;
-  sun.shadow.camera.bottom = -14;
+  sun.shadow.camera.left = -16;
+  sun.shadow.camera.right = 16;
+  sun.shadow.camera.top = 16;
+  sun.shadow.camera.bottom = -16;
   sun.shadow.bias = -0.0004;
   scene.add(sun);
-  var rim = new THREE.DirectionalLight(0xf26a21, 0.6);
-  rim.position.set(-7, 4, -6);
-  scene.add(rim);
+  var fill = new THREE.DirectionalLight(0xdfe8f2, 0.4);
+  fill.position.set(9, 5, -7);
+  scene.add(fill);
 
   function mat(color, metal, rough) {
     return new THREE.MeshStandardMaterial({ color: color, metalness: metal, roughness: rough });
   }
-  var steel = mat(0x4f7189, 0.55, 0.5);
-  var steelDark = mat(0x334654, 0.6, 0.5);
-  var roofMat = mat(0x2a2d31, 0.45, 0.55);
-  var doorMat = mat(0xc2c8cd, 0.7, 0.35);
-  var trimMat = mat(0xf26a21, 0.25, 0.5);
-  var slabMat = mat(0x3c3c3c, 0.0, 0.95);
-  var glassMat = mat(0x0b1a26, 0.2, 0.1);
+  // Paleta tomada de la foto de referencia: paredes tostado, faldón y molduras
+  // marrón, techo marrón, puertas blancas, losa de concreto y césped.
+  var tan = mat(0xc6a068, 0.35, 0.62);
+  var brown = mat(0x6a4327, 0.35, 0.6);
+  var roofMat = mat(0x5c3a27, 0.4, 0.55);
+  var ridgeMat = mat(0x4d3020, 0.4, 0.55);
+  var doorMat = mat(0xf1f0ec, 0.25, 0.5);
+  var frameMat = mat(0x5c3a27, 0.3, 0.6);
+  var slabMat = mat(0xbdb9b1, 0.0, 0.95);
+  var grassMat = mat(0x46672e, 0.0, 1.0);
+  var glassMat = mat(0x0e1519, 0.15, 0.2);
+  var darkMat = mat(0x090909, 0.0, 1.0);
+  var ribMat = mat(0xb8925c, 0.35, 0.62);
 
-  var W = 6, D = 8, H = 3.3, roofH = 1.5;
+  var W = 7.4, D = 8, H = 3.0, roofH = 1.25, wh = 1.05;
+  var eave = 0.35;
   var garage = new THREE.Group();
 
+  // Césped
+  var grass = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), grassMat);
+  grass.rotation.x = -Math.PI / 2;
+  grass.position.y = 0;
+  grass.receiveShadow = true;
+  garage.add(grass);
+
   // Losa de concreto
-  var slab = new THREE.Mesh(new THREE.BoxGeometry(W + 1.6, 0.25, D + 1.6), slabMat);
-  slab.position.y = -0.125;
+  var slabH = 0.18;
+  var slab = new THREE.Mesh(new THREE.BoxGeometry(W + 1.4, slabH, D + 1.2), slabMat);
+  slab.position.y = slabH / 2;
   slab.receiveShadow = true;
   garage.add(slab);
 
-  // Cuerpo (paredes) + zocalo mas oscuro
-  var body = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), steel);
-  body.position.y = H / 2;
+  var base = slabH; // piso del edificio (cara superior de la losa)
+
+  // Paredes superiores (tostado)
+  var body = new THREE.Mesh(new THREE.BoxGeometry(W, H, D), tan);
+  body.position.y = base + H / 2;
   body.castShadow = true;
   body.receiveShadow = true;
   garage.add(body);
-  var skirt = new THREE.Mesh(new THREE.BoxGeometry(W + 0.04, 0.5, D + 0.04), steelDark);
-  skirt.position.y = 0.25;
+
+  // Faldón inferior (wainscot) marrón, apenas saliente
+  var skirt = new THREE.Mesh(new THREE.BoxGeometry(W + 0.06, wh, D + 0.06), brown);
+  skirt.position.y = base + wh / 2;
   skirt.castShadow = true;
+  skirt.receiveShadow = true;
   garage.add(skirt);
 
-  // Techo a dos aguas
-  var slant = Math.hypot(W / 2, roofH);
-  var ang = Math.atan2(roofH, W / 2);
-  var roofGeo = new THREE.BoxGeometry(slant + 0.25, 0.14, D + 0.7);
+  // Techo a dos aguas (marrón) con alero
+  var slant = Math.hypot(W / 2 + eave, roofH);
+  var ang = Math.atan2(roofH, W / 2 + eave);
+  var roofThick = 0.14;
+  var roofGeo = new THREE.BoxGeometry(slant, roofThick, D + eave * 2);
   var roofL = new THREE.Mesh(roofGeo, roofMat);
-  roofL.position.set(-W / 4, H + roofH / 2, 0);
+  roofL.position.set(-(W / 2 + eave) / 2, base + H + roofH / 2, 0);
   roofL.rotation.z = ang;
   roofL.castShadow = true;
+  roofL.receiveShadow = true;
   garage.add(roofL);
   var roofR = new THREE.Mesh(roofGeo, roofMat);
-  roofR.position.set(W / 4, H + roofH / 2, 0);
+  roofR.position.set((W / 2 + eave) / 2, base + H + roofH / 2, 0);
   roofR.rotation.z = -ang;
   roofR.castShadow = true;
+  roofR.receiveShadow = true;
   garage.add(roofR);
+  // Cumbrera
+  var ridge = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.16, D + eave * 2), ridgeMat);
+  ridge.position.set(0, base + H + roofH + 0.02, 0);
+  ridge.castShadow = true;
+  garage.add(ridge);
 
-  // Frontones (triangulos) frente y fondo
+  // Frontones (triángulos) tostado, frente y fondo
   var tri = new THREE.Shape();
   tri.moveTo(-W / 2, 0);
   tri.lineTo(W / 2, 0);
   tri.lineTo(0, roofH);
   tri.lineTo(-W / 2, 0);
   var triGeo = new THREE.ShapeGeometry(tri);
-  var gableF = new THREE.Mesh(triGeo, steel);
-  gableF.position.set(0, H, D / 2 + 0.005);
+  var gableF = new THREE.Mesh(triGeo, tan);
+  gableF.position.set(0, base + H, D / 2 + 0.004);
+  gableF.castShadow = true;
+  gableF.receiveShadow = true;
   garage.add(gableF);
-  var gableB = new THREE.Mesh(triGeo, steel);
-  gableB.position.set(0, H, -D / 2 - 0.005);
+  var gableB = new THREE.Mesh(triGeo, tan);
+  gableB.position.set(0, base + H, -D / 2 - 0.004);
   gableB.rotation.y = Math.PI;
   garage.add(gableB);
 
-  // Puerta enrollable (frente) con lineas horizontales
-  var dW = 3.2, dH = 2.5, fz = D / 2 + 0.02;
-  var door = new THREE.Mesh(new THREE.BoxGeometry(dW, dH, 0.12), doorMat);
-  door.position.set(0, dH / 2 + 0.15, fz + 0.05);
-  garage.add(door);
-  var seg = 8;
-  for (var i = 1; i < seg; i++) {
-    var ln = new THREE.Mesh(new THREE.BoxGeometry(dW, 0.035, 0.14), steelDark);
-    ln.position.set(0, 0.15 + (i * dH) / seg, fz + 0.11);
-    garage.add(ln);
-  }
-  // Marco naranja de la puerta
-  var fT = 0.14;
-  function frameBar(w, h, x, y) {
-    var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.16), trimMat);
-    b.position.set(x, y, fz + 0.08);
+  // --- Elementos del frente (gable end, z = +D/2) ---
+  var fz = D / 2;
+  var ft = 0.12;
+  function frameBar(w, h, x, y, z) {
+    var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.14), frameMat);
+    b.position.set(x, y, z);
+    b.castShadow = true;
     garage.add(b);
   }
-  frameBar(dW + fT * 2, fT, 0, 0.15 + dH + fT / 2);
-  frameBar(fT, dH + fT, -(dW / 2 + fT / 2), 0.15 + dH / 2);
-  frameBar(fT, dH + fT, dW / 2 + fT / 2, 0.15 + dH / 2);
 
-  // Puerta peatonal + ventana en el lateral derecho (x = +W/2)
-  var sx = W / 2 + 0.02;
-  var pDoor = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.0, 0.9), doorMat);
-  pDoor.position.set(sx + 0.04, 1.0, D / 2 - 1.7);
-  garage.add(pDoor);
-  var win = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.8, 1.0), glassMat);
-  win.position.set(sx + 0.04, 2.1, -1.6);
+  // Puerta enrollable blanca (izquierda)
+  var rdW = 2.2, rdH = 2.3, rdX = -2.35;
+  var door = new THREE.Mesh(new THREE.BoxGeometry(rdW, rdH, 0.1), doorMat);
+  door.position.set(rdX, base + rdH / 2 + 0.02, fz + 0.06);
+  door.castShadow = true;
+  garage.add(door);
+  for (var i = 1; i < 9; i++) {
+    var ln = new THREE.Mesh(new THREE.BoxGeometry(rdW, 0.03, 0.12), ribMat);
+    ln.position.set(rdX, base + 0.02 + (i * rdH) / 9, fz + 0.1);
+    garage.add(ln);
+  }
+  frameBar(rdW + ft * 2, ft, rdX, base + rdH + 0.02 + ft / 2, fz + 0.09);
+  frameBar(ft, rdH + ft, rdX - rdW / 2 - ft / 2, base + rdH / 2 + 0.02, fz + 0.09);
+  frameBar(ft, rdH + ft, rdX + rdW / 2 + ft / 2, base + rdH / 2 + 0.02, fz + 0.09);
+
+  // Bahía abierta (centro): panel oscuro con marco
+  var obW = 2.0, obH = 2.35, obX = 0.15;
+  var opening = new THREE.Mesh(new THREE.BoxGeometry(obW, obH, 0.04), darkMat);
+  opening.position.set(obX, base + obH / 2, fz + 0.04);
+  garage.add(opening);
+  frameBar(obW + ft * 2, ft, obX, base + obH + ft / 2, fz + 0.06);
+  frameBar(ft, obH + ft, obX - obW / 2 - ft / 2, base + obH / 2, fz + 0.06);
+  frameBar(ft, obH + ft, obX + obW / 2 + ft / 2, base + obH / 2, fz + 0.06);
+
+  // Puerta peatonal blanca (derecha)
+  var wdW = 0.95, wdH = 2.05, wdX = 2.35;
+  var wdoor = new THREE.Mesh(new THREE.BoxGeometry(wdW, wdH, 0.1), doorMat);
+  wdoor.position.set(wdX, base + wdH / 2 + 0.02, fz + 0.06);
+  wdoor.castShadow = true;
+  garage.add(wdoor);
+  frameBar(wdW + ft, ft, wdX, base + wdH + 0.02 + ft / 2, fz + 0.08);
+  frameBar(ft, wdH + ft, wdX - wdW / 2 - ft / 2, base + wdH / 2 + 0.02, fz + 0.08);
+  frameBar(ft, wdH + ft, wdX + wdW / 2 + ft / 2, base + wdH / 2 + 0.02, fz + 0.08);
+  var knob = new THREE.Mesh(new THREE.SphereGeometry(0.05, 10, 10), frameMat);
+  knob.position.set(wdX + wdW / 2 - 0.18, base + 1.05, fz + 0.12);
+  garage.add(knob);
+
+  // Ventana (derecha, arriba) con marco blanco
+  var winW = 0.8, winH = 0.8, winX = 3.15, winY = base + 2.05;
+  var win = new THREE.Mesh(new THREE.BoxGeometry(winW, winH, 0.06), glassMat);
+  win.position.set(winX, winY, fz + 0.05);
   garage.add(win);
+  function winFrame(w, h, x, y) {
+    var b = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.12), doorMat);
+    b.position.set(x, y, fz + 0.06);
+    garage.add(b);
+  }
+  winFrame(winW + ft, ft, winX, winY + winH / 2 + ft / 2);
+  winFrame(winW + ft, ft, winX, winY - winH / 2 - ft / 2);
+  winFrame(ft, winH, winX - winW / 2 - ft / 2, winY);
+  winFrame(ft, winH, winX + winW / 2 + ft / 2, winY);
 
-  // Trim naranja en los aleros (frente y fondo)
-  var eaveGeo = new THREE.BoxGeometry(W + 0.3, 0.12, 0.12);
-  [D / 2 + 0.2, -D / 2 - 0.2].forEach(function (z) {
-    var e = new THREE.Mesh(eaveGeo, trimMat);
-    e.position.set(0, H + 0.02, z);
-    garage.add(e);
+  // Molduras de esquina (marrón) — 4 verticales salientes
+  var cornerGeo = new THREE.BoxGeometry(0.16, H, 0.16);
+  [[-W / 2, D / 2], [W / 2, D / 2], [-W / 2, -D / 2], [W / 2, -D / 2]].forEach(function (c) {
+    var cc = new THREE.Mesh(cornerGeo, brown);
+    cc.position.set(c[0], base + H / 2, c[1]);
+    cc.castShadow = true;
+    garage.add(cc);
   });
 
-  garage.position.y = 0.12;
+  // Fascia del alero (marrón) en los lados largos
+  var fasciaGeo = new THREE.BoxGeometry(0.1, 0.22, D + eave * 2);
+  [-(W / 2 + eave), W / 2 + eave].forEach(function (x) {
+    var fa = new THREE.Mesh(fasciaGeo, brown);
+    fa.position.set(x, base + H + 0.02, 0);
+    fa.castShadow = true;
+    garage.add(fa);
+  });
+
+  garage.position.y = 0;
   scene.add(garage);
 
-  // Sombra de contacto sobre suelo transparente
-  var ground = new THREE.Mesh(new THREE.PlaneGeometry(60, 60), new THREE.ShadowMaterial({ opacity: 0.33 }));
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -0.26;
-  ground.receiveShadow = true;
-  scene.add(ground);
-
   // --- Orbit propio (arrastrar = rotar, rueda = zoom) ---
-  var target = new THREE.Vector3(0, H * 0.5, 0);
+  var target = new THREE.Vector3(0, 1.7, 0);
   var az = 0.7, el = 0.28, dist = 17;
   var minEl = 0.06, maxEl = 1.15, minD = 11, maxD = 26;
   function applyCam() {

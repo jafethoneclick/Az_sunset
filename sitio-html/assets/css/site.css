@@ -700,6 +700,29 @@ textarea:focus-visible, summary:focus-visible {
 	50%      { opacity: 1;    transform: translate(-6%, 4%); }
 }
 
+/* Parallax 3D del hero: la imagen (capa lejana) y el texto (capa cercana) se
+   mueven a distinta velocidad siguiendo el cursor, y toda la escena se inclina
+   un poco en 3D → sensación de profundidad. Lo maneja main.js. */
+.product-hero {
+	perspective: 1200px;
+}
+.ph-bg-layer {
+	transform: scale(1.08);
+	transform-origin: center;
+	transition: transform 0.3s ease-out;
+	will-change: transform;
+}
+.ph-fg-layer {
+	transition: transform 0.3s ease-out;
+	will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+	.ph-bg-layer,
+	.ph-fg-layer {
+		transition: none;
+	}
+}
+
 /* Lista de características: cada ítem se desliza y el check "salta" al hover. */
 .feature-item {
 	transition: transform 0.25s ease, color 0.25s ease;
@@ -832,6 +855,10 @@ textarea:focus-visible, summary:focus-visible {
 .sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
 .sxm-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; border-radius: 1rem; overflow: hidden; width: min(1100px, 95vw); height: min(78vh, 680px); max-width: 95vw; max-height: 85vh; box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6); }
 .sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+/* Parallax de profundidad de la imagen del hero (main.js la desplaza dentro
+   del marco recortado siguiendo el cursor). El scroll-expand no toca .sxm-scene. */
+.sxm-scene { transition: transform 0.3s ease-out; will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .sxm-scene { transition: none; } }
 .sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
 .sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
 .sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
@@ -844,3 +871,250 @@ textarea:focus-visible, summary:focus-visible {
 .sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
 .sxm-content { transition: opacity 0.7s ease; }
 @media (prefers-reduced-motion: reduce) { .sxm-content { opacity: 1; } .sxm-hint { display: none; } }
+
+/* ===== Hero de la portada: imagen a pantalla completa con parallax =====
+   La imagen (.home-hero-bg) se desplaza más lento que el contenido al hacer
+   scroll (main.js) y hay un parallax sutil de ratón sobre el contenido
+   (motion.js, [data-hero-parallax]). El scrim asegura legibilidad del texto. */
+.home-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: 92vh;
+	min-height: 92dvh;
+	overflow: hidden;
+	background: #0d0d0d;
+}
+.home-hero-bg {
+	position: absolute;
+	inset: -12% 0;
+	z-index: 0;
+	overflow: hidden;
+	will-change: transform;
+}
+.home-hero-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transform: scale(1.06);
+}
+.home-hero-scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background:
+		linear-gradient(90deg, rgba(6, 8, 10, 0.88) 0%, rgba(6, 8, 10, 0.55) 42%, rgba(6, 8, 10, 0.12) 72%, rgba(6, 8, 10, 0.32) 100%),
+		linear-gradient(0deg, rgba(6, 8, 10, 0.72) 0%, rgba(6, 8, 10, 0) 46%);
+}
+.home-hero-inner {
+	position: relative;
+	z-index: 2;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 80rem;
+	margin: 0 auto;
+	padding: 7.5rem 1.5rem 6rem;
+}
+@media (min-width: 640px) {
+	.home-hero-inner { padding-left: 2rem; padding-right: 2rem; }
+}
+.home-hero-content {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 42rem;
+	text-align: center;
+}
+.home-hero-eyebrow {
+	font-family: "Hanken Grotesk", sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.17em;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--color-sun);
+}
+.home-hero-title {
+	margin-top: 0.7rem;
+	color: #fff;
+	font-family: "Fraunces", Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	line-height: 1.05;
+	letter-spacing: -0.015em;
+	font-size: clamp(1.95rem, 6.6vw, 4.6rem);
+	max-width: 100%;
+	overflow-wrap: break-word;
+	text-shadow: 0 3px 34px rgba(0, 0, 0, 0.5);
+}
+.home-hero-sub {
+	margin: 1.3rem auto 0;
+	max-width: 38rem;
+	color: rgba(255, 255, 255, 0.88);
+	font-size: clamp(0.98rem, 3.4vw, 1.2rem);
+	line-height: 1.6;
+	overflow-wrap: break-word;
+	text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+.home-hero-actions {
+	margin-top: 2.1rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem;
+}
+.hero-cta-primary,
+.hero-cta-ghost {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.6rem;
+	padding: 0.95rem 2rem;
+	font-weight: 600;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.hero-cta-primary {
+	background: var(--color-accent);
+	color: #fff;
+	box-shadow: 0 14px 30px -12px rgba(242, 106, 33, 0.6);
+}
+.hero-cta-primary:hover {
+	transform: translateY(-2px);
+	background: var(--color-accent-hover);
+	box-shadow: 0 18px 38px -12px rgba(242, 106, 33, 0.7);
+}
+.hero-cta-ghost {
+	border: 1px solid rgba(255, 255, 255, 0.42);
+	color: #fff;
+	backdrop-filter: blur(4px);
+}
+.hero-cta-ghost:hover {
+	transform: translateY(-2px);
+	background: rgba(255, 255, 255, 0.12);
+	border-color: #fff;
+}
+.home-hero-trust {
+	margin-top: 2.3rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem 1.5rem;
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+.home-hero-trust li {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: rgba(255, 255, 255, 0.82);
+	font-size: 0.86rem;
+}
+.home-hero-trust strong { color: #fff; font-weight: 700; }
+.hero-stars { color: var(--color-sun); letter-spacing: 0.05em; }
+.home-hero-trust li svg { flex-shrink: 0; }
+.hero-trust-g { width: 16px; height: 16px; }
+.hero-trust-ic { width: 16px; height: 16px; color: var(--color-sun); }
+.home-hero-scroll {
+	position: absolute;
+	z-index: 2;
+	left: 50%;
+	bottom: 1.5rem;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	color: rgba(255, 255, 255, 0.75);
+	font-size: 0.7rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+.home-hero-scroll svg { width: 20px; height: 20px; }
+@media (prefers-reduced-motion: reduce) {
+	.home-hero-img { transform: scale(1.03); }
+}
+
+/* ===== Resplandor ambiental (portada): reemplaza las chispas por un brillo
+   cálido, tenue y muy lento que da profundidad sin robar atención. Con
+   mix-blend screen sólo aclara zonas oscuras; sobre tarjetas claras es
+   invisible. ===== */
+.ambient {
+	position: fixed;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+	mix-blend-mode: screen;
+	background:
+		radial-gradient(42% 46% at 16% 20%, rgba(242, 106, 33, 0.09), transparent 60%),
+		radial-gradient(46% 52% at 84% 80%, rgba(242, 150, 70, 0.07), transparent 62%);
+	animation: ambientDrift 46s ease-in-out infinite alternate;
+	will-change: transform, opacity;
+}
+@keyframes ambientDrift {
+	0%   { opacity: 0.75; transform: translate3d(0, 0, 0) scale(1); }
+	100% { opacity: 1;    transform: translate3d(-3%, 2.5%, 0) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.ambient { animation: none; opacity: 0.85; }
+}
+
+/* ===== "Cómo funciona": 4 pasos con línea conectora (timeline) =====
+   La grilla se define aquí (no con clases Tailwind md:grid-cols-4, que están
+   purgadas del CSS compilado). */
+.process-grid {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2.5rem;
+}
+@media (min-width: 640px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .process-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+@media (min-width: 768px) {
+	.process-grid::before {
+		content: "";
+		position: absolute;
+		left: 12.5%;
+		right: 12.5%;
+		top: 40px;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, rgba(242, 106, 33, 0.45) 15%, rgba(242, 106, 33, 0.45) 85%, transparent);
+		z-index: 0;
+	}
+}
+.process-step { position: relative; z-index: 1; text-align: center; }
+.process-badge {
+	position: relative;
+	margin: 0 auto;
+	width: 80px;
+	height: 80px;
+	border-radius: 9999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #141414;
+	border: 1px solid rgba(242, 106, 33, 0.35);
+	color: var(--color-accent);
+	box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.7);
+	transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.process-step:hover .process-badge {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, 0.7);
+	box-shadow: 0 18px 36px -16px rgba(242, 106, 33, 0.4);
+}
+.process-badge svg { width: 34px; height: 34px; }
+.process-num {
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	width: 26px;
+	height: 26px;
+	border-radius: 9999px;
+	background: var(--color-accent);
+	color: #fff;
+	font-size: 0.78rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 10px -3px rgba(242, 106, 33, 0.6);
+}

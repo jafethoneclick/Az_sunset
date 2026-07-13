@@ -29,7 +29,6 @@ const site = {
   // estados; ahora la empresa es 100% Arizona). Se usan como "chips" en la
   // sección "Where We Build" y para el contador de cobertura.
   states: ["Phoenix", "Tucson", "Mesa", "Chandler", "Scottsdale", "Gilbert", "Glendale", "Flagstaff", "Prescott", "Yuma", "Casa Grande", "Kingman"],
-  warrantyYears: "20",
   completedCount: 4200,
   bbbRating: "5.0",
   bbbReviews: "239",
@@ -279,15 +278,15 @@ const faqs = [
     a: "We offer traditional financing up to $100,000, outright purchase pricing, and rent-to-own plans up to $20,000 with no credit check required. See our Financing page for details.",
   },
   {
-    q: "Do your buildings come with a warranty?",
-    a: "Yes, every structure includes our industry-leading structural warranty against rust-through and manufacturer defects.",
+    q: "How long does delivery and installation take?",
+    a: "Most builds are delivered and installed within 4–8 weeks of your order, depending on size and site preparation.",
   },
 ];
 
 const whyUs = [
   {
-    title: "Industry-leading warranty",
-    desc: "20-year structural warranty on every steel building we install.",
+    title: "Engineered & certified",
+    desc: "Wind- and snow-rated, heavy-gauge steel built to Arizona code on every project.",
   },
   {
     title: "Delivery & installation included",
@@ -362,12 +361,6 @@ function navColumns(prefix) {
         { label: "HSF Portal", href: `${prefix}financing/financing.html#hsf-portal` },
         { label: "RTO National", href: `${prefix}financing/financing.html#rto-national` },
       ],
-    },
-    {
-      label: "Pricing",
-      icon: navIcons.pricing,
-      href: `${prefix}pricing/pricing.html`,
-      links: [],
     },
     {
       label: "Dealers",
@@ -445,26 +438,6 @@ ${links}
   const icLi = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6.94 5a1.94 1.94 0 1 1-3.88 0 1.94 1.94 0 0 1 3.88 0zM3.3 8.3h3.28V21H3.3zM9.2 8.3h3.14v1.74h.05c.44-.83 1.5-1.71 3.1-1.71 3.3 0 3.9 2.18 3.9 5V21h-3.27v-6.8c0-1.62-.03-3.7-2.26-3.7-2.26 0-2.6 1.77-2.6 3.6V21H9.2z"/></svg>';
 
   return `<header class="site-header sticky top-0 z-50 bg-white/95 backdrop-blur">
-		<div class="top-utility">
-			<div class="mx-auto flex h-9 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8 text-xs">
-				<p class="util-left flex items-center gap-2">
-					${icPin}
-					<span>Proudly serving ${site.city} &amp; all of Arizona</span>
-					<span class="util-sep">·</span>
-					<span>${site.warrantyYears}-Year Warranty</span>
-				</p>
-				<div class="flex items-center gap-4">
-					<a href="mailto:${site.email}" class="util-link flex items-center gap-1.5">${icMail}<span>${site.email}</span></a>
-					<span class="util-sep">·</span>
-					<span class="flex items-center gap-2.5">
-						<a href="${site.facebook}" class="util-social" aria-label="Facebook" target="_blank" rel="noopener">${icFb}</a>
-						<a href="${site.instagram}" class="util-social" aria-label="Instagram" target="_blank" rel="noopener">${icIg}</a>
-						<a href="${site.linkedin}" class="util-social" aria-label="LinkedIn" target="_blank" rel="noopener">${icLi}</a>
-					</span>
-				</div>
-			</div>
-		</div>
-
 		<div class="header-main mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 			<a href="${prefix}index.html" class="logo-badge flex items-center gap-2 text-xl font-bold text-primary">
 				<img src="${prefix}assets/images/logo/logo-header.png" alt="${site.name}" class="site-logo">
@@ -1404,6 +1377,29 @@ textarea:focus-visible, summary:focus-visible {
 	50%      { opacity: 1;    transform: translate(-6%, 4%); }
 }
 
+/* Parallax 3D del hero: la imagen (capa lejana) y el texto (capa cercana) se
+   mueven a distinta velocidad siguiendo el cursor, y toda la escena se inclina
+   un poco en 3D → sensación de profundidad. Lo maneja main.js. */
+.product-hero {
+	perspective: 1200px;
+}
+.ph-bg-layer {
+	transform: scale(1.08);
+	transform-origin: center;
+	transition: transform 0.3s ease-out;
+	will-change: transform;
+}
+.ph-fg-layer {
+	transition: transform 0.3s ease-out;
+	will-change: transform;
+}
+@media (prefers-reduced-motion: reduce) {
+	.ph-bg-layer,
+	.ph-fg-layer {
+		transition: none;
+	}
+}
+
 /* Lista de características: cada ítem se desliza y el check "salta" al hover. */
 .feature-item {
 	transition: transform 0.25s ease, color 0.25s ease;
@@ -1536,6 +1532,10 @@ textarea:focus-visible, summary:focus-visible {
 .sxm-center { position: relative; width: 100%; height: 100dvh; display: flex; align-items: center; justify-content: center; }
 .sxm-media { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 0; border-radius: 1rem; overflow: hidden; width: min(1100px, 95vw); height: min(78vh, 680px); max-width: 95vw; max-height: 85vh; box-shadow: 0 24px 70px -20px rgba(0, 0, 0, 0.6); }
 .sxm-media > video, .sxm-media > img { width: 100%; height: 100%; object-fit: cover; border-radius: 1rem; display: block; }
+/* Parallax de profundidad de la imagen del hero (main.js la desplaza dentro
+   del marco recortado siguiendo el cursor). El scroll-expand no toca .sxm-scene. */
+.sxm-scene { transition: transform 0.3s ease-out; will-change: transform; }
+@media (prefers-reduced-motion: reduce) { .sxm-scene { transition: none; } }
 .sxm-veil { position: absolute; inset: 0; border-radius: 1rem; background: rgba(15, 20, 26, 0.35); }
 .sxm-hint { position: absolute; left: 0; right: 0; bottom: 1.25rem; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 0.15rem; text-align: center; pointer-events: none; transition: opacity 0.4s ease; }
 .sxm-date { font-family: "Hanken Grotesk", sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--color-sun); }
@@ -1548,6 +1548,253 @@ textarea:focus-visible, summary:focus-visible {
 .sxm-bg, .sxm-veil { transition: opacity 0.1s linear; }
 .sxm-content { transition: opacity 0.7s ease; }
 @media (prefers-reduced-motion: reduce) { .sxm-content { opacity: 1; } .sxm-hint { display: none; } }
+
+/* ===== Hero de la portada: imagen a pantalla completa con parallax =====
+   La imagen (.home-hero-bg) se desplaza más lento que el contenido al hacer
+   scroll (main.js) y hay un parallax sutil de ratón sobre el contenido
+   (motion.js, [data-hero-parallax]). El scrim asegura legibilidad del texto. */
+.home-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	min-height: 92vh;
+	min-height: 92dvh;
+	overflow: hidden;
+	background: #0d0d0d;
+}
+.home-hero-bg {
+	position: absolute;
+	inset: -12% 0;
+	z-index: 0;
+	overflow: hidden;
+	will-change: transform;
+}
+.home-hero-img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transform: scale(1.06);
+}
+.home-hero-scrim {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background:
+		linear-gradient(90deg, rgba(6, 8, 10, 0.88) 0%, rgba(6, 8, 10, 0.55) 42%, rgba(6, 8, 10, 0.12) 72%, rgba(6, 8, 10, 0.32) 100%),
+		linear-gradient(0deg, rgba(6, 8, 10, 0.72) 0%, rgba(6, 8, 10, 0) 46%);
+}
+.home-hero-inner {
+	position: relative;
+	z-index: 2;
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 80rem;
+	margin: 0 auto;
+	padding: 7.5rem 1.5rem 6rem;
+}
+@media (min-width: 640px) {
+	.home-hero-inner { padding-left: 2rem; padding-right: 2rem; }
+}
+.home-hero-content {
+	box-sizing: border-box;
+	width: 100%;
+	max-width: 42rem;
+	text-align: center;
+}
+.home-hero-eyebrow {
+	font-family: "Hanken Grotesk", sans-serif;
+	text-transform: uppercase;
+	letter-spacing: 0.17em;
+	font-size: 0.8rem;
+	font-weight: 600;
+	color: var(--color-sun);
+}
+.home-hero-title {
+	margin-top: 0.7rem;
+	color: #fff;
+	font-family: "Fraunces", Georgia, "Times New Roman", serif;
+	font-weight: 600;
+	line-height: 1.05;
+	letter-spacing: -0.015em;
+	font-size: clamp(1.95rem, 6.6vw, 4.6rem);
+	max-width: 100%;
+	overflow-wrap: break-word;
+	text-shadow: 0 3px 34px rgba(0, 0, 0, 0.5);
+}
+.home-hero-sub {
+	margin: 1.3rem auto 0;
+	max-width: 38rem;
+	color: rgba(255, 255, 255, 0.88);
+	font-size: clamp(0.98rem, 3.4vw, 1.2rem);
+	line-height: 1.6;
+	overflow-wrap: break-word;
+	text-shadow: 0 1px 12px rgba(0, 0, 0, 0.45);
+}
+.home-hero-actions {
+	margin-top: 2.1rem;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 1rem;
+}
+.hero-cta-primary,
+.hero-cta-ghost {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 0.6rem;
+	padding: 0.95rem 2rem;
+	font-weight: 600;
+	transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+.hero-cta-primary {
+	background: var(--color-accent);
+	color: #fff;
+	box-shadow: 0 14px 30px -12px rgba(242, 106, 33, 0.6);
+}
+.hero-cta-primary:hover {
+	transform: translateY(-2px);
+	background: var(--color-accent-hover);
+	box-shadow: 0 18px 38px -12px rgba(242, 106, 33, 0.7);
+}
+.hero-cta-ghost {
+	border: 1px solid rgba(255, 255, 255, 0.42);
+	color: #fff;
+	backdrop-filter: blur(4px);
+}
+.hero-cta-ghost:hover {
+	transform: translateY(-2px);
+	background: rgba(255, 255, 255, 0.12);
+	border-color: #fff;
+}
+.home-hero-trust {
+	margin-top: 2.3rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.55rem 1.5rem;
+	list-style: none;
+	padding: 0;
+	margin-bottom: 0;
+}
+.home-hero-trust li {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	color: rgba(255, 255, 255, 0.82);
+	font-size: 0.86rem;
+}
+.home-hero-trust strong { color: #fff; font-weight: 700; }
+.hero-stars { color: var(--color-sun); letter-spacing: 0.05em; }
+.home-hero-trust li svg { flex-shrink: 0; }
+.hero-trust-g { width: 16px; height: 16px; }
+.hero-trust-ic { width: 16px; height: 16px; color: var(--color-sun); }
+.home-hero-scroll {
+	position: absolute;
+	z-index: 2;
+	left: 50%;
+	bottom: 1.5rem;
+	transform: translateX(-50%);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.25rem;
+	color: rgba(255, 255, 255, 0.75);
+	font-size: 0.7rem;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	text-decoration: none;
+}
+.home-hero-scroll svg { width: 20px; height: 20px; }
+@media (prefers-reduced-motion: reduce) {
+	.home-hero-img { transform: scale(1.03); }
+}
+
+/* ===== Resplandor ambiental (portada): reemplaza las chispas por un brillo
+   cálido, tenue y muy lento que da profundidad sin robar atención. Con
+   mix-blend screen sólo aclara zonas oscuras; sobre tarjetas claras es
+   invisible. ===== */
+.ambient {
+	position: fixed;
+	inset: 0;
+	z-index: 2;
+	pointer-events: none;
+	mix-blend-mode: screen;
+	background:
+		radial-gradient(42% 46% at 16% 20%, rgba(242, 106, 33, 0.09), transparent 60%),
+		radial-gradient(46% 52% at 84% 80%, rgba(242, 150, 70, 0.07), transparent 62%);
+	animation: ambientDrift 46s ease-in-out infinite alternate;
+	will-change: transform, opacity;
+}
+@keyframes ambientDrift {
+	0%   { opacity: 0.75; transform: translate3d(0, 0, 0) scale(1); }
+	100% { opacity: 1;    transform: translate3d(-3%, 2.5%, 0) scale(1.06); }
+}
+@media (prefers-reduced-motion: reduce) {
+	.ambient { animation: none; opacity: 0.85; }
+}
+
+/* ===== "Cómo funciona": 4 pasos con línea conectora (timeline) =====
+   La grilla se define aquí (no con clases Tailwind md:grid-cols-4, que están
+   purgadas del CSS compilado). */
+.process-grid {
+	position: relative;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2.5rem;
+}
+@media (min-width: 640px) { .process-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 768px) { .process-grid { grid-template-columns: repeat(4, 1fr); gap: 1.5rem; } }
+@media (min-width: 768px) {
+	.process-grid::before {
+		content: "";
+		position: absolute;
+		left: 12.5%;
+		right: 12.5%;
+		top: 40px;
+		height: 2px;
+		background: linear-gradient(90deg, transparent, rgba(242, 106, 33, 0.45) 15%, rgba(242, 106, 33, 0.45) 85%, transparent);
+		z-index: 0;
+	}
+}
+.process-step { position: relative; z-index: 1; text-align: center; }
+.process-badge {
+	position: relative;
+	margin: 0 auto;
+	width: 80px;
+	height: 80px;
+	border-radius: 9999px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #141414;
+	border: 1px solid rgba(242, 106, 33, 0.35);
+	color: var(--color-accent);
+	box-shadow: 0 12px 30px -14px rgba(0, 0, 0, 0.7);
+	transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.process-step:hover .process-badge {
+	transform: translateY(-4px);
+	border-color: rgba(242, 106, 33, 0.7);
+	box-shadow: 0 18px 36px -16px rgba(242, 106, 33, 0.4);
+}
+.process-badge svg { width: 34px; height: 34px; }
+.process-num {
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	width: 26px;
+	height: 26px;
+	border-radius: 9999px;
+	background: var(--color-accent);
+	color: #fff;
+	font-size: 0.78rem;
+	font-weight: 700;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 10px -3px rgba(242, 106, 33, 0.6);
+}
 `;
 
 // ---- Home (index.html, en la raíz) ----
@@ -1636,76 +1883,29 @@ ${set(true)}
   ].join("\n");
 
   const main = `
-<div class="sxm" data-scroll-expand>
-	<section class="sxm-stage">
-		<div class="sxm-bg" aria-hidden="true"></div>
-		<div class="sxm-container">
-			<div class="sxm-center">
-				<div class="sxm-media">
-					<img class="sxm-scene" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom 30x40 steel ranch building on an Arizona property" decoding="async">
-					<div class="sxm-veil" aria-hidden="true"></div>
-					<div class="sxm-hint">
-						<p class="sxm-date">Arizona's Custom Steel Builder · ${count}+ Delivered</p>
-						<p class="sxm-scroll">Scroll to expand</p>
-					</div>
-				</div>
-				<h1 class="sxm-title">
-					<span class="sxm-title-first">Giving Life</span>
-					<span class="sxm-title-rest">to Your Projects</span>
-				</h1>
+<div class="ambient" aria-hidden="true"></div>
+<section class="home-hero" data-hero>
+	<div class="home-hero-bg" data-hero-bg aria-hidden="true">
+		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom 30x40 steel ranch building on an Arizona property" decoding="async">
+	</div>
+	<div class="home-hero-scrim" aria-hidden="true"></div>
+	<div class="home-hero-inner">
+		<div class="home-hero-content" data-hero-parallax>
+			<p class="home-hero-eyebrow" data-hero-eyebrow>Steel Structure Manufacturer</p>
+			<h1 class="home-hero-title" data-hero-heading>Steel Buildings</h1>
+			<p class="home-hero-sub" data-hero-subtitle>Custom garages, carports, barns and workshops, designed to withstand the heat and the monsoon, with delivery and installation.</p>
+			<div class="home-hero-actions" data-hero-actions>
+				<a href="${prefix}contact/contact.html" class="hero-cta-primary">Get a Free Quote</a>
+				<a href="#our-products" class="hero-cta-ghost">Explore Buildings</a>
 			</div>
-
-			<section class="sxm-content">
-				<div class="mx-auto max-w-3xl text-center">
-					<p class="text-lg text-gray-600 sm:text-xl">
-						Custom steel garages, carports, barns and commercial buildings — engineered for the Arizona sun and monsoon season, priced to fit your budget, and backed by a ${site.warrantyYears}-year warranty.
-					</p>
-					<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-						<a href="${prefix}contact/contact.html" class="inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm">Get a Free Quote</a>
-						<a href="#our-products" class="inline-flex items-center justify-center rounded-md border border-primary px-8 py-3.5 text-base font-semibold text-primary transition hover:bg-primary hover:text-white">View Products</a>
-					</div>
-
-					<div class="mx-auto mt-10 grid max-w-2xl grid-cols-1 gap-3 sm:grid-cols-3">
-						<div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm">
-							<span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-extrabold text-white">BBB</span>
-							<div>
-								<p class="text-xs font-semibold text-gray-500">BBB Rating</p>
-								<div class="flex items-center gap-1.5">
-									<span class="text-sm font-bold text-dark">${site.bbbRating}</span>
-									${starRow()}
-								</div>
-								<p class="text-[11px] text-gray-400">${site.bbbReviews} reviews</p>
-							</div>
-						</div>
-
-						<div class="flex flex-col items-center justify-center rounded-xl border border-gray-200 bg-white px-4 py-3 text-center shadow-sm">
-							<p class="text-2xl font-extrabold text-accent" data-counter="${site.completedCount}" data-suffix="+">${count}+</p>
-							<p class="text-[11px] font-semibold uppercase tracking-wide text-gray-500">Completed Projects</p>
-						</div>
-
-						<div class="flex items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-left shadow-sm">
-							<svg class="h-9 w-9 shrink-0" viewBox="0 0 48 48" aria-hidden="true">
-								<path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.6H24v9.1h11.9c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.5-9.4 6.5-16.7z"/>
-								<path fill="#34A853" d="M24 46c6 0 11-2 14.6-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.5 2.1-5.8 0-10.7-3.9-12.4-9.1H4.3v5.7C7.9 41.1 15.3 46 24 46z"/>
-								<path fill="#FBBC05" d="M11.6 28.2c-.4-1.3-.7-2.7-.7-4.2s.2-2.9.7-4.2v-5.7H4.3C2.8 17 2 20.4 2 24s.8 7 2.3 9.9z"/>
-								<path fill="#EA4335" d="M24 10.7c3.3 0 6.2 1.1 8.5 3.3l6.3-6.3C34.9 4.2 29.9 2 24 2 15.3 2 7.9 6.9 4.3 14.1l7.3 5.7c1.7-5.2 6.6-9.1 12.4-9.1z"/>
-							</svg>
-							<div>
-								<p class="text-xs font-semibold text-gray-500">Google Rating</p>
-								<div class="flex items-center gap-1.5">
-									<span class="text-sm font-bold text-dark">${site.googleRating}</span>
-									${starRow()}
-								</div>
-								<p class="text-[11px] text-gray-400">${site.googleReviews} reviews</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
+			
 		</div>
-	</section>
-</div>
-
+	</div>
+	<a href="#our-products" class="home-hero-scroll" data-scroll-indicator aria-label="Scroll to explore">
+		<span>Scroll</span>
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+	</a>
+</section>
 <section class="border-y border-gray-100 bg-gray-50 py-12">
 	<div class="mx-auto grid w-full max-w-7xl grid-cols-2 gap-8 px-4 text-center sm:grid-cols-4 sm:px-6 lg:px-8">
 		<div class="js-reveal-card" data-reveal-group="stats">
@@ -1713,8 +1913,8 @@ ${set(true)}
 			<p class="mt-1 text-sm text-gray-600">Buildings Delivered</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
-			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${site.warrantyYears}">${site.warrantyYears}</p>
-			<p class="mt-1 text-sm text-gray-600">Years of Warranty</p>
+			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${site.googleReviews}" data-suffix="+">${site.googleReviews}+</p>
+			<p class="mt-1 text-sm text-gray-600">5-Star Reviews</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${statesCount}" data-suffix="+">${statesCount}+</p>
@@ -1786,15 +1986,42 @@ ${testimonialMarquee}
 	</div>
 </section>
 
-<section class="bg-gray-50 py-16">
+<section class="bg-gray-50 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		<div class="mb-8 text-center" data-reveal>
-			<p class="text-sm font-semibold uppercase tracking-wide text-accent">Interactive Preview</p>
-			<h2 class="mt-2 text-3xl font-bold text-dark sm:text-4xl">See Your Steel Garage in 3D</h2>
-			<p class="mx-auto mt-3 max-w-xl text-sm text-gray-600">Drag to spin it around and explore it from every angle. A fully custom 3D builder — pick size, color and doors — is coming soon.</p>
-		</div>
-		<div id="garage3d" class="g3d-stage" role="img" aria-label="Interactive 3D model of a custom steel garage. Drag to rotate.">
-			<div class="g3d-hint"><span class="g3d-hint-ic">⟲</span> Drag to rotate · scroll to zoom</div>
+		${sectionHeading("How It Works", "From Idea to Installed in 4 Simple Steps", "We handle design, engineering, delivery and installation in-house — one point of contact from your first quote to final install.")}
+		<div class="process-grid mt-14">
+			<div class="js-reveal-card process-step" data-reveal-group="process">
+				<div class="process-badge">
+					<span class="process-num">1</span>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
+				</div>
+				<h3 class="mt-5 text-lg font-bold text-dark">Design</h3>
+				<p class="mx-auto mt-2 max-w-xs text-sm text-gray-600">Tell us your size, use and site — we'll help you spec the perfect building.</p>
+			</div>
+			<div class="js-reveal-card process-step" data-reveal-group="process">
+				<div class="process-badge">
+					<span class="process-num">2</span>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></svg>
+				</div>
+				<h3 class="mt-5 text-lg font-bold text-dark">Free Quote</h3>
+				<p class="mx-auto mt-2 max-w-xs text-sm text-gray-600">Get a fast, no-obligation quote — with financing options if you need them.</p>
+			</div>
+			<div class="js-reveal-card process-step" data-reveal-group="process">
+				<div class="process-badge">
+					<span class="process-num">3</span>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M4 21V10l6 4V10l6 4V7l4 3v11"/><path d="M9 21v-4h2v4"/></svg>
+				</div>
+				<h3 class="mt-5 text-lg font-bold text-dark">Fabrication</h3>
+				<p class="mx-auto mt-2 max-w-xs text-sm text-gray-600">We manufacture your building with certified, heavy-gauge steel, made to your exact spec.</p>
+			</div>
+			<div class="js-reveal-card process-step" data-reveal-group="process">
+				<div class="process-badge">
+					<span class="process-num">4</span>
+					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v9H3z"/><path d="M14 9h4l3 3v3h-7z"/><circle cx="7" cy="18" r="1.7"/><circle cx="17.5" cy="18" r="1.7"/></svg>
+				</div>
+				<h3 class="mt-5 text-lg font-bold text-dark">Delivery &amp; Install</h3>
+				<p class="mx-auto mt-2 max-w-xs text-sm text-gray-600">Our crew delivers and installs on your prepared site, usually in 4–8 weeks.</p>
+			</div>
 		</div>
 	</div>
 </section>
@@ -1835,8 +2062,6 @@ ${ctaBanner(prefix, "Ready to Build?", "Get a free, no-obligation quote from our
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="${prefix}assets/js/motion.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-<script src="${prefix}assets/js/garage3d.js" defer></script>
 `,
   });
 
@@ -1933,13 +2158,15 @@ for (const p of products) {
   const relatedCards = related.map((r) => `\t\t\t\t${productCard(prefix, r)}`).join("\n");
 
   const main = `
-<section class="product-hero relative overflow-hidden bg-primary">
+<section class="product-hero relative overflow-hidden bg-primary" data-parallax3d>
 	<div class="absolute inset-0">
-		<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
+		<div class="ph-bg-layer absolute inset-0">
+			<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
+		</div>
 		<div class="absolute inset-0 bg-primary/70"></div>
 		<span class="product-hero-glow" aria-hidden="true"></span>
 	</div>
-	<div class="relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+	<div class="ph-fg-layer relative mx-auto w-full max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
 		<p class="reveal-rise text-sm font-semibold uppercase tracking-widest text-blue-200">Products</p>
 		<h1 class="reveal-rise mt-2 max-w-2xl text-4xl font-extrabold text-white sm:text-5xl">${p.title}</h1>
 		<p class="reveal-rise mt-4 max-w-xl text-lg text-blue-100">${p.excerpt}</p>
@@ -2006,7 +2233,7 @@ ${ctaBanner(prefix, `Ready for Your New ${p.title.replace(/s$/, "")}?`, "Request
 <section class="py-20">
 	<div class="mx-auto w-full max-w-3xl space-y-6 px-4 text-gray-700 sm:px-6 lg:px-8">
 		<p>${site.name} was built on a simple idea: every home and business in Arizona deserves a durable, affordable steel structure without the hassle. From our first garage to thousands of buildings delivered across the state, our team handles design, engineering, delivery and installation in-house — so you get one point of contact from quote to completion.</p>
-		<p>We stand behind every build with a ${site.warrantyYears}-year structural warranty and a support team that's with you from your first quote through final installation.</p>
+		<p>We stand behind every build with a support team that's with you from your first quote through final installation.</p>
 	</div>
 </section>
 
@@ -2120,7 +2347,7 @@ ${ctaBanner(prefix, "Still have questions?", "Our team is happy to walk you thro
 `;
   files["faqs/faqs.html"] = page({
     title: `FAQs — ${site.name}`,
-    description: "Frequently asked questions about our steel buildings, permits, delivery and warranty.",
+    description: "Frequently asked questions about our steel buildings, permits, delivery and installation.",
     prefix,
     main,
     cssFile: "faqs.css",
@@ -2775,42 +3002,33 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 {
   const prefix = "../";
   const main = `
-<div class="sxm" data-scroll-expand>
-	<section class="sxm-stage">
-		<div class="sxm-bg" aria-hidden="true"></div>
-		<div class="sxm-container">
-			<div class="sxm-center">
-				<div class="sxm-media">
-					<video class="sxm-video" autoplay muted loop playsinline preload="auto" poster="${prefix}assets/images/hero/hero-placeholder.svg">
-						<source src="${prefix}assets/video/hero.mp4" type="video/mp4">
-					</video>
-					<div class="sxm-veil" aria-hidden="true"></div>
-					<div class="sxm-hint">
-						<p class="sxm-date">Arizona Steel · Built On-Site</p>
-						<p class="sxm-scroll">Scroll to expand</p>
-					</div>
-				</div>
-				<div class="sxm-title">
-					<h2 class="sxm-title-first">Built</h2>
-					<h2 class="sxm-title-rest">to Last</h2>
-				</div>
+<section class="home-hero" data-hero>
+	<div class="home-hero-bg" data-hero-bg aria-hidden="true">
+		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom steel building on an Arizona property" decoding="async">
+	</div>
+	<div class="home-hero-scrim" aria-hidden="true"></div>
+	<div class="home-hero-inner">
+		<div class="home-hero-content">
+			<p class="home-hero-eyebrow">Arizona Steel &middot; Built On-Site</p>
+			<h1 class="home-hero-title">Built to Last</h1>
+			<p class="home-hero-sub">Custom steel structures engineered for the Arizona climate and raised on your property by our own crews.</p>
+			<div class="home-hero-actions">
+				<a href="${prefix}contact/contact.html" class="hero-cta-primary">Get a Free Quote</a>
+				<a href="${prefix}index.html#our-products" class="hero-cta-ghost">Explore Products</a>
 			</div>
-
-			<section class="sxm-content">
-				<div class="mx-auto max-w-3xl text-center">
-					<p class="text-sm font-semibold uppercase tracking-wide eyebrow-red">Our Work</p>
-					<h2 class="mt-2 text-3xl font-bold tracking-tight text-dark sm:text-4xl">Craftsmanship you can see from the road</h2>
-					<p class="mt-5 text-lg text-gray-600">Every AZ Sunset structure is engineered for the Arizona climate and raised on your property by our own crews — from a single-car carport to a full commercial warehouse. Heavy-gauge steel, certified wind and snow ratings, and a ${site.warrantyYears}-year structural warranty on every build.</p>
-					<p class="mt-4 text-lg text-gray-600">Scroll through the video above to get a feel for the scale and finish of what we deliver, then tell us about your project and we'll send a free, no-obligation quote.</p>
-					<div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-						<a href="${prefix}contact/contact.html" class="inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm">Get a Free Quote</a>
-						<a href="${prefix}index.html#our-products" class="inline-flex items-center justify-center rounded-md border border-primary px-8 py-3.5 text-base font-semibold text-primary transition hover:bg-primary hover:text-white">Explore Products</a>
-					</div>
-				</div>
-			</section>
 		</div>
-	</section>
-</div>
+	</div>
+</section>
+
+<section class="py-20">
+	<div class="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
+		<p class="text-sm font-semibold uppercase tracking-wide eyebrow-red">Our Work</p>
+		<h2 class="mt-2 text-3xl font-bold tracking-tight text-dark sm:text-4xl">Craftsmanship you can see from the road</h2>
+		<p class="mt-5 text-lg text-gray-600">Every AZ Sunset structure is engineered for the Arizona climate and raised on your property by our own crews — from a single-car carport to a full commercial warehouse. Heavy-gauge steel with certified wind and snow ratings on every build.</p>
+	</div>
+</section>
+
+${ctaBanner(prefix, "Ready to start your project?", "Tell us what you need and we'll send a free, no-obligation quote.", "Get a Free Quote")}
 `;
   files["our-work/our-work.html"] = page({
     title: `Our Work — ${site.name}`,
@@ -2818,7 +3036,6 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
     prefix,
     main,
     cssFile: "our-work.css",
-    extraScripts: `<script src="${prefix}assets/js/scroll-expand.js"></script>\n`,
   });
 
   files["our-work/our-work.css"] = `/* ===== Scroll-to-expand media hero (portado a vanilla desde el componente
