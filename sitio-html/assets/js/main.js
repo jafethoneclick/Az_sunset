@@ -222,3 +222,126 @@
     });
   });
 })();
+
+// Galería de proyectos (lightbox). Cada tarjeta [data-gallery-base] abre el
+// visor con las fotos base/01.webp..NN.webp del mismo proyecto. Navegación por
+// flechas en pantalla, miniaturas, teclado (← → Esc) y swipe en táctil. El
+// foco se atrapa dentro del visor y se restaura al cerrar (accesibilidad).
+(function () {
+  var lb = document.getElementById("project-lightbox");
+  if (!lb) return;
+  var imgEl = document.getElementById("lightbox-img");
+  var titleEl = document.getElementById("lightbox-title");
+  var counterEl = document.getElementById("lightbox-counter");
+  var thumbsEl = document.getElementById("lightbox-thumbs");
+  var closeBtn = lb.querySelector(".lightbox-close");
+  var imgs = [];
+  var idx = 0;
+  var title = "";
+  var lastFocus = null;
+
+  function pad(n) { return (n < 10 ? "0" : "") + n; }
+
+  function render() {
+    imgEl.src = imgs[idx];
+    imgEl.alt = title + " — photo " + (idx + 1) + " of " + imgs.length;
+    titleEl.textContent = title;
+    counterEl.textContent = (idx + 1) + " / " + imgs.length;
+    // Reinicia la animación de entrada de la imagen en cada cambio.
+    imgEl.style.animation = "none";
+    // eslint-disable-next-line no-unused-expressions
+    imgEl.offsetWidth;
+    imgEl.style.animation = "";
+    var ts = thumbsEl.children;
+    for (var i = 0; i < ts.length; i++) ts[i].classList.toggle("is-active", i === idx);
+    var active = ts[idx];
+    if (active && active.scrollIntoView) {
+      active.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" });
+    }
+  }
+
+  function buildThumbs() {
+    thumbsEl.innerHTML = "";
+    imgs.forEach(function (src, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "lightbox-thumb";
+      b.setAttribute("aria-label", "Photo " + (i + 1));
+      var im = document.createElement("img");
+      im.src = src;
+      im.alt = "";
+      im.loading = "lazy";
+      b.appendChild(im);
+      b.addEventListener("click", function () { idx = i; render(); });
+      thumbsEl.appendChild(b);
+    });
+  }
+
+  function open(base, count, t) {
+    imgs = [];
+    for (var i = 1; i <= count; i++) imgs.push(base + "/" + pad(i) + ".webp");
+    idx = 0;
+    title = t || "";
+    buildThumbs();
+    render();
+    lastFocus = document.activeElement;
+    lb.hidden = false;
+    document.body.style.overflow = "hidden";
+    requestAnimationFrame(function () { lb.classList.add("is-open"); });
+    if (closeBtn) closeBtn.focus();
+  }
+
+  function close() {
+    lb.classList.remove("is-open");
+    document.body.style.overflow = "";
+    window.setTimeout(function () {
+      if (!lb.classList.contains("is-open")) { lb.hidden = true; imgEl.src = ""; }
+    }, 300);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  }
+
+  function step(d) { idx = (idx + d + imgs.length) % imgs.length; render(); }
+
+  var cards = document.querySelectorAll("[data-gallery-base]");
+  Array.prototype.forEach.call(cards, function (card) {
+    card.addEventListener("click", function () {
+      open(
+        card.getAttribute("data-gallery-base"),
+        Number(card.getAttribute("data-gallery-count")) || 0,
+        card.getAttribute("data-gallery-title")
+      );
+    });
+  });
+
+  Array.prototype.forEach.call(lb.querySelectorAll("[data-lightbox-close]"), function (el) {
+    el.addEventListener("click", close);
+  });
+  var prevBtn = lb.querySelector("[data-lightbox-prev]");
+  var nextBtn = lb.querySelector("[data-lightbox-next]");
+  if (prevBtn) prevBtn.addEventListener("click", function () { step(-1); });
+  if (nextBtn) nextBtn.addEventListener("click", function () { step(1); });
+
+  document.addEventListener("keydown", function (e) {
+    if (lb.hidden) return;
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowLeft") step(-1);
+    else if (e.key === "ArrowRight") step(1);
+    else if (e.key === "Tab") {
+      // Atrapa el foco dentro del visor.
+      var f = lb.querySelectorAll("button");
+      if (!f.length) return;
+      var first = f[0];
+      var last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+
+  // Swipe horizontal en táctil.
+  var sx = 0;
+  lb.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; }, { passive: true });
+  lb.addEventListener("touchend", function (e) {
+    var dx = e.changedTouches[0].clientX - sx;
+    if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
+})();

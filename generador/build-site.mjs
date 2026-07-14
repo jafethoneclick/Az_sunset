@@ -595,6 +595,257 @@ function productCard(prefix, p) {
 				</a>`;
 }
 
+// Proyectos reales (fotos de obra). Cada carpeta en
+// assets/images/projects/<slug>/ tiene cover.webp (portada 4:3) y las tomas
+// numeradas 01.webp..NN.webp (mismo edificio en distintos ángulos). El
+// lightbox arma las URLs con la base + count. Ver galleryLightbox() y el JS
+// de main.js ([data-gallery-base]).
+const projects = [
+  {
+    slug: "proyecto-1",
+    tag: "Garage",
+    title: "Enclosed Steel Garage",
+    location: "Arizona · vertical roof, walk-in door",
+    count: 7,
+  },
+  {
+    slug: "proyecto-2",
+    tag: "Workshop",
+    title: "Three-Bay Steel Garage",
+    location: "High country · roll-up doors",
+    count: 11,
+  },
+  {
+    slug: "proyecto-3",
+    tag: "Garage",
+    title: "Two-Bay Garage & Shop",
+    location: "Panoramic valley view",
+    count: 6,
+  },
+];
+
+// Icono SVG inline (heroicons-ish) reutilizable en las tarjetas de proyecto.
+function icon(name) {
+  const paths = {
+    camera:
+      '<path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"/>',
+    expand:
+      '<path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15"/>',
+  };
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">${paths[name] || ""}</svg>`;
+}
+
+// Visor de fotos (lightbox) para las galerías de proyectos. Se pinta una vez
+// por página; el JS de main.js lo llena al abrir según la tarjeta pulsada.
+// Navegación: flechas ‹ ›, miniaturas, teclado (← → Esc) y swipe en táctil.
+function galleryLightbox() {
+  return `<div class="lightbox" id="project-lightbox" role="dialog" aria-modal="true" aria-label="Project photos" hidden>
+	<div class="lightbox-backdrop" data-lightbox-close></div>
+	<button type="button" class="lightbox-close" data-lightbox-close aria-label="Close gallery">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12"/></svg>
+	</button>
+	<button type="button" class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="Previous photo">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5 8.25 12l7.5-7.5"/></svg>
+	</button>
+	<button type="button" class="lightbox-nav lightbox-next" data-lightbox-next aria-label="Next photo">
+		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5"/></svg>
+	</button>
+	<figure class="lightbox-stage">
+		<img class="lightbox-img" id="lightbox-img" alt="">
+		<figcaption class="lightbox-caption">
+			<span class="lightbox-title" id="lightbox-title"></span>
+			<span class="lightbox-counter" id="lightbox-counter"></span>
+		</figcaption>
+	</figure>
+	<div class="lightbox-thumbs" id="lightbox-thumbs"></div>
+</div>`;
+}
+
+// Página "HSF Portal": versión resumida del portal de financiación (inspirada
+// en HFS Financial). Es una página propia (financing/hsf-portal.html) a la que
+// redirige el botón "Request access". `prefix` apunta a la raíz del sitio.
+function hsfPortalMain(prefix) {
+  const check =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>';
+  const benefits = [
+    "No home equity or collateral required",
+    "No appraisals or prepayment penalties",
+    "Soft credit check &mdash; it won&rsquo;t affect your score",
+    "Funds in as little as 1 day for qualified buyers",
+    "Available in all 50 states",
+  ];
+  const steps = [
+    "Submit a 60-second inquiry with a soft credit check.",
+    "Get prequalified with instant loan options the same day.",
+    "Upload your documents securely online.",
+    "Receive your funds within 48 hours of approval.",
+  ];
+  return `
+<section class="bg-primary py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+		<img src="${prefix}assets/images/partners/hsf-logo.webp" alt="HFS Financial" width="326" height="105" class="mx-auto mb-6 h-14 w-auto" loading="lazy">
+		<p class="fin-modal-eyebrow">Financing partner</p>
+		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">You dream it, we finance it</h1>
+		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Simple, fixed-rate financing for your steel building &mdash; no home equity, no appraisals, just a fast online application.</p>
+		<div class="mt-8 flex flex-wrap justify-center gap-4">
+			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Start your inquiry</a>
+			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
+		</div>
+	</div>
+</section>
+
+<section class="py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		<div class="fin-modal-stats reveal-rise">
+			<div class="fin-stat"><b>$1k&ndash;$100k</b><span>Loan amounts</span></div>
+			<div class="fin-stat"><b>7.80% APR</b><span>Fixed rates from</span></div>
+			<div class="fin-stat"><b>1&ndash;30 yrs</b><span>Flexible terms</span></div>
+		</div>
+		<ul class="fin-modal-list reveal-rise">
+${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
+		</ul>
+	</div>
+</section>
+
+<section class="bg-gray-50 py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		${sectionHeading("How it works", "Funded in four simple steps")}
+		<div class="fin-steps reveal-rise mx-auto mt-10 max-w-2xl">
+${steps.map((s, i) => `\t\t\t<div class="fin-step"><span class="fin-step-num">${i + 1}</span><p>${s}</p></div>`).join("\n")}
+		</div>
+		<p class="fin-modal-trust mt-10 text-center">100,000+ homeowners funded since 2011 &middot; 3,500+ five-star Trustpilot reviews</p>
+		<p class="fin-modal-note mx-auto mt-3 max-w-2xl text-center">HSF Financial is an independent lending partner. Rates and terms shown are illustrative and subject to credit approval.</p>
+	</div>
+</section>
+
+${ctaBanner(prefix, "Ready to finance your building?", "Start your 60-second inquiry &mdash; it won&rsquo;t affect your credit score.", "Start your inquiry")}
+`;
+}
+
+// Página "RTO National": versión resumida del portal de alquiler con opción a
+// compra (inspirada en rtonational.com). Es una página propia
+// (financing/rto-national.html) a la que redirige el botón "Learn more".
+function rtoNationalMain(prefix) {
+  const check =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>';
+  const benefits = [
+    "Two ways to pay: lease or finance",
+    "$0 down financing available",
+    "No credit check on the lease option",
+    "No early buyout or cancellation penalties",
+    "Fixed APR and predictable monthly payments",
+    "Own your building &mdash; buy it out anytime",
+  ];
+  const steps = [
+    "Choose lease or finance and pick the terms that fit your budget.",
+    "Get an instant approval decision online or in person, 24/7.",
+    "Sign and take your building home with low monthly payments.",
+    "Buy out early whenever you&rsquo;re ready &mdash; with no penalty.",
+  ];
+  return `
+<section class="bg-primary py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+		<img src="${prefix}assets/images/partners/rto-national-logo.svg" alt="RTO National" width="553" height="275" class="mx-auto mb-6 h-20 w-auto" loading="lazy">
+		<p class="fin-modal-eyebrow">Rent-to-own partner</p>
+		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">Making success simple</h1>
+		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Rent-to-own for your steel building &mdash; quick, easy and flexible. Lease with no credit check, or finance with $0 down.</p>
+		<div class="mt-8 flex flex-wrap justify-center gap-4">
+			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Check your options</a>
+			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
+		</div>
+	</div>
+</section>
+
+<section class="py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		<div class="fin-modal-stats reveal-rise">
+			<div class="fin-stat"><b>$0 down</b><span>Finance option</span></div>
+			<div class="fin-stat"><b>No credit check</b><span>Lease option</span></div>
+			<div class="fin-stat"><b>Up to $20k</b><span>Building value</span></div>
+		</div>
+		<ul class="fin-modal-list reveal-rise">
+${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
+		</ul>
+	</div>
+</section>
+
+<section class="bg-gray-50 py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		${sectionHeading("How it works", "Approved in minutes, yours to own")}
+		<div class="fin-steps reveal-rise mx-auto mt-10 max-w-2xl">
+${steps.map((s, i) => `\t\t\t<div class="fin-step"><span class="fin-step-num">${i + 1}</span><p>${s}</p></div>`).join("\n")}
+		</div>
+		<p class="fin-modal-trust mt-10 text-center">BBB-accredited &middot; Nationwide dealer network &middot; Online approvals 24/7</p>
+		<p class="fin-modal-note mx-auto mt-3 max-w-2xl text-center">RTO National is an independent rent-to-own partner. Terms, availability and buyout options vary by state and are subject to approval.</p>
+	</div>
+</section>
+
+${ctaBanner(prefix, "Ready to get started?", "Check your rent-to-own options &mdash; lease with no credit check or finance with $0 down.", "Check your options")}
+`;
+}
+
+// Página "Heartland Capital RTO": resumen del programa de alquiler con opción a
+// compra (inspirada en hci.net). Es una página propia
+// (financing/heartland-capital-rto.html) a la que redirige "Ask about RTO".
+function heartlandRtoMain(prefix) {
+  const check =
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>';
+  const benefits = [
+    "No upfront cost to get started",
+    "No credit check and no credit reporting",
+    "Month-to-month agreement &mdash; cancel anytime",
+    "Early payoff available with no penalties",
+    "Every payment is credited toward ownership",
+    "Instant approval",
+  ];
+  const steps = [
+    "Complete your rental information.",
+    "Submit your first payment by card or check.",
+    "Get an instant approval decision.",
+    "Make affordable monthly payments &mdash; each one moves you closer to owning.",
+  ];
+  return `
+<section class="bg-primary py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 text-center sm:px-6 lg:px-8">
+		<img src="${prefix}assets/images/partners/heartland-logo-white.png" alt="Heartland Capital Investments" width="445" height="100" class="mx-auto mb-6 h-14 w-auto" loading="lazy">
+		<p class="fin-modal-eyebrow">Rent-to-own partner</p>
+		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">Rent today, own it tomorrow</h1>
+		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Affordable monthly payments on your steel building &mdash; no credit check, no upfront cost, and every payment works toward ownership.</p>
+		<div class="mt-8 flex flex-wrap justify-center gap-4">
+			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Ask about RTO</a>
+			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
+		</div>
+	</div>
+</section>
+
+<section class="py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		<div class="fin-modal-stats reveal-rise">
+			<div class="fin-stat"><b>$0 upfront</b><span>To get started</span></div>
+			<div class="fin-stat"><b>No credit check</b><span>No credit reporting</span></div>
+			<div class="fin-stat"><b>Since 2007</b><span>Rent-to-own experts</span></div>
+		</div>
+		<ul class="fin-modal-list reveal-rise">
+${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
+		</ul>
+	</div>
+</section>
+
+<section class="bg-gray-50 py-16">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+		${sectionHeading("How it works", "From application to ownership")}
+		<div class="fin-steps reveal-rise mx-auto mt-10 max-w-2xl">
+${steps.map((s, i) => `\t\t\t<div class="fin-step"><span class="fin-step-num">${i + 1}</span><p>${s}</p></div>`).join("\n")}
+		</div>
+		<p class="fin-modal-trust mt-10 text-center">In business since 2007 &middot; BBB accredited &middot; 1,000+ five-star Google reviews &middot; Serving the continental U.S.</p>
+		<p class="fin-modal-note mx-auto mt-3 max-w-2xl text-center">Heartland Capital Investments is an independent rent-to-own partner. Terms and availability vary by state and are subject to approval.</p>
+	</div>
+</section>
+
+${ctaBanner(prefix, "Ready to rent to own?", "No credit check, no upfront cost &mdash; ask us how rent-to-own works for your building.", "Ask about RTO")}
+`;
+}
+
 // Datos estructurados schema.org para SEO local (rich results de Google:
 // nombre, dirección, teléfono, horarios, zona de servicio y rating). Va en la
 // portada. OJO: usa site.url (dominio placeholder) — cambialo por el real.
@@ -1591,7 +1842,9 @@ textarea:focus-visible, summary:focus-visible {
 	width: 100%;
 	max-width: 80rem;
 	margin: 0 auto;
-	padding: 7.5rem 1.5rem 6rem;
+	/* Top relativo al alto de pantalla → el bloque baja de forma responsiva
+	   (más abajo en pantallas altas), con mínimo y máximo para no pasarse. */
+	padding: clamp(11rem, 30vh, 18rem) 1.5rem 3rem;
 }
 @media (min-width: 640px) {
 	.home-hero-inner { padding-left: 2rem; padding-right: 2rem; }
@@ -1601,6 +1854,33 @@ textarea:focus-visible, summary:focus-visible {
 	width: 100%;
 	max-width: 42rem;
 	text-align: center;
+}
+
+/* Entrada animada del hero (CSS puro, sin GSAP): la imagen hace fade-in y los
+   textos + botones suben escalonados al cargar la página. */
+.home-hero-bg {
+	animation: heroFadeIn 1.1s ease both;
+}
+.home-hero-content > * {
+	animation: heroRise 0.75s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.home-hero-eyebrow { animation-delay: 0.15s; }
+.home-hero-title   { animation-delay: 0.28s; }
+.home-hero-sub     { animation-delay: 0.44s; }
+.home-hero-actions { animation-delay: 0.60s; }
+@keyframes heroFadeIn {
+	from { opacity: 0; }
+	to   { opacity: 1; }
+}
+@keyframes heroRise {
+	from { opacity: 0; transform: translateY(26px); }
+	to   { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.home-hero-bg,
+	.home-hero-content > * {
+		animation: none;
+	}
 }
 .home-hero-eyebrow {
 	font-family: "Hanken Grotesk", sans-serif;
@@ -1795,6 +2075,359 @@ textarea:focus-visible, summary:focus-visible {
 	justify-content: center;
 	box-shadow: 0 4px 10px -3px rgba(242, 106, 33, 0.6);
 }
+
+/* ===== Galería de proyectos (obra real) ===== */
+.projects-grid {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.75rem;
+}
+@media (min-width: 640px) {
+	.projects-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+	.projects-grid { grid-template-columns: repeat(3, 1fr); }
+}
+.project-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+	padding: 0;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 1rem;
+	overflow: hidden;
+	background: #141414;
+	cursor: pointer;
+	color: inherit;
+	font: inherit;
+	box-shadow: 0 14px 40px -22px rgba(0, 0, 0, 0.9);
+	transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+.project-card:hover,
+.project-card:focus-visible {
+	transform: translateY(-6px);
+	border-color: rgba(242, 106, 33, 0.45);
+	box-shadow: 0 26px 50px -24px rgba(0, 0, 0, 0.95);
+	outline: none;
+}
+.project-card:focus-visible { box-shadow: 0 0 0 3px rgba(242, 106, 33, 0.55), 0 26px 50px -24px rgba(0, 0, 0, 0.95); }
+.project-card-media {
+	position: relative;
+	display: block;
+	aspect-ratio: 4 / 3;
+	overflow: hidden;
+	background: #0d0d0d;
+}
+.project-card-media img {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.project-card:hover .project-card-media img,
+.project-card:focus-visible .project-card-media img { transform: scale(1.07); }
+.project-card-scrim {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.55) 0%, rgba(0, 0, 0, 0) 45%);
+}
+.project-card-badge {
+	position: absolute;
+	top: 0.85rem;
+	right: 0.85rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.32rem 0.6rem;
+	border-radius: 9999px;
+	background: rgba(13, 13, 13, 0.72);
+	backdrop-filter: blur(6px);
+	color: #fff;
+	font-size: 0.78rem;
+	font-weight: 700;
+	line-height: 1;
+}
+.project-card-badge svg { width: 15px; height: 15px; }
+.project-card-zoom {
+	position: absolute;
+	inset: 0;
+	margin: auto;
+	width: 56px;
+	height: 56px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 9999px;
+	background: rgba(242, 106, 33, 0.92);
+	color: #fff;
+	opacity: 0;
+	transform: scale(0.8);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+	box-shadow: 0 10px 24px -8px rgba(242, 106, 33, 0.7);
+}
+.project-card-zoom svg { width: 26px; height: 26px; }
+.project-card:hover .project-card-zoom,
+.project-card:focus-visible .project-card-zoom { opacity: 1; transform: scale(1); }
+.project-card-body { padding: 1.15rem 1.25rem 1.35rem; }
+.project-card-tag {
+	display: inline-block;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+.project-card-title {
+	display: block;
+	margin-top: 0.35rem;
+	font-size: 1.15rem;
+	font-weight: 700;
+	color: var(--color-text-strong, #f5f5f5);
+}
+.project-card-loc {
+	display: block;
+	margin-top: 0.3rem;
+	font-size: 0.86rem;
+	color: #9ca3af;
+}
+
+/* ===== Lightbox ===== */
+.lightbox {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(0.75rem, 3vw, 2rem);
+	background: rgba(8, 8, 8, 0.94);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	transition: opacity 0.28s ease;
+}
+.lightbox[hidden] { display: none; }
+.lightbox.is-open { opacity: 1; }
+.lightbox-backdrop { position: absolute; inset: 0; cursor: zoom-out; }
+.lightbox-stage {
+	position: relative;
+	z-index: 1;
+	margin: 0;
+	max-width: min(100%, 1200px);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.9rem;
+}
+.lightbox-img {
+	max-width: 100%;
+	max-height: 74vh;
+	width: auto;
+	height: auto;
+	border-radius: 0.75rem;
+	box-shadow: 0 30px 70px -25px rgba(0, 0, 0, 0.9);
+	animation: lightboxIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes lightboxIn {
+	from { opacity: 0; transform: scale(0.97); }
+	to { opacity: 1; transform: scale(1); }
+}
+.lightbox-caption {
+	display: flex;
+	align-items: baseline;
+	gap: 0.75rem;
+	color: #e5e7eb;
+	font-size: 0.92rem;
+}
+.lightbox-title { font-weight: 600; }
+.lightbox-counter { color: #9ca3af; font-variant-numeric: tabular-nums; }
+.lightbox-thumbs {
+	position: relative;
+	z-index: 1;
+	margin-top: 1rem;
+	display: flex;
+	gap: 0.55rem;
+	max-width: 100%;
+	overflow-x: auto;
+	padding: 0.35rem 0.15rem 0.5rem;
+	scrollbar-width: thin;
+}
+.lightbox-thumb {
+	flex: 0 0 auto;
+	width: 74px;
+	height: 54px;
+	padding: 0;
+	border: 2px solid transparent;
+	border-radius: 0.5rem;
+	overflow: hidden;
+	background: #111;
+	cursor: pointer;
+	opacity: 0.55;
+	transition: opacity 0.25s ease, border-color 0.25s ease;
+}
+.lightbox-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.lightbox-thumb:hover { opacity: 0.85; }
+.lightbox-thumb.is-active { opacity: 1; border-color: var(--color-accent); }
+.lightbox-close,
+.lightbox-nav {
+	position: absolute;
+	z-index: 2;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 9999px;
+	background: rgba(20, 20, 20, 0.72);
+	color: #fff;
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	cursor: pointer;
+	transition: background 0.25s ease, transform 0.25s ease;
+}
+.lightbox-close:hover,
+.lightbox-nav:hover { background: var(--color-accent); }
+.lightbox-close { top: 1rem; right: 1rem; width: 44px; height: 44px; }
+.lightbox-close svg { width: 22px; height: 22px; }
+.lightbox-nav { top: 50%; transform: translateY(-50%); width: 48px; height: 48px; }
+.lightbox-nav:hover { transform: translateY(-50%) scale(1.08); }
+.lightbox-nav svg { width: 24px; height: 24px; }
+.lightbox-prev { left: clamp(0.5rem, 2vw, 1.5rem); }
+.lightbox-next { right: clamp(0.5rem, 2vw, 1.5rem); }
+@media (max-width: 600px) {
+	.lightbox-nav { width: 40px; height: 40px; }
+	.lightbox-img { max-height: 62vh; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.project-card,
+	.project-card-media img,
+	.project-card-zoom,
+	.lightbox,
+	.lightbox-img { transition: none; animation: none; }
+}
+
+/* ===== Modal HSF Portal (financiación) ===== */
+.fin-modal {
+	position: fixed;
+	inset: 0;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: clamp(1rem, 4vw, 2rem);
+	background: rgba(8, 8, 8, 0.9);
+	backdrop-filter: blur(10px);
+	opacity: 0;
+	transition: opacity 0.28s ease;
+}
+.fin-modal[hidden] { display: none; }
+.fin-modal.is-open { opacity: 1; }
+.fin-modal-backdrop { position: absolute; inset: 0; cursor: pointer; }
+.fin-modal-panel {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 640px;
+	max-height: 88vh;
+	overflow-y: auto;
+	background: #141414;
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 1.25rem;
+	padding: clamp(1.5rem, 4vw, 2.5rem);
+	box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.9);
+	opacity: 0;
+	transform: translateY(16px) scale(0.98);
+	transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
+}
+.fin-modal.is-open .fin-modal-panel { opacity: 1; transform: none; }
+.fin-modal-close {
+	position: absolute;
+	top: 1rem;
+	right: 1rem;
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 9999px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	color: #fff;
+	cursor: pointer;
+	transition: background 0.25s ease, transform 0.25s ease;
+}
+.fin-modal-close:hover { background: var(--color-accent); transform: rotate(90deg); }
+.fin-modal-close svg { width: 20px; height: 20px; }
+.fin-modal-eyebrow {
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: var(--color-accent);
+}
+.fin-modal-title {
+	margin-top: 0.5rem;
+	font-size: clamp(1.5rem, 4vw, 2rem);
+	font-weight: 700;
+	color: #f5f5f5;
+	line-height: 1.15;
+}
+.fin-modal-sub {
+	margin-top: 0.65rem;
+	font-size: 0.95rem;
+	line-height: 1.6;
+	color: #9ca3af;
+}
+.fin-modal-stats {
+	margin-top: 1.4rem;
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.65rem;
+}
+.fin-stat {
+	background: #1b1b1b;
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	border-radius: 0.75rem;
+	padding: 0.85rem 0.4rem;
+	text-align: center;
+}
+.fin-stat b { display: block; color: var(--color-accent); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
+.fin-stat span { display: block; margin-top: 0.2rem; font-size: 0.7rem; color: #9ca3af; }
+.fin-modal-list { margin-top: 1.5rem; display: grid; gap: 0.7rem; list-style: none; padding: 0; }
+.fin-modal-list li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: #d1d5db; }
+.fin-modal-list svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--color-accent); margin-top: 1px; }
+.fin-modal-heading {
+	margin-top: 1.6rem;
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.09em;
+	text-transform: uppercase;
+	color: #e5e7eb;
+}
+.fin-steps { margin-top: 0.9rem; display: grid; gap: 0.8rem; }
+.fin-step { display: flex; gap: 0.75rem; align-items: flex-start; }
+.fin-step-num {
+	flex: 0 0 auto;
+	width: 28px;
+	height: 28px;
+	border-radius: 9999px;
+	background: rgba(242, 106, 33, 0.15);
+	color: var(--color-accent);
+	font-weight: 700;
+	font-size: 0.85rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.fin-step p { font-size: 0.9rem; color: #d1d5db; line-height: 1.5; }
+.fin-modal-actions { margin-top: 1.8rem; display: flex; flex-wrap: wrap; gap: 0.8rem; }
+.fin-modal-trust { margin-top: 1.3rem; font-size: 0.8rem; color: #9ca3af; }
+.fin-modal-note { margin-top: 0.6rem; font-size: 0.72rem; color: #6b7280; line-height: 1.5; }
+@media (prefers-reduced-motion: reduce) {
+	.fin-modal,
+	.fin-modal-panel { transition: none; }
+	.fin-modal-close:hover { transform: none; }
+}
 `;
 
 // ---- Home (index.html, en la raíz) ----
@@ -1820,6 +2453,27 @@ textarea:focus-visible, summary:focus-visible {
     .join("\n");
 
   const productGrid = products.map((p) => `\t\t\t\t${productCard(prefix, p)}`).join("\n");
+
+  // Tarjetas de proyecto (obra real). Son <button>: al hacer clic abren el
+  // lightbox con los demás ángulos (JS en main.js lee data-gallery-*).
+  const projectCards = projects
+    .map((pr) => {
+      const base = `${prefix}assets/images/projects/${pr.slug}`;
+      return `\t\t\t<button type="button" class="project-card js-reveal-card" data-reveal-group="projects-gallery" data-gallery-base="${base}" data-gallery-count="${pr.count}" data-gallery-title="${pr.title}" aria-label="View gallery: ${pr.title} (${pr.count} photos)">
+					<span class="project-card-media">
+						<img src="${base}/cover.webp" alt="${pr.title}" width="1000" height="750" loading="lazy" decoding="async">
+						<span class="project-card-scrim" aria-hidden="true"></span>
+						<span class="project-card-badge">${icon("camera")}<span>${pr.count}</span></span>
+						<span class="project-card-zoom" aria-hidden="true">${icon("expand")}</span>
+					</span>
+					<span class="project-card-body">
+						<span class="project-card-tag">${pr.tag}</span>
+						<span class="project-card-title">${pr.title}</span>
+						<span class="project-card-loc">${pr.location}</span>
+					</span>
+				</button>`;
+    })
+    .join("\n");
 
   const whyUsCards = whyUs
     .map(
@@ -1891,10 +2545,10 @@ ${set(true)}
 	<div class="home-hero-scrim" aria-hidden="true"></div>
 	<div class="home-hero-inner">
 		<div class="home-hero-content" data-hero-parallax>
-			<p class="home-hero-eyebrow" data-hero-eyebrow>Steel Structure Manufacturer</p>
-			<h1 class="home-hero-title" data-hero-heading>Steel Buildings</h1>
-			<p class="home-hero-sub" data-hero-subtitle>Custom garages, carports, barns and workshops, designed to withstand the heat and the monsoon, with delivery and installation.</p>
-			<div class="home-hero-actions" data-hero-actions>
+			<p class="home-hero-eyebrow">Steel Structure Manufacturer</p>
+			<h1 class="home-hero-title">Steel Buildings</h1>
+			<p class="home-hero-sub">Custom garages, carports, barns and workshops, designed to withstand the heat and the monsoon, with delivery and installation.</p>
+			<div class="home-hero-actions">
 				<a href="${prefix}contact/contact.html" class="hero-cta-primary">Get a Free Quote</a>
 				<a href="#our-products" class="hero-cta-ghost">Explore Buildings</a>
 			</div>
@@ -1935,12 +2589,15 @@ ${set(true)}
 			</h2>
 			<a href="#our-products" class="inline-flex shrink-0 items-center justify-center rounded-md bg-accent px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:opacity-90 sm:self-start">View All Products</a>
 		</div>
-		<div class="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-${topPicks}
+		<div class="projects-grid mt-10">
+${projectCards}
 		</div>
 	</div>
 </section>
 
+${galleryLightbox()}
+
+<!-- OCULTO TEMPORALMENTE: seccion Our Products (Built for Every Project). Quitar las marcas de comentario para volver a mostrarla.
 <section id="our-products" class="scroll-mt-24 bg-gray-50 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 		${sectionHeading("Our Products", "Built for Every Project", "From a single-car garage to a full commercial warehouse, we've got a structure for it.")}
@@ -1949,6 +2606,7 @@ ${productGrid}
 		</div>
 	</div>
 </section>
+-->
 
 <section class="bg-gray-50 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -1961,9 +2619,23 @@ ${whyUsCards}
 
 <section class="py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		${sectionHeading("Purchase Options", "Flexible Ways to Get Your Building", "Pick the payment path that works best for your budget and timeline.")}
-		<div class="mt-12 grid grid-cols-1 gap-6 md:grid-cols-3">
-${purchaseCards}
+		${sectionHeading("Our Partners", "Financing Partners", "We work with trusted rent-to-own and financing partners to make your building affordable.")}
+		<div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
+				<h3 class="text-xl font-bold text-dark">Heartland Capital RTO</h3>
+				<p class="mt-3 text-sm text-gray-600">Rent-to-own plans up to $20,000 with no credit check and affordable monthly payments — with the option to buy out anytime.</p>
+				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
+			</div>
+			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
+				<h3 class="text-xl font-bold text-dark">HSF Portal</h3>
+				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
+				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
+			</div>
+			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
+				<h3 class="text-xl font-bold text-dark">RTO National</h3>
+				<p class="mt-3 text-sm text-gray-600">A nationwide rent-to-own program with flexible terms and early purchase options, available in most of the states we serve.</p>
+				<a href="${prefix}financing/rto-national.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>
+			</div>
 		</div>
 	</div>
 </section>
@@ -2264,6 +2936,7 @@ ${ctaBanner(prefix, "Let's build something together", "", "Get a Free Quote")}
     .join("\n");
 
   const main = `
+<!-- OCULTO TEMPORALMENTE: seccion Flexible Ways to Own Your Building (Payment Options) y sus tarjetas. Quitar las marcas de comentario para volver a mostrarla.
 <section class="bg-primary py-16">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 		${sectionHeading("Payment Options", "Flexible Ways to Own Your Building", "Whatever your budget or credit situation, we have a payment path that fits.", true)}
@@ -2275,6 +2948,7 @@ ${ctaBanner(prefix, "Let's build something together", "", "Get a Free Quote")}
 ${cards}
 	</div>
 </section>
+-->
 
 <section class="bg-gray-50 py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -2283,17 +2957,17 @@ ${cards}
 			<div id="heartland-capital-rto" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">Heartland Capital RTO</h2>
 				<p class="mt-3 text-sm text-gray-600">Rent-to-own plans up to $20,000 with no credit check and affordable monthly payments — with the option to buy out anytime.</p>
-				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
+				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
 			<div id="hsf-portal" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">HSF Portal</h2>
 				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
-				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
+				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
 			<div id="rto-national" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">RTO National</h2>
 				<p class="mt-3 text-sm text-gray-600">A nationwide rent-to-own program with flexible terms and early purchase options, available in most of the states we serve.</p>
-				<a href="${prefix}contact/contact.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>
+				<a href="${prefix}financing/rto-national.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>
 			</div>
 		</div>
 	</div>
@@ -2311,6 +2985,33 @@ ${ctaBanner(prefix, "Have questions about financing?", "Talk to our team and we'
   files["financing/financing.css"] = `/* Estilos específicos de la página Financing.
    El diseño base compartido vive en ../assets/css/main.css. */
 `;
+
+  // Página del portal de financiación HSF (resumen tipo HFS Financial).
+  files["financing/hsf-portal.html"] = page({
+    title: `HSF Portal — Financing — ${site.name}`,
+    description: "Fixed-rate financing for your steel building through our HSF partner — no home equity, no appraisals, funds in as little as one day.",
+    prefix,
+    main: hsfPortalMain(prefix),
+    cssFile: "financing.css",
+  });
+
+  // Página de RTO National (resumen tipo rtonational.com).
+  files["financing/rto-national.html"] = page({
+    title: `RTO National — Financing — ${site.name}`,
+    description: "Rent-to-own for your steel building through RTO National — lease with no credit check or finance with $0 down, and buy out anytime.",
+    prefix,
+    main: rtoNationalMain(prefix),
+    cssFile: "financing.css",
+  });
+
+  // Página de Heartland Capital RTO (resumen tipo hci.net).
+  files["financing/heartland-capital-rto.html"] = page({
+    title: `Heartland Capital RTO — Financing — ${site.name}`,
+    description: "Rent-to-own for your steel building through Heartland Capital — no credit check, no upfront cost, cancel anytime and every payment goes toward ownership.",
+    prefix,
+    main: heartlandRtoMain(prefix),
+    cssFile: "financing.css",
+  });
 }
 
 // ---- FAQs ----
