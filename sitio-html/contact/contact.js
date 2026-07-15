@@ -1,8 +1,8 @@
-// Lógica de la página Contact — versión FRONT-END ONLY.
-// El formulario muestra su estado de éxito directamente en el navegador,
-// sin depender de un backend. Cuando conectes un servicio real de
-// formularios (Formspree, Web3Forms, tu propio endpoint…), enviá los datos
-// en el punto marcado con TODO más abajo y luego llamá a showSuccess().
+// Lógica de la página Contact. El envío se hace con FormSubmit
+// (https://formsubmit.co) — un servicio gratuito de correo para sitios
+// estáticos. El lead se manda por AJAX al correo configurado en site.leadEmail.
+// IMPORTANTE: la primera vez hay que activar el correo haciendo clic en el
+// enlace que FormSubmit envía al buzón de destino.
 (function () {
 	var params = new URLSearchParams(window.location.search);
 	var status = params.get("quote");
@@ -47,17 +47,24 @@
 				return;
 			}
 
-			// TODO (entrega del lead): acá va el envío real. Ejemplo con
-			// Formspree / Web3Forms (reemplazá la URL por la tuya):
-			//   fetch("https://formspree.io/f/XXXXXXXX", {
-			//     method: "POST",
-			//     headers: { Accept: "application/json" },
-			//     body: new FormData(form)
-			//   }).then(showSuccess).catch(function () {
-			//     if (error) error.classList.remove("hidden");
-			//   });
-			// Mientras no haya endpoint, mostramos el éxito directamente:
-			showSuccess();
+			// Envío real vía FormSubmit (AJAX). Mostramos estado "enviando"
+			// y, si algo falla, reactivamos el botón y avisamos.
+			var btn = form.querySelector("button[type=submit]");
+			var btnLabel = btn ? btn.textContent : "";
+			if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+			if (error) error.classList.add("hidden");
+
+			fetch("https://formsubmit.co/ajax/jafethjimenezsanchez@gmail.com", {
+				method: "POST",
+				headers: { Accept: "application/json" },
+				body: new FormData(form)
+			})
+				.then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.json(); })
+				.then(function () { showSuccess(); })
+				.catch(function () {
+					if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+					if (error) error.classList.remove("hidden");
+				});
 		});
 	}
 })();

@@ -9,7 +9,7 @@
  * Al terminar redirige a contact.html?quote=success|error.
  */
 
-$to            = 'quotes@azsunsetsteel.com';
+$to            = 'Azsunsetsteelstructures@gmail.com';
 $business_name = 'AZ Sunset Steel Structures & Carports';
 
 function redirect_with($status) {

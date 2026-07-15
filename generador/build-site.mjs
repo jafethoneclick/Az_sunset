@@ -15,9 +15,13 @@ const site = {
   url: "https://www.azsunsetsteel.com",
   tagline: "Giving Life to Your Projects",
   shortTagline: "Custom-built steel structures, delivered and installed",
-  phone: "(480) 555-0199",
-  phoneHref: "+14805550199",
-  email: "quotes@azsunsetsteel.com",
+  phone: "(480) 852-7744",
+  phoneHref: "+14808527744",
+  email: "Azsunsetsteelstructures@gmail.com",
+  // Correo al que llegan los envíos del formulario (vía FormSubmit). Es una
+  // PRUEBA: hoy va a jafeth; para pasarlo al negocio, cambiá esta línea por
+  // site.email y reconstruí (node generador/build-site.mjs).
+  leadEmail: "jafethjimenezsanchez@gmail.com",
   address1: "2450 W Deer Valley Rd, Suite 12",
   city: "Phoenix",
   state: "AZ",
@@ -34,9 +38,9 @@ const site = {
   bbbReviews: "239",
   googleRating: "4.9",
   googleReviews: "418",
-  facebook: "https://facebook.com/",
-  instagram: "https://instagram.com/",
-  linkedin: "https://linkedin.com/",
+  facebook: "https://www.facebook.com/people/AZ-Sunset-Steel-Structures/61590595353591/",
+  instagram: "",
+  linkedin: "",
 };
 
 const products = [
@@ -497,9 +501,7 @@ function footer(prefix) {
 				<p><span class="text-gray-400">Sunday:</span> ${site.hoursSunday}</p>
 			</div>
 			<div class="mt-5 flex gap-3">
-				<a href="${site.facebook}" class="footer-social" aria-label="Facebook">${icFb}</a>
-				<a href="${site.instagram}" class="footer-social" aria-label="Instagram">${icIg}</a>
-				<a href="${site.linkedin}" class="footer-social" aria-label="LinkedIn">${icLi}</a>
+				<a href="${site.facebook}" class="footer-social" aria-label="Facebook" target="_blank" rel="noopener">${icFb}</a>
 			</div>
 		</div>
 
@@ -889,7 +891,7 @@ function localBusinessJsonLd() {
       { "@type": "OpeningHoursSpecification", dayOfWeek: "Saturday", opens: "09:00", closes: "16:00" },
     ],
     aggregateRating: { "@type": "AggregateRating", ratingValue: site.googleRating, reviewCount: site.googleReviews },
-    sameAs: [site.facebook, site.instagram, site.linkedin],
+    sameAs: [site.facebook],
   };
   return `<script type="application/ld+json">${JSON.stringify(data)}</script>\n`;
 }
@@ -3119,11 +3121,15 @@ ${ctaBanner(prefix, "Still have questions?", "Our team is happy to walk you thro
 
 			<p id="quote-error" class="hidden mb-5 text-sm text-red-600">Please fill in all required fields and try again.</p>
 
-			<form id="quote-form" method="post" action="contact.php" class="space-y-5">
+			<form id="quote-form" method="post" action="https://formsubmit.co/${site.leadEmail}" class="space-y-5">
 				<div class="hidden" aria-hidden="true">
 					<label for="website">Website</label>
 					<input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
 				</div>
+				<!-- Config de FormSubmit (servicio de correo para sitios estáticos). -->
+				<input type="hidden" name="_subject" value="New quote request — ${site.name}">
+				<input type="hidden" name="_template" value="table">
+				<input type="hidden" name="_captcha" value="false">
 
 				<div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
 					<div>
@@ -3213,11 +3219,11 @@ ${options}
 }
 `;
 
-  files["contact/contact.js"] = `// Lógica de la página Contact — versión FRONT-END ONLY.
-// El formulario muestra su estado de éxito directamente en el navegador,
-// sin depender de un backend. Cuando conectes un servicio real de
-// formularios (Formspree, Web3Forms, tu propio endpoint…), enviá los datos
-// en el punto marcado con TODO más abajo y luego llamá a showSuccess().
+  files["contact/contact.js"] = `// Lógica de la página Contact. El envío se hace con FormSubmit
+// (https://formsubmit.co) — un servicio gratuito de correo para sitios
+// estáticos. El lead se manda por AJAX al correo configurado en site.leadEmail.
+// IMPORTANTE: la primera vez hay que activar el correo haciendo clic en el
+// enlace que FormSubmit envía al buzón de destino.
 (function () {
 	var params = new URLSearchParams(window.location.search);
 	var status = params.get("quote");
@@ -3262,17 +3268,24 @@ ${options}
 				return;
 			}
 
-			// TODO (entrega del lead): acá va el envío real. Ejemplo con
-			// Formspree / Web3Forms (reemplazá la URL por la tuya):
-			//   fetch("https://formspree.io/f/XXXXXXXX", {
-			//     method: "POST",
-			//     headers: { Accept: "application/json" },
-			//     body: new FormData(form)
-			//   }).then(showSuccess).catch(function () {
-			//     if (error) error.classList.remove("hidden");
-			//   });
-			// Mientras no haya endpoint, mostramos el éxito directamente:
-			showSuccess();
+			// Envío real vía FormSubmit (AJAX). Mostramos estado "enviando"
+			// y, si algo falla, reactivamos el botón y avisamos.
+			var btn = form.querySelector("button[type=submit]");
+			var btnLabel = btn ? btn.textContent : "";
+			if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
+			if (error) error.classList.add("hidden");
+
+			fetch("https://formsubmit.co/ajax/${site.leadEmail}", {
+				method: "POST",
+				headers: { Accept: "application/json" },
+				body: new FormData(form)
+			})
+				.then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.json(); })
+				.then(function () { showSuccess(); })
+				.catch(function () {
+					if (btn) { btn.disabled = false; btn.textContent = btnLabel; }
+					if (error) error.classList.remove("hidden");
+				});
 		});
 	}
 })();

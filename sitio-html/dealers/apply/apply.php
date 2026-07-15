@@ -6,7 +6,7 @@
  * intenta avisar por correo y redirige a apply.html?apply=success|error.
  */
 
-$to            = 'quotes@azsunsetsteel.com';
+$to            = 'Azsunsetsteelstructures@gmail.com';
 $business_name = 'AZ Sunset Steel Structures & Carports';
 
 function redirect_with($status) {
