@@ -54,10 +54,20 @@
 			if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
 			if (error) error.classList.add("hidden");
 
+			// Personalizamos el correo: el asunto lleva el nombre de la persona
+			// (para verlo en la bandeja) y Reply-To apunta a su correo (al
+			// responder, la respuesta le llega directo al cliente).
+			var data = new FormData(form);
+			var nameField = form.querySelector("#name");
+			var emailField = form.querySelector("#email");
+			var who = nameField && nameField.value ? nameField.value.trim() : "a customer";
+			data.set("_subject", "New quote request from " + who);
+			if (emailField && emailField.value) { data.set("_replyto", emailField.value.trim()); }
+
 			fetch("https://formsubmit.co/ajax/jafethjimenezsanchez@gmail.com", {
 				method: "POST",
 				headers: { Accept: "application/json" },
-				body: new FormData(form)
+				body: data
 			})
 				.then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.json(); })
 				.then(function () { showSuccess(); })

@@ -214,7 +214,7 @@ const testimonials = [
     name: "Marisol D.",
     location: "Tucson, AZ",
     quote:
-      "Great price, great communication, and the crew that installed our barn was fast and professional. Would recommend to anyone in Southern Arizona.",
+      "Great price, great communication, and the crew that installed our barn was fast and professional. Would recommend to anyone.",
   },
   {
     name: "Dusty H.",
@@ -226,7 +226,7 @@ const testimonials = [
     name: "Dakota S.",
     location: "Prescott, AZ",
     quote:
-      "Our RV cover has already shrugged off two monsoon storms without a scratch. Solid steel, solid company — built for Arizona weather.",
+      "Our RV cover has already shrugged off two monsoon storms without a scratch. Solid steel, solid company — built to handle the toughest weather.",
   },
   {
     name: "Carlos M.",
@@ -271,7 +271,7 @@ const faqs = [
   },
   {
     q: "What areas do you service?",
-    a: "We deliver and install across all of Arizona — from Phoenix, Mesa and Tucson to the high country around Flagstaff and Prescott. Contact us to confirm scheduling in your area.",
+    a: "We deliver and install across a wide service area — from the low desert to the high country. Contact us to confirm scheduling in your area.",
   },
   {
     q: "Can I customize the size, color and features of my building?",
@@ -290,7 +290,7 @@ const faqs = [
 const whyUs = [
   {
     title: "Engineered & certified",
-    desc: "Wind- and snow-rated, heavy-gauge steel built to Arizona code on every project.",
+    desc: "Wind- and snow-rated, heavy-gauge steel built to code on every project.",
   },
   {
     title: "Delivery & installation included",
@@ -616,7 +616,7 @@ const projects = [
     slug: "proyecto-1",
     tag: "Garage",
     title: "Enclosed Steel Garage",
-    location: "Arizona · vertical roof, walk-in door",
+    location: "Vertical roof · walk-in door",
     count: 7,
     product: "garages",
     productLabel: "Metal Garages",
@@ -2579,7 +2579,7 @@ ${set(true)}
 <div class="ambient" aria-hidden="true"></div>
 <section class="home-hero" data-hero>
 	<div class="home-hero-bg" data-hero-bg aria-hidden="true">
-		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom 30x40 steel ranch building on an Arizona property" decoding="async">
+		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom 30x40 steel ranch building on a rural property" decoding="async">
 	</div>
 	<div class="home-hero-scrim" aria-hidden="true"></div>
 	<div class="home-hero-inner">
@@ -2611,7 +2611,7 @@ ${set(true)}
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${statesCount}" data-suffix="+">${statesCount}+</p>
-			<p class="mt-1 text-sm text-gray-600">AZ Cities Served</p>
+			<p class="mt-1 text-sm text-gray-600">Cities Served</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl">4-8 wks</p>
@@ -2681,7 +2681,7 @@ ${whyUsCards}
 
 <section id="where-we-build" class="scroll-mt-24 bg-primary py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-		${sectionHeading("Where We Build", "Proudly Serving All of Arizona", "From the low desert to the high country, we deliver and install statewide.", true)}
+		${sectionHeading("Where We Build", "Proudly Serving Your Area", "From the low desert to the high country, we deliver and install right where you are.", true)}
 		<div class="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-3">
 ${stateChips}
 		</div>
@@ -2943,7 +2943,7 @@ ${ctaBanner(prefix, `Ready for Your New ${p.title.replace(/s$/, "")}?`, "Request
 
 <section class="py-20">
 	<div class="mx-auto w-full max-w-3xl space-y-6 px-4 text-gray-700 sm:px-6 lg:px-8">
-		<p>${site.name} was built on a simple idea: every home and business in Arizona deserves a durable, affordable steel structure without the hassle. From our first garage to thousands of buildings delivered across the state, our team handles design, engineering, delivery and installation in-house — so you get one point of contact from quote to completion.</p>
+		<p>${site.name} was built on a simple idea: every home and business deserves a durable, affordable steel structure without the hassle. From our first garage to thousands of buildings delivered, our team handles design, engineering, delivery and installation in-house — so you get one point of contact from quote to completion.</p>
 		<p>We stand behind every build with a support team that's with you from your first quote through final installation.</p>
 	</div>
 </section>
@@ -3275,10 +3275,20 @@ ${options}
 			if (btn) { btn.disabled = true; btn.textContent = "Sending…"; }
 			if (error) error.classList.add("hidden");
 
+			// Personalizamos el correo: el asunto lleva el nombre de la persona
+			// (para verlo en la bandeja) y Reply-To apunta a su correo (al
+			// responder, la respuesta le llega directo al cliente).
+			var data = new FormData(form);
+			var nameField = form.querySelector("#name");
+			var emailField = form.querySelector("#email");
+			var who = nameField && nameField.value ? nameField.value.trim() : "a customer";
+			data.set("_subject", "New quote request from " + who);
+			if (emailField && emailField.value) { data.set("_replyto", emailField.value.trim()); }
+
 			fetch("https://formsubmit.co/ajax/${site.leadEmail}", {
 				method: "POST",
 				headers: { Accept: "application/json" },
-				body: new FormData(form)
+				body: data
 			})
 				.then(function (r) { if (!r.ok) { throw new Error("HTTP " + r.status); } return r.json(); })
 				.then(function () { showSuccess(); })
@@ -3755,14 +3765,14 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
   const main = `
 <section class="home-hero" data-hero>
 	<div class="home-hero-bg" data-hero-bg aria-hidden="true">
-		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom steel building on an Arizona property" decoding="async">
+		<img class="home-hero-img" src="${prefix}assets/images/hero/hero-inicio.avif" alt="Custom steel building on a rural property" decoding="async">
 	</div>
 	<div class="home-hero-scrim" aria-hidden="true"></div>
 	<div class="home-hero-inner">
 		<div class="home-hero-content">
-			<p class="home-hero-eyebrow">Arizona Steel &middot; Built On-Site</p>
+			<p class="home-hero-eyebrow">Custom Steel &middot; Built On-Site</p>
 			<h1 class="home-hero-title">Built to Last</h1>
-			<p class="home-hero-sub">Custom steel structures engineered for the Arizona climate and raised on your property by our own crews.</p>
+			<p class="home-hero-sub">Custom steel structures engineered for tough weather and raised on your property by our own crews.</p>
 			<div class="home-hero-actions">
 				<a href="${prefix}contact/contact.html" class="hero-cta-primary">Get a Free Quote</a>
 				<a href="${prefix}index.html#our-products" class="hero-cta-ghost">Explore Products</a>
@@ -3775,7 +3785,7 @@ ${ctaBanner(prefix, "Already a dealer?", "Sign in to the dealer portal to manage
 	<div class="mx-auto max-w-3xl px-4 text-center sm:px-6 lg:px-8">
 		<p class="text-sm font-semibold uppercase tracking-wide eyebrow-red">Our Work</p>
 		<h2 class="mt-2 text-3xl font-bold tracking-tight text-dark sm:text-4xl">Craftsmanship you can see from the road</h2>
-		<p class="mt-5 text-lg text-gray-600">Every AZ Sunset structure is engineered for the Arizona climate and raised on your property by our own crews — from a single-car carport to a full commercial warehouse. Heavy-gauge steel with certified wind and snow ratings on every build.</p>
+		<p class="mt-5 text-lg text-gray-600">Every AZ Sunset structure is engineered for tough weather and raised on your property by our own crews — from a single-car carport to a full commercial warehouse. Heavy-gauge steel with certified wind and snow ratings on every build.</p>
 	</div>
 </section>
 
@@ -3783,7 +3793,7 @@ ${ctaBanner(prefix, "Ready to start your project?", "Tell us what you need and w
 `;
   files["our-work/our-work.html"] = page({
     title: `Our Work — ${site.name}`,
-    description: "An immersive look at the custom steel structures we design, build and install across Arizona.",
+    description: "An immersive look at the custom steel structures we design, build and install.",
     prefix,
     main,
     cssFile: "our-work.css",
@@ -4165,7 +4175,7 @@ function heroSceneSvg() {
     const op = i % 2 === 0 ? 0.1 : 0.05;
     rays += `<polygon points="800,-900 776,565 824,565" fill="#ffd08a" opacity="${op}" transform="rotate(${ang} 800 565)"/>`;
   }
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Custom steel garages, carports and barns silhouetted against an Arizona sunset">
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Custom steel garages, carports and barns silhouetted against a sunset">
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#120b20"/>
