@@ -616,6 +616,8 @@ const projects = [
     title: "Enclosed Steel Garage",
     location: "Arizona · vertical roof, walk-in door",
     count: 7,
+    product: "garages",
+    productLabel: "Metal Garages",
   },
   {
     slug: "proyecto-2",
@@ -623,6 +625,8 @@ const projects = [
     title: "Three-Bay Steel Garage",
     location: "High country · roll-up doors",
     count: 11,
+    product: "commercial",
+    productLabel: "Commercial Buildings",
   },
   {
     slug: "proyecto-3",
@@ -630,6 +634,8 @@ const projects = [
     title: "Two-Bay Garage & Shop",
     location: "Panoramic valley view",
     count: 6,
+    product: "combo-units",
+    productLabel: "Combo Units",
   },
 ];
 
@@ -2107,26 +2113,32 @@ textarea:focus-visible, summary:focus-visible {
 	border-radius: 1rem;
 	overflow: hidden;
 	background: #141414;
-	cursor: pointer;
-	color: inherit;
-	font: inherit;
 	box-shadow: 0 14px 40px -22px rgba(0, 0, 0, 0.9);
 	transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.35s ease, box-shadow 0.35s ease;
 }
 .project-card:hover,
-.project-card:focus-visible {
+.project-card:focus-within {
 	transform: translateY(-6px);
 	border-color: rgba(242, 106, 33, 0.45);
 	box-shadow: 0 26px 50px -24px rgba(0, 0, 0, 0.95);
-	outline: none;
 }
-.project-card:focus-visible { box-shadow: 0 0 0 3px rgba(242, 106, 33, 0.55), 0 26px 50px -24px rgba(0, 0, 0, 0.95); }
 .project-card-media {
 	position: relative;
 	display: block;
+	width: 100%;
 	aspect-ratio: 4 / 3;
 	overflow: hidden;
 	background: #0d0d0d;
+	border: 0;
+	padding: 0;
+	margin: 0;
+	cursor: pointer;
+	appearance: none;
+	-webkit-appearance: none;
+}
+.project-card-media:focus-visible {
+	outline: 2px solid var(--color-accent);
+	outline-offset: -3px;
 }
 .project-card-media img {
 	position: absolute;
@@ -2137,7 +2149,7 @@ textarea:focus-visible, summary:focus-visible {
 	transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 .project-card:hover .project-card-media img,
-.project-card:focus-visible .project-card-media img { transform: scale(1.07); }
+.project-card:focus-within .project-card-media img { transform: scale(1.07); }
 .project-card-scrim {
 	position: absolute;
 	inset: 0;
@@ -2179,8 +2191,8 @@ textarea:focus-visible, summary:focus-visible {
 }
 .project-card-zoom svg { width: 26px; height: 26px; }
 .project-card:hover .project-card-zoom,
-.project-card:focus-visible .project-card-zoom { opacity: 1; transform: scale(1); }
-.project-card-body { padding: 1.15rem 1.25rem 1.35rem; }
+.project-card:focus-within .project-card-zoom { opacity: 1; transform: scale(1); }
+.project-card-body { display: flex; flex-direction: column; padding: 1.15rem 1.25rem 1.35rem; }
 .project-card-tag {
 	display: inline-block;
 	font-size: 0.72rem;
@@ -2202,6 +2214,21 @@ textarea:focus-visible, summary:focus-visible {
 	font-size: 0.86rem;
 	color: #9ca3af;
 }
+.project-card-link {
+	align-self: flex-start;
+	margin-top: 1rem;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.15rem;
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--color-accent);
+	text-decoration: none;
+	transition: gap 0.25s ease;
+}
+.project-card-link:hover,
+.project-card-link:focus-visible { text-decoration: underline; gap: 0.4rem; }
+.project-card-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; border-radius: 2px; }
 
 /* ===== Lightbox ===== */
 .lightbox {
@@ -2468,19 +2495,20 @@ textarea:focus-visible, summary:focus-visible {
   const projectCards = projects
     .map((pr) => {
       const base = `${prefix}assets/images/projects/${pr.slug}`;
-      return `\t\t\t<button type="button" class="project-card js-reveal-card" data-reveal-group="projects-gallery" data-gallery-base="${base}" data-gallery-count="${pr.count}" data-gallery-title="${pr.title}" aria-label="View gallery: ${pr.title} (${pr.count} photos)">
-					<span class="project-card-media">
+      return `\t\t\t<article class="project-card js-reveal-card" data-reveal-group="projects-gallery">
+					<button type="button" class="project-card-media" data-gallery-base="${base}" data-gallery-count="${pr.count}" data-gallery-title="${pr.title}" aria-label="View photos: ${pr.title} (${pr.count} photos)">
 						<img src="${base}/cover.webp" alt="${pr.title}" width="1000" height="750" loading="lazy" decoding="async">
 						<span class="project-card-scrim" aria-hidden="true"></span>
 						<span class="project-card-badge">${icon("camera")}<span>${pr.count}</span></span>
 						<span class="project-card-zoom" aria-hidden="true">${icon("expand")}</span>
-					</span>
-					<span class="project-card-body">
+					</button>
+					<div class="project-card-body">
 						<span class="project-card-tag">${pr.tag}</span>
 						<span class="project-card-title">${pr.title}</span>
 						<span class="project-card-loc">${pr.location}</span>
-					</span>
-				</button>`;
+						<a href="${prefix}products/${pr.product}/${pr.product}.html" class="project-card-link">View details<span aria-hidden="true"> →</span></a>
+					</div>
+				</article>`;
     })
     .join("\n");
 
