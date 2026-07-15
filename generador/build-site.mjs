@@ -358,7 +358,7 @@ function navColumns(prefix) {
       href: `${prefix}financing/financing.html`,
       links: [
         { label: "Heartland Capital RTO", href: `${prefix}financing/financing.html#heartland-capital-rto` },
-        { label: "HSF Portal", href: `${prefix}financing/financing.html#hsf-portal` },
+        { label: "HSF", href: `${prefix}financing/financing.html#hsf-portal` },
         { label: "RTO National", href: `${prefix}financing/financing.html#rto-national` },
       ],
     },
@@ -565,21 +565,30 @@ ${subtext ? `\t\t<p class="max-w-xl text-lg text-blue-100">${subtext}</p>` : ""}
 </section>`;
 }
 
-// Fotos reales de productos (prueba). Si un producto está acá, se usa la foto;
-// si no, se cae al placeholder SVG animado. Reemplazá/agregá fotos manteniendo
-// el nombre "photo.<ext>" dentro de assets/images/products/<slug>/.
-const productPhotos = {
-  garages: "photo.jpg",
-  carports: "photo.jpg",
-  barns: "photo.avif",
-  commercial: "photo.webp",
-  "utility-units": "photo.jpg",
-};
+// Imágenes de producto: SOLO fotos reales de obra que subió el cliente (las de
+// assets/images/projects). Nada de fotos de stock de internet. Como todas las
+// fotos reales son de garajes, se reparten entre los productos por índice para
+// dar variedad. PROJECT_CARD_COVERS son 4:3 (tarjetas); PROJECT_HERO_SHOTS son
+// panorámicas (hero de la página de producto).
+const PROJECT_CARD_COVERS = [
+  "proyecto-1/cover.webp",
+  "proyecto-2/cover.webp",
+  "proyecto-3/cover.webp",
+];
+const PROJECT_HERO_SHOTS = [
+  "proyecto-1/02.webp",
+  "proyecto-2/01.webp",
+  "proyecto-3/01.webp",
+];
 function productImage(prefix, p) {
-  const photo = productPhotos[p.slug];
-  return photo
-    ? `${prefix}assets/images/products/${p.slug}/${photo}`
-    : `${prefix}assets/images/products/${p.slug}/card-placeholder.svg`;
+  const i = Math.max(0, products.indexOf(p));
+  const file = PROJECT_CARD_COVERS[i % PROJECT_CARD_COVERS.length];
+  return `${prefix}assets/images/projects/${file}`;
+}
+function productHeroImage(prefix, p) {
+  const i = Math.max(0, products.indexOf(p));
+  const file = PROJECT_HERO_SHOTS[i % PROJECT_HERO_SHOTS.length];
+  return `${prefix}assets/images/projects/${file}`;
 }
 
 function productCard(prefix, p) {
@@ -2627,7 +2636,7 @@ ${whyUsCards}
 				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
 			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
-				<h3 class="text-xl font-bold text-dark">HSF Portal</h3>
+				<h3 class="text-xl font-bold text-dark">HSF</h3>
 				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
 				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
@@ -2833,7 +2842,7 @@ for (const p of products) {
 <section class="product-hero relative overflow-hidden bg-primary" data-parallax3d>
 	<div class="absolute inset-0">
 		<div class="ph-bg-layer absolute inset-0">
-			<img src="${productPhotos[p.slug] ? `${prefix}assets/images/products/${p.slug}/${productPhotos[p.slug]}` : `${prefix}assets/images/products/${p.slug}/hero-placeholder.svg`}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
+			<img src="${productHeroImage(prefix, p)}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
 		</div>
 		<div class="absolute inset-0 bg-primary/70"></div>
 		<span class="product-hero-glow" aria-hidden="true"></span>
@@ -2960,7 +2969,7 @@ ${cards}
 				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
 			<div id="hsf-portal" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
-				<h2 class="text-xl font-bold text-dark">HSF Portal</h2>
+				<h2 class="text-xl font-bold text-dark">HSF</h2>
 				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
 				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
@@ -2988,7 +2997,7 @@ ${ctaBanner(prefix, "Have questions about financing?", "Talk to our team and we'
 
   // Página del portal de financiación HSF (resumen tipo HFS Financial).
   files["financing/hsf-portal.html"] = page({
-    title: `HSF Portal — Financing — ${site.name}`,
+    title: `HSF — Financing — ${site.name}`,
     description: "Fixed-rate financing for your steel building through our HSF partner — no home equity, no appraisals, funds in as little as one day.",
     prefix,
     main: hsfPortalMain(prefix),
