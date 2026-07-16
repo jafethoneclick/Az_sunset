@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="12.0 16.0 536.0 616.0">
+  <defs>
+    <linearGradient id="steel" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef1f4"/>
+      <stop offset="20%" stop-color="#c4cad2"/>
+      <stop offset="46%" stop-color="#9aa0a9"/>
+      <stop offset="56%" stop-color="#dfe3e8"/>
+      <stop offset="72%" stop-color="#aab0b9"/>
+      <stop offset="100%" stop-color="#82888f"/>
+    </linearGradient>
+    <radialGradient id="sunset" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="rgba(242,106,33,0.55)"/>
+      <stop offset="45%" stop-color="rgba(242,106,33,0.18)"/>
+      <stop offset="100%" stop-color="rgba(242,106,33,0)"/>
+    </radialGradient>
+  </defs>
+  
+  <path d="M514.0,46.5L513.6,602.0L349.3,602.0L46.0,488.2L53.5,466.2L69.5,462.4L74.0,453.9L69.5,435.6L58.4,435.1L53.1,398.6L69.5,384.6L68.6,347.1L78.4,329.9L91.3,323.5L101.1,310.6L85.1,296.6L74.0,270.9L60.7,254.8L65.5,229.0L57.1,192.0L52.2,134.5L82.0,130.8L91.7,142.6L99.7,142.1L108.2,125.4L108.2,46.5L395.9,46.0Z" fill="none" stroke="#E9EAEC" stroke-width="3.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <g transform="translate(187.7,270.7) scale(0.9853)" fill="#E9EAEC">
+    <path d="M24,0 L48,0 L24,100 L0,100 Z M48,0 L72,0 L96,100 L72,100 Z M33.1,62 L62.9,62 L67.7,82 L28.3,82 Z"/>
+    <g transform="translate(136,0)"><path d="M0,0 L92,0 L92,26 L0,26 Z M62,0 L92,0 L30,100 L0,100 Z M0,74 L92,74 L92,100 L0,100 Z"/></g>
+  </g>
+</svg>

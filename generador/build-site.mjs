@@ -670,41 +670,38 @@ function icon(name) {
 // puntitos (para no encimarse) y se nombran en el pie. El brillo y el parallax
 // sutil los ponen el CSS (.az-map-glow) y el JS de main.js ([data-az-map]).
 function arizonaMap() {
-  const counties = azGeo.counties
-    .map(
-      (c) => `<path class="azm-county" d="${c.d}" fill="${c.color}"></path>
-			<text class="azm-county-label" x="${c.cx}" y="${c.cy}">${c.name.toUpperCase()}</text>`
-    )
-    .join("");
-  const neighbors = azGeo.neighbors
-    .map(
-      (n) => `<text class="azm-neighbor" x="${n.x}" y="${n.y}" transform="rotate(${n.rot} ${n.x} ${n.y})" text-anchor="${n.anchor}">${n.name}</text>`
-    )
-    .join("");
-  const star = "M0,-6L1.8,-1.9L6,-1.9L2.6,1L3.7,5.2L0,2.7L-3.7,5.2L-2.6,1L-6,-1.9L-1.8,-1.9Z";
-  // Sin marcadores de ciudades: el mapa muestra solo los condados con su color
-  // y nombre, y los estados vecinos. Queda limpio.
-  const cityPins = azGeo.cities
-    .filter(() => false)
-    .map(
-      (c) => `<g class="azm-city${c.capital ? " is-capital" : ""}" tabindex="0" role="img" aria-label="${c.name}">
-			${c.capital ? `<path class="azm-star" transform="translate(${c.x},${c.y})" d="${star}"></path>` : ""}
-			<circle class="azm-hit" cx="${c.x}" cy="${c.y}" r="10"></circle>
-			${c.capital ? "" : `<circle class="azm-dot" cx="${c.x}" cy="${c.y}" r="${c.r}"></circle>`}
-			<text class="azm-label${c.capital ? " is-capital-label" : ""}" x="${c.capital ? c.x + 9 : c.lx}" y="${c.ly}" text-anchor="${c.capital ? "start" : c.anchor}">${c.name}</text>
-		</g>`
-    )
-    .join("");
+  // Marca "AZ": silueta de Arizona simplificada (contorno naranja grueso) con
+  // "AZ" en letras geométricas de acabado acero (degradado metálico) y un
+  // resplandor radial naranja "sunset" detrás. Vectores puros (sin depender de
+  // fuentes) para verse nítido a cualquier tamaño. Parallax vía main.js.
+  const state = "M514.0,46.5L513.6,602.0L349.3,602.0L46.0,488.2L53.5,466.2L69.5,462.4L74.0,453.9L69.5,435.6L58.4,435.1L53.1,398.6L69.5,384.6L68.6,347.1L78.4,329.9L91.3,323.5L101.1,310.6L85.1,296.6L74.0,270.9L60.7,254.8L65.5,229.0L57.1,192.0L52.2,134.5L82.0,130.8L91.7,142.6L99.7,142.1L108.2,125.4L108.2,46.5L395.9,46.0Z";
+  const azA = "M24,0 L48,0 L24,100 L0,100 Z M48,0 L72,0 L96,100 L72,100 Z M33.1,62 L62.9,62 L67.7,82 L28.3,82 Z";
+  const azZ = "M0,0 L92,0 L92,26 L0,26 Z M62,0 L92,0 L30,100 L0,100 Z M0,74 L92,74 L92,100 L0,100 Z";
   return `<div class="az-map-wrap" data-az-map>
-		<span class="az-map-glow" aria-hidden="true"></span>
-		<svg class="az-map-svg" viewBox="0 0 ${azGeo.w} ${azGeo.h}" role="img" aria-label="County map of Arizona showing the cities we serve">
-			<g class="azm-counties">${counties}</g>
-			<path class="azm-outline" d="${azGeo.state}"></path>
-			<g class="azm-neighbors" aria-hidden="true">${neighbors}</g>
-				<g class="azm-cities">${cityPins}</g>
-		</svg>
-	</div>
-	`;
+    <svg class="az-map-svg" viewBox="12 16 536 616" role="img" aria-label="Arizona — AZ Sunset Steel Structures service area">
+      <defs>
+        <linearGradient id="azSteel" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#eef1f4"/>
+          <stop offset="20%" stop-color="#c4cad2"/>
+          <stop offset="46%" stop-color="#9aa0a9"/>
+          <stop offset="56%" stop-color="#dfe3e8"/>
+          <stop offset="72%" stop-color="#aab0b9"/>
+          <stop offset="100%" stop-color="#82888f"/>
+        </linearGradient>
+        <radialGradient id="azSunset" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="rgba(242,106,33,0.55)"/>
+          <stop offset="45%" stop-color="rgba(242,106,33,0.18)"/>
+          <stop offset="100%" stop-color="rgba(242,106,33,0)"/>
+        </radialGradient>
+      </defs>
+      <ellipse cx="300" cy="320" rx="159" ry="111" fill="url(#azSunset)"/>
+      <path class="az-outline" d="${state}"/>
+      <g class="az-letters" fill="url(#azSteel)" transform="translate(187.7,270.7) scale(0.9853)">
+        <path d="${azA}"/>
+        <g transform="translate(136,0)"><path d="${azZ}"/></g>
+      </g>
+    </svg>
+  </div>`;
 }
 
 // Visor de fotos (lightbox) para las galerías de proyectos. Se pinta una vez
@@ -740,6 +737,7 @@ function hsfPortalMain(prefix) {
   const check =
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m4.5 12.75 6 6 9-13.5"/></svg>';
   const benefits = [
+    "Loan amounts from $3k to $300k",
     "No home equity or collateral required",
     "No appraisals or prepayment penalties",
     "Soft credit check &mdash; it won&rsquo;t affect your score",
@@ -764,10 +762,6 @@ function hsfPortalMain(prefix) {
 
 <section class="py-16">
 	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
-		<div class="fin-modal-stats reveal-rise">
-			<div class="fin-stat"><b>$3k&ndash;$300k</b><span>Loan amounts</span></div>
-			<div class="fin-stat"><b>7.80% APR</b><span>Fixed rates from</span></div>
-		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
 		</ul>
@@ -821,10 +815,6 @@ function rtoNationalMain(prefix) {
 
 <section class="py-16">
 	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
-		<div class="fin-modal-stats reveal-rise">
-			<div class="fin-stat"><b>$0 down</b><span>Finance option</span></div>
-			<div class="fin-stat"><b>No credit check</b><span>Lease option</span></div>
-		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
 		</ul>
@@ -837,8 +827,6 @@ ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
 		<div class="fin-steps reveal-rise mx-auto mt-10 max-w-2xl">
 ${steps.map((s, i) => `\t\t\t<div class="fin-step"><span class="fin-step-num">${i + 1}</span><p>${s}</p></div>`).join("\n")}
 		</div>
-		<p class="fin-modal-trust mt-10 text-center">BBB-accredited &middot; Nationwide dealer network &middot; Online approvals 24/7</p>
-		<p class="fin-modal-note mx-auto mt-3 max-w-2xl text-center">RTO National is an independent rent-to-own partner. Terms, availability and buyout options vary by state and are subject to approval.</p>
 	</div>
 </section>
 
@@ -878,10 +866,6 @@ function heartlandRtoMain(prefix) {
 
 <section class="py-16">
 	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
-		<div class="fin-modal-stats reveal-rise">
-			<div class="fin-stat"><b>$0 upfront</b><span>To get started</span></div>
-			<div class="fin-stat"><b>No credit check</b><span>No credit reporting</span></div>
-		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
 		</ul>
@@ -894,8 +878,6 @@ ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
 		<div class="fin-steps reveal-rise mx-auto mt-10 max-w-2xl">
 ${steps.map((s, i) => `\t\t\t<div class="fin-step"><span class="fin-step-num">${i + 1}</span><p>${s}</p></div>`).join("\n")}
 		</div>
-		<p class="fin-modal-trust mt-10 text-center">In business since 2007 &middot; BBB accredited &middot; 1,000+ five-star Google reviews &middot; Serving the continental U.S.</p>
-		<p class="fin-modal-note mx-auto mt-3 max-w-2xl text-center">Heartland Capital Investments is an independent rent-to-own partner. Terms and availability vary by state and are subject to approval.</p>
 	</div>
 </section>
 
@@ -973,7 +955,6 @@ ${main}
 ${footer(prefix)}
 
 <script src="${prefix}assets/js/main.js"></script>
-<script src="${prefix}assets/js/sound.js"></script>
 ${jsFile ? `<script src="${jsFile}"></script>\n` : ""}${extraScripts}</body>
 </html>
 `;
@@ -2474,8 +2455,8 @@ textarea:focus-visible, summary:focus-visible {
 .fin-stat b { display: block; color: var(--color-accent); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 .fin-stat span { display: block; margin-top: 0.2rem; font-size: 0.7rem; color: #9ca3af; }
 .fin-modal-list { margin-top: 1.5rem; display: grid; gap: 0.7rem; list-style: none; padding: 0; width: fit-content; margin-left: auto; margin-right: auto; }
-.fin-modal-list li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: #d1d5db; }
-.fin-modal-list svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--color-accent); margin-top: 1px; }
+.fin-modal-list li { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 1.2rem; color: #d1d5db; }
+.fin-modal-list svg { flex: 0 0 auto; width: 23px; height: 23px; color: var(--color-accent); margin-top: 3px; }
 .fin-modal-heading {
 	margin-top: 1.6rem;
 	font-size: 0.74rem;
@@ -2547,12 +2528,16 @@ textarea:focus-visible, summary:focus-visible {
 	stroke-linejoin: round;
 	vector-effect: non-scaling-stroke;
 }
-.azm-outline {
+.az-outline {
 	fill: none;
 	stroke: var(--color-accent);
-	stroke-width: 1.8;
+	stroke-width: 3.1;
 	stroke-linejoin: round;
-	filter: drop-shadow(0 0 6px rgba(242, 106, 33, 0.4));
+	stroke-linecap: round;
+	filter: drop-shadow(0 0 10px rgba(242, 106, 33, 0.45));
+}
+.az-letters {
+	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 .azm-ring { fill: none; stroke: var(--color-accent); stroke-width: 1.5; opacity: 0.45; }
 .azm-hit { fill: transparent; }

@@ -1489,8 +1489,8 @@ textarea:focus-visible, summary:focus-visible {
 .fin-stat b { display: block; color: var(--color-accent); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 .fin-stat span { display: block; margin-top: 0.2rem; font-size: 0.7rem; color: #9ca3af; }
 .fin-modal-list { margin-top: 1.5rem; display: grid; gap: 0.7rem; list-style: none; padding: 0; width: fit-content; margin-left: auto; margin-right: auto; }
-.fin-modal-list li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: #d1d5db; }
-.fin-modal-list svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--color-accent); margin-top: 1px; }
+.fin-modal-list li { display: flex; gap: 0.7rem; align-items: flex-start; font-size: 1.2rem; color: #d1d5db; }
+.fin-modal-list svg { flex: 0 0 auto; width: 23px; height: 23px; color: var(--color-accent); margin-top: 3px; }
 .fin-modal-heading {
 	margin-top: 1.6rem;
 	font-size: 0.74rem;
@@ -1562,12 +1562,16 @@ textarea:focus-visible, summary:focus-visible {
 	stroke-linejoin: round;
 	vector-effect: non-scaling-stroke;
 }
-.azm-outline {
+.az-outline {
 	fill: none;
 	stroke: var(--color-accent);
-	stroke-width: 1.8;
+	stroke-width: 3.1;
 	stroke-linejoin: round;
-	filter: drop-shadow(0 0 6px rgba(242, 106, 33, 0.4));
+	stroke-linecap: round;
+	filter: drop-shadow(0 0 10px rgba(242, 106, 33, 0.45));
+}
+.az-letters {
+	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
 }
 .azm-ring { fill: none; stroke: var(--color-accent); stroke-width: 1.5; opacity: 0.45; }
 .azm-hit { fill: transparent; }
