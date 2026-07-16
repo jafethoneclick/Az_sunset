@@ -2632,30 +2632,45 @@ textarea:focus-visible, summary:focus-visible {
 	background: #e9e9e9;
 	cursor: pointer;
 	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-	transition: box-shadow 0.25s ease, transform 0.25s ease;
+	/* Estado inicial del reveal (el JS añade .is-in al entrar en pantalla). */
+	opacity: 0;
+	transform: translateY(28px);
+	transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease;
+	will-change: transform, opacity;
 }
-.catalog-item:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16); transform: translateY(-2px); }
+.catalog-item.is-in { opacity: 1; transform: none; }
+.catalog-item.is-in:hover { transform: translateY(-4px); box-shadow: 0 16px 34px rgba(0, 0, 0, 0.22); }
 .catalog-item:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+/* Envoltorio para el parallax: se desplaza (var --py, lo pone el JS al hacer
+   scroll) y va escalado para que el desplazamiento no muestre bordes. */
+.catalog-media {
+	position: absolute;
+	inset: 0;
+	transform: translate3d(0, var(--py, 0px), 0) scale(1.16);
+	will-change: transform;
+}
 .catalog-item img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
 	display: block;
-	transition: transform 0.45s ease;
+	transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-.catalog-item:hover img { transform: scale(1.06); }
+.catalog-item:hover img { transform: scale(1.07); }
 .catalog-item::after {
 	content: "";
 	position: absolute;
 	inset: 0;
-	background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 45%);
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.4), transparent 45%);
 	opacity: 0;
-	transition: opacity 0.25s ease;
+	transition: opacity 0.3s ease;
 	pointer-events: none;
 }
 .catalog-item:hover::after { opacity: 1; }
 @media (prefers-reduced-motion: reduce) {
-	.catalog-item, .catalog-item img { transition: none; }
+	.catalog-item { opacity: 1; transform: none; transition: none; }
+	.catalog-media { transform: scale(1.16); transition: none; }
+	.catalog-item img { transition: none; }
 	.catalog-item:hover img { transform: none; }
 }
 `;
@@ -3067,8 +3082,8 @@ for (const p of products) {
   const heroImg = catCount ? `${catBase}/01.webp` : productHeroImage(prefix, p);
   const catalogItems = Array.from({ length: catCount }, (_, k) => {
     const n = String(k + 1).padStart(2, "0");
-    return `\t\t\t\t<button type="button" class="catalog-item js-reveal-card" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
-						<img src="${catBase}/${n}.webp" alt="${p.title} example ${k + 1}" loading="lazy" width="700" height="525">
+    return `\t\t\t\t<button type="button" class="catalog-item" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
+						<span class="catalog-media"><img src="${catBase}/${n}.webp" alt="${p.title} example ${k + 1}" loading="lazy" width="700" height="525"></span>
 					</button>`;
   }).join("\n");
   const catalogSection = catCount

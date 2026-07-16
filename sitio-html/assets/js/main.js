@@ -223,6 +223,60 @@
   });
 })();
 
+// Galería/catálogo de producto (.catalog-item): entrada con reveal escalonado
+// al entrar en pantalla. El escalonado es por columna (grilla de hasta 4) para
+// que cada fila entre como una "ola". Respeta "reducir movimiento".
+(function () {
+  var items = document.querySelectorAll(".catalog-item");
+  if (!items.length) return;
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduce || !window.IntersectionObserver) {
+    Array.prototype.forEach.call(items, function (el) { el.classList.add("is-in"); });
+    return;
+  }
+  Array.prototype.forEach.call(items, function (el) {
+    var grid = el.parentElement;
+    var idx = grid ? Array.prototype.indexOf.call(grid.children, el) : 0;
+    el.style.transitionDelay = ((idx % 4) * 90) + "ms";
+  });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (en) {
+      if (!en.isIntersecting) return;
+      en.target.classList.add("is-in");
+      io.unobserve(en.target);
+    });
+  }, { threshold: 0.14 });
+  Array.prototype.forEach.call(items, function (el) { io.observe(el); });
+})();
+
+// Parallax sutil del catálogo: la foto (.catalog-media) se desliza dentro de su
+// marco recortado según la posición del ítem respecto al centro de la pantalla
+// al hacer scroll. rAF para rendimiento; respeta "reducir movimiento".
+(function () {
+  var medias = document.querySelectorAll(".catalog-item > .catalog-media");
+  if (!medias.length) return;
+  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var AMP = 14;
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var vh = window.innerHeight || document.documentElement.clientHeight;
+    var vc = vh / 2;
+    for (var i = 0; i < medias.length; i++) {
+      var m = medias[i];
+      var r = m.parentNode.getBoundingClientRect();
+      if (r.bottom < -80 || r.top > vh + 80) continue;
+      var prog = (r.top + r.height / 2 - vc) / vh; // ~ -0.6..0.6
+      if (prog > 1) prog = 1; else if (prog < -1) prog = -1;
+      m.style.setProperty("--py", (prog * -AMP).toFixed(1) + "px");
+    }
+  }
+  function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll);
+  update();
+})();
+
 // Galería de proyectos (lightbox). Cada tarjeta [data-gallery-base] abre el
 // visor con las fotos base/01.webp..NN.webp del mismo proyecto. Navegación por
 // flechas en pantalla, miniaturas, teclado (← → Esc) y swipe en táctil. El
