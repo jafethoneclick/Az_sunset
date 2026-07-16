@@ -2715,7 +2715,7 @@ textarea:focus-visible, summary:focus-visible {
 						<span class="project-card-tag">${pr.tag}</span>
 						<span class="project-card-title">${pr.title}</span>
 						<span class="project-card-loc">${pr.location}</span>
-						<a href="${prefix}products/${pr.product}/${pr.product}.html" class="project-card-link">View details<span aria-hidden="true"> →</span></a>
+						<a href="${prefix}products/${pr.product}/${pr.product}.html" class="project-card-link">View gallery<span aria-hidden="true"> →</span></a>
 					</div>
 				</article>`;
     })
