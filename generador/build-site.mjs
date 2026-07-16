@@ -1,7 +1,22 @@
 // Genera el sitio estático (HTML/CSS/JS/PHP) a partir del contenido del
 // tema WordPress ironclad-steel, con una carpeta por página.
-import { mkdirSync, writeFileSync, cpSync } from "node:fs";
+import { mkdirSync, writeFileSync, cpSync, readFileSync, readdirSync } from "node:fs";
 import { join, dirname } from "node:path";
+
+// Geometría real del mapa de Arizona (contorno + 15 condados) proyectada a un
+// viewBox, generada a partir de GeoJSON. Ver generador/az-geo.json.
+const azGeo = JSON.parse(readFileSync(new URL("./az-geo.json", import.meta.url), "utf8"));
+
+// Cuenta las fotos de catálogo (NN.webp) ya generadas para un producto, para
+// armar la galería con lightbox en su página. Devuelve 0 si no hay carpeta.
+function catalogCount(slug) {
+  try {
+    return readdirSync(new URL(`../sitio-html/assets/images/products/${slug}/catalog/`, import.meta.url))
+      .filter((f) => /^\d+\.webp$/i.test(f)).length;
+  } catch {
+    return 0;
+  }
+}
 
 const OUT = "C:/Users/Jafeth/Desktop/html_diseño/sitio-html";
 const THEME = "C:/Users/Jafeth/Desktop/html_diseño/wp-content/themes/ironclad-steel";
@@ -361,9 +376,9 @@ function navColumns(prefix) {
       icon: navIcons.financing,
       href: `${prefix}financing/financing.html`,
       links: [
-        { label: "Heartland Capital RTO", href: `${prefix}financing/financing.html#heartland-capital-rto` },
-        { label: "HSF", href: `${prefix}financing/financing.html#hsf-portal` },
-        { label: "RTO National", href: `${prefix}financing/financing.html#rto-national` },
+        { label: "Heartland Capital RTO", href: `${prefix}financing/heartland-capital-rto.html` },
+        { label: "RTO National", href: `${prefix}financing/rto-national.html` },
+        { label: "HSF", href: `${prefix}financing/hsf-portal.html` },
       ],
     },
     {
@@ -517,7 +532,6 @@ ${footProducts}
 			<ul class="mt-4 space-y-2 text-sm">
 				<li><a href="${prefix}our-work/our-work.html" class="footer-link hover:text-white">Our Work</a></li>
 				<li><a href="${prefix}financing/financing.html" class="footer-link hover:text-white">Financing</a></li>
-				<li><a href="${prefix}faqs/faqs.html" class="footer-link hover:text-white">FAQs</a></li>
 				<li><a href="${prefix}about/about.html" class="footer-link hover:text-white">About Us</a></li>
 				<li><a href="${prefix}contact/contact.html" class="footer-link hover:text-white">Contact</a></li>
 			</ul>
@@ -527,8 +541,6 @@ ${footProducts}
 			<p class="footer-col-title text-sm font-semibold uppercase tracking-wide text-white">Company</p>
 			<ul class="mt-4 space-y-2 text-sm">
 				<li><a href="${prefix}contact/contact.html" class="footer-link hover:text-white">Get a Quote</a></li>
-				<li><a href="${prefix}terms/terms.html" class="footer-link hover:text-white">Terms &amp; Conditions</a></li>
-				<li><a href="${prefix}privacy/privacy.html" class="footer-link hover:text-white">Privacy Policy</a></li>
 			</ul>
 			<p class="mt-6 text-sm"><a href="tel:${site.phoneHref}" class="footer-link hover:text-white">${site.phone}</a></p>
 			<p class="text-sm"><a href="mailto:${site.email}" class="footer-link hover:text-white">${site.email}</a></p>
@@ -652,6 +664,49 @@ function icon(name) {
   return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">${paths[name] || ""}</svg>`;
 }
 
+// Mapa de la zona de servicio: mapa real de Arizona (contorno + 15 condados)
+// desde GeoJSON (azGeo), con pines de ciudades en su ubicación geográfica real.
+// Sustituye a los "chips". Las ciudades del área metro de Phoenix van como
+// puntitos (para no encimarse) y se nombran en el pie. El brillo y el parallax
+// sutil los ponen el CSS (.az-map-glow) y el JS de main.js ([data-az-map]).
+function arizonaMap() {
+  const counties = azGeo.counties
+    .map(
+      (c) => `<path class="azm-county" d="${c.d}" fill="${c.color}"></path>
+			<text class="azm-county-label" x="${c.cx}" y="${c.cy}">${c.name.toUpperCase()}</text>`
+    )
+    .join("");
+  const neighbors = azGeo.neighbors
+    .map(
+      (n) => `<text class="azm-neighbor" x="${n.x}" y="${n.y}" transform="rotate(${n.rot} ${n.x} ${n.y})" text-anchor="${n.anchor}">${n.name}</text>`
+    )
+    .join("");
+  const star = "M0,-6L1.8,-1.9L6,-1.9L2.6,1L3.7,5.2L0,2.7L-3.7,5.2L-2.6,1L-6,-1.9L-1.8,-1.9Z";
+  // Sin marcadores de ciudades: el mapa muestra solo los condados con su color
+  // y nombre, y los estados vecinos. Queda limpio.
+  const cityPins = azGeo.cities
+    .filter(() => false)
+    .map(
+      (c) => `<g class="azm-city${c.capital ? " is-capital" : ""}" tabindex="0" role="img" aria-label="${c.name}">
+			${c.capital ? `<path class="azm-star" transform="translate(${c.x},${c.y})" d="${star}"></path>` : ""}
+			<circle class="azm-hit" cx="${c.x}" cy="${c.y}" r="10"></circle>
+			${c.capital ? "" : `<circle class="azm-dot" cx="${c.x}" cy="${c.y}" r="${c.r}"></circle>`}
+			<text class="azm-label${c.capital ? " is-capital-label" : ""}" x="${c.capital ? c.x + 9 : c.lx}" y="${c.ly}" text-anchor="${c.capital ? "start" : c.anchor}">${c.name}</text>
+		</g>`
+    )
+    .join("");
+  return `<div class="az-map-wrap" data-az-map>
+		<span class="az-map-glow" aria-hidden="true"></span>
+		<svg class="az-map-svg" viewBox="0 0 ${azGeo.w} ${azGeo.h}" role="img" aria-label="County map of Arizona showing the cities we serve">
+			<g class="azm-counties">${counties}</g>
+			<path class="azm-outline" d="${azGeo.state}"></path>
+			<g class="azm-neighbors" aria-hidden="true">${neighbors}</g>
+				<g class="azm-cities">${cityPins}</g>
+		</svg>
+	</div>
+	`;
+}
+
 // Visor de fotos (lightbox) para las galerías de proyectos. Se pinta una vez
 // por página; el JS de main.js lo llena al abrir según la tarjeta pulsada.
 // Navegación: flechas ‹ ›, miniaturas, teclado (← → Esc) y swipe en táctil.
@@ -704,19 +759,14 @@ function hsfPortalMain(prefix) {
 		<p class="fin-modal-eyebrow">Financing partner</p>
 		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">You dream it, we finance it</h1>
 		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Simple, fixed-rate financing for your steel building &mdash; no home equity, no appraisals, just a fast online application.</p>
-		<div class="mt-8 flex flex-wrap justify-center gap-4">
-			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Start your inquiry</a>
-			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
-		</div>
 	</div>
 </section>
 
 <section class="py-16">
 	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
 		<div class="fin-modal-stats reveal-rise">
-			<div class="fin-stat"><b>$1k&ndash;$100k</b><span>Loan amounts</span></div>
+			<div class="fin-stat"><b>$3k&ndash;$300k</b><span>Loan amounts</span></div>
 			<div class="fin-stat"><b>7.80% APR</b><span>Fixed rates from</span></div>
-			<div class="fin-stat"><b>1&ndash;30 yrs</b><span>Flexible terms</span></div>
 		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
@@ -766,10 +816,6 @@ function rtoNationalMain(prefix) {
 		<p class="fin-modal-eyebrow">Rent-to-own partner</p>
 		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">Making success simple</h1>
 		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Rent-to-own for your steel building &mdash; quick, easy and flexible. Lease with no credit check, or finance with $0 down.</p>
-		<div class="mt-8 flex flex-wrap justify-center gap-4">
-			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Check your options</a>
-			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
-		</div>
 	</div>
 </section>
 
@@ -778,7 +824,6 @@ function rtoNationalMain(prefix) {
 		<div class="fin-modal-stats reveal-rise">
 			<div class="fin-stat"><b>$0 down</b><span>Finance option</span></div>
 			<div class="fin-stat"><b>No credit check</b><span>Lease option</span></div>
-			<div class="fin-stat"><b>Up to $20k</b><span>Building value</span></div>
 		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
@@ -828,10 +873,6 @@ function heartlandRtoMain(prefix) {
 		<p class="fin-modal-eyebrow">Rent-to-own partner</p>
 		<h1 class="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">Rent today, own it tomorrow</h1>
 		<p class="mx-auto mt-5 max-w-2xl text-lg text-white/85">Affordable monthly payments on your steel building &mdash; no credit check, no upfront cost, and every payment works toward ownership.</p>
-		<div class="mt-8 flex flex-wrap justify-center gap-4">
-			<a href="${prefix}contact/contact.html" class="hero-cta-primary">Ask about RTO</a>
-			<a href="${prefix}financing/financing.html" class="hero-cta-ghost">Back to financing</a>
-		</div>
 	</div>
 </section>
 
@@ -840,7 +881,6 @@ function heartlandRtoMain(prefix) {
 		<div class="fin-modal-stats reveal-rise">
 			<div class="fin-stat"><b>$0 upfront</b><span>To get started</span></div>
 			<div class="fin-stat"><b>No credit check</b><span>No credit reporting</span></div>
-			<div class="fin-stat"><b>Since 2007</b><span>Rent-to-own experts</span></div>
 		</div>
 		<ul class="fin-modal-list reveal-rise">
 ${benefits.map((b) => `\t\t\t<li>${check}<span>${b}</span></li>`).join("\n")}
@@ -2418,20 +2458,22 @@ textarea:focus-visible, summary:focus-visible {
 }
 .fin-modal-stats {
 	margin-top: 1.4rem;
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
 	gap: 0.65rem;
 }
 .fin-stat {
+	flex: 0 1 285px;
 	background: #1b1b1b;
 	border: 1px solid rgba(255, 255, 255, 0.06);
 	border-radius: 0.75rem;
-	padding: 0.85rem 0.4rem;
+	padding: 0.95rem 1.4rem;
 	text-align: center;
 }
 .fin-stat b { display: block; color: var(--color-accent); font-size: 1.02rem; font-variant-numeric: tabular-nums; }
 .fin-stat span { display: block; margin-top: 0.2rem; font-size: 0.7rem; color: #9ca3af; }
-.fin-modal-list { margin-top: 1.5rem; display: grid; gap: 0.7rem; list-style: none; padding: 0; }
+.fin-modal-list { margin-top: 1.5rem; display: grid; gap: 0.7rem; list-style: none; padding: 0; width: fit-content; margin-left: auto; margin-right: auto; }
 .fin-modal-list li { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.9rem; color: #d1d5db; }
 .fin-modal-list svg { flex: 0 0 auto; width: 18px; height: 18px; color: var(--color-accent); margin-top: 1px; }
 .fin-modal-heading {
@@ -2465,6 +2507,171 @@ textarea:focus-visible, summary:focus-visible {
 	.fin-modal,
 	.fin-modal-panel { transition: none; }
 	.fin-modal-close:hover { transform: none; }
+}
+
+/* ===== Mapa de zona de servicio (silueta de Arizona) ===== */
+.az-map-wrap {
+	position: relative;
+	max-width: 560px;
+	margin: 3.5rem auto 0;
+	padding: 0 1rem;
+}
+.az-map-glow {
+	position: absolute;
+	inset: 6% 12%;
+	z-index: 0;
+	border-radius: 50%;
+	background: radial-gradient(closest-side, rgba(242, 106, 33, 0.35), rgba(242, 106, 33, 0.08) 60%, transparent 75%);
+	filter: blur(26px);
+	animation: azGlowPulse 6s ease-in-out infinite alternate;
+	will-change: transform, opacity;
+	transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes azGlowPulse {
+	0% { opacity: 0.6; transform: scale(0.96); }
+	100% { opacity: 1; transform: scale(1.06); }
+}
+.az-map-svg {
+	position: relative;
+	z-index: 1;
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+	transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.azm-county {
+	fill-opacity: 0.92;
+	stroke: rgba(255, 255, 255, 0.42);
+	stroke-width: 0.7;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+.azm-outline {
+	fill: none;
+	stroke: var(--color-accent);
+	stroke-width: 1.8;
+	stroke-linejoin: round;
+	filter: drop-shadow(0 0 6px rgba(242, 106, 33, 0.4));
+}
+.azm-ring { fill: none; stroke: var(--color-accent); stroke-width: 1.5; opacity: 0.45; }
+.azm-hit { fill: transparent; }
+.azm-city { cursor: pointer; }
+.azm-city:focus { outline: none; }
+.azm-dot {
+	fill: #221a12;
+	stroke: #fff;
+	stroke-width: 1;
+	transition: r 0.15s ease;
+}
+.azm-city:hover .azm-dot,
+.azm-city:focus .azm-dot { r: 7; fill: var(--color-accent); }
+.azm-star {
+	fill: #fff;
+	stroke: #221a12;
+	stroke-width: 0.8;
+	stroke-linejoin: round;
+	filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+}
+.azm-county-label {
+	fill: #241c14;
+	font-family: inherit;
+	font-size: 9px;
+	font-weight: 700;
+	letter-spacing: 0.4px;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.4);
+	stroke-width: 2px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
+.azm-neighbor {
+	fill: rgba(255, 255, 255, 0.42);
+	font-family: inherit;
+	font-size: 10px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	dominant-baseline: middle;
+	pointer-events: none;
+}
+.azm-label {
+	fill: #f3f4f6;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 600;
+	paint-order: stroke;
+	stroke: rgba(0, 0, 0, 0.75);
+	stroke-width: 3.5px;
+	stroke-linejoin: round;
+	dominant-baseline: middle;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.15s ease;
+}
+.azm-city:hover .azm-label,
+.azm-city:focus .azm-label { opacity: 1; }
+.azm-label.is-capital-label { opacity: 1; font-size: 14px; font-weight: 700; fill: #fff; }
+.az-map-caption {
+	position: relative;
+	z-index: 1;
+	margin: 1.5rem auto 0;
+	max-width: 34rem;
+	text-align: center;
+	font-size: 0.9rem;
+	color: rgba(255, 255, 255, 0.7);
+}
+@media (prefers-reduced-motion: reduce) {
+	.az-map-glow { animation: none; }
+	.az-map-glow, .az-map-svg { transition: none; }
+}
+
+/* ===== Galería/catálogo de fotos en las páginas de producto ===== */
+.catalog-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1rem;
+}
+@media (min-width: 640px) { .catalog-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .catalog-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.catalog-item {
+	position: relative;
+	display: block;
+	padding: 0;
+	margin: 0;
+	border: 1px solid rgba(0, 0, 0, 0.08);
+	border-radius: 0.85rem;
+	overflow: hidden;
+	aspect-ratio: 4 / 3;
+	background: #e9e9e9;
+	cursor: pointer;
+	box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
+	transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+.catalog-item:hover { box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16); transform: translateY(-2px); }
+.catalog-item:focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
+.catalog-item img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+	transition: transform 0.45s ease;
+}
+.catalog-item:hover img { transform: scale(1.06); }
+.catalog-item::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.35), transparent 45%);
+	opacity: 0;
+	transition: opacity 0.25s ease;
+	pointer-events: none;
+}
+.catalog-item:hover::after { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+	.catalog-item, .catalog-item img { transition: none; }
+	.catalog-item:hover img { transform: none; }
 }
 `;
 
@@ -2615,7 +2822,7 @@ ${set(true)}
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl">4-8 wks</p>
-			<p class="mt-1 text-sm text-gray-600">Avg. Install Time</p>
+			<p class="mt-1 text-sm text-gray-600">Lead Time</p>
 		</div>
 	</div>
 </section>
@@ -2666,14 +2873,14 @@ ${whyUsCards}
 				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
 			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
-				<h3 class="text-xl font-bold text-dark">HSF</h3>
-				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
-				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
-			</div>
-			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
 				<h3 class="text-xl font-bold text-dark">RTO National</h3>
 				<p class="mt-3 text-sm text-gray-600">A nationwide rent-to-own program with flexible terms and early purchase options, available in most of the states we serve.</p>
 				<a href="${prefix}financing/rto-national.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>
+			</div>
+			<div class="js-reveal-card lift-card rounded-xl bg-white p-8 shadow-sm" data-reveal-group="partners">
+				<h3 class="text-xl font-bold text-dark">HSF</h3>
+				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
+				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
 		</div>
 	</div>
@@ -2682,9 +2889,7 @@ ${whyUsCards}
 <section id="where-we-build" class="scroll-mt-24 bg-primary py-20">
 	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 		${sectionHeading("Where We Build", "Proudly Serving Your Area", "From the low desert to the high country, we deliver and install right where you are.", true)}
-		<div class="mx-auto mt-10 flex max-w-3xl flex-wrap justify-center gap-3">
-${stateChips}
-		</div>
+		${arizonaMap()}
 	</div>
 </section>
 
@@ -2868,11 +3073,38 @@ for (const p of products) {
 
   const relatedCards = related.map((r) => `\t\t\t\t${productCard(prefix, r)}`).join("\n");
 
+  // Catálogo de fotos del producto (galería con lightbox). Cada foto abre el
+  // visor en esa imagen. Las fotos viven en assets/images/products/{slug}/catalog.
+  const catCount = catalogCount(p.slug);
+  const catBase = `${prefix}assets/images/products/${p.slug}/catalog`;
+  // Portada: usa la primera foto del propio catálogo del producto; si no hay
+  // catálogo, cae a la imagen genérica de respaldo.
+  const heroImg = catCount ? `${catBase}/01.webp` : productHeroImage(prefix, p);
+  const catalogItems = Array.from({ length: catCount }, (_, k) => {
+    const n = String(k + 1).padStart(2, "0");
+    return `\t\t\t\t<button type="button" class="catalog-item js-reveal-card" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
+						<img src="${catBase}/${n}.webp" alt="${p.title} example ${k + 1}" loading="lazy" width="700" height="525">
+					</button>`;
+  }).join("\n");
+  const catalogSection = catCount
+    ? `
+<section class="catalog-section py-16">
+	<div class="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+		<h2 class="reveal-rise text-2xl font-bold text-dark">Our ${p.title} Gallery</h2>
+		<p class="reveal-rise mt-2 text-sm text-gray-600">A look at ${p.title.toLowerCase()} we've built. Tap any photo to view it larger.</p>
+		<div class="catalog-grid mt-8">
+${catalogItems}
+		</div>
+	</div>
+</section>
+`
+    : "";
+
   const main = `
 <section class="product-hero relative overflow-hidden bg-primary" data-parallax3d>
 	<div class="absolute inset-0">
 		<div class="ph-bg-layer absolute inset-0">
-			<img src="${productHeroImage(prefix, p)}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
+			<img src="${heroImg}" alt="" class="product-hero-img h-full w-full object-cover opacity-30">
 		</div>
 		<div class="absolute inset-0 bg-primary/70"></div>
 		<span class="product-hero-glow" aria-hidden="true"></span>
@@ -2884,9 +3116,9 @@ for (const p of products) {
 		<a href="${prefix}contact/contact.html" class="reveal-rise mt-8 inline-flex items-center justify-center rounded-md bg-accent px-8 py-3.5 text-base font-semibold text-white shadow-sm transition hover:opacity-90">Get a Free Quote</a>
 	</div>
 </section>
-
+${catalogSection}
 <section class="py-20">
-	<div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-12 px-4 sm:px-6 lg:grid-cols-2 lg:px-8">
+	<div class="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
 		<div>
 			<h2 class="reveal-rise text-2xl font-bold text-dark">Overview</h2>
 			<div class="reveal-rise mt-4 text-sm text-gray-700"><p>${p.content}</p></div>
@@ -2895,13 +3127,6 @@ for (const p of products) {
 			<ul class="mt-6 space-y-3">
 ${featureItems}
 			</ul>
-		</div>
-
-		<div>
-			<h2 class="reveal-rise text-2xl font-bold text-dark">Popular Sizes</h2>
-			<div class="mt-6 space-y-4">
-${modelItems}
-			</div>
 		</div>
 	</div>
 </section>
@@ -2916,6 +3141,7 @@ ${relatedCards}
 </section>
 
 ${ctaBanner(prefix, `Ready for Your New ${p.title.replace(/s$/, "")}?`, "Request a free, no-obligation quote and we'll get back to you fast.", "Get a Free Quote")}
+${catCount ? galleryLightbox() : ""}
 `;
 
   files[`products/${p.slug}/${p.slug}.html`] = page({
@@ -2998,15 +3224,15 @@ ${cards}
 				<p class="mt-3 text-sm text-gray-600">Rent-to-own plans up to $20,000 with no credit check and affordable monthly payments — with the option to buy out anytime.</p>
 				<a href="${prefix}financing/heartland-capital-rto.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Ask about RTO</a>
 			</div>
-			<div id="hsf-portal" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
-				<h2 class="text-xl font-bold text-dark">HSF</h2>
-				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
-				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
-			</div>
 			<div id="rto-national" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
 				<h2 class="text-xl font-bold text-dark">RTO National</h2>
 				<p class="mt-3 text-sm text-gray-600">A nationwide rent-to-own program with flexible terms and early purchase options, available in most of the states we serve.</p>
 				<a href="${prefix}financing/rto-national.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Learn more</a>
+			</div>
+			<div id="hsf-portal" class="lift-card reveal-rise scroll-mt-24 rounded-xl bg-white p-8 shadow-sm">
+				<h2 class="text-xl font-bold text-dark">HSF</h2>
+				<p class="mt-3 text-sm text-gray-600">Apply for traditional financing up to $100,000 through our HSF partner portal, with fast approval even with limited credit.</p>
+				<a href="${prefix}financing/hsf-portal.html" class="mt-6 inline-flex items-center justify-center rounded-md border border-primary px-6 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary hover:text-white">Request access</a>
 			</div>
 		</div>
 	</div>

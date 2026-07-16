@@ -277,10 +277,10 @@
     });
   }
 
-  function open(base, count, t) {
+  function open(base, count, t, start) {
     imgs = [];
     for (var i = 1; i <= count; i++) imgs.push(base + "/" + pad(i) + ".webp");
-    idx = 0;
+    idx = start && start >= 1 && start <= count ? start - 1 : 0;
     title = t || "";
     buildThumbs();
     render();
@@ -308,7 +308,8 @@
       open(
         card.getAttribute("data-gallery-base"),
         Number(card.getAttribute("data-gallery-count")) || 0,
-        card.getAttribute("data-gallery-title")
+        card.getAttribute("data-gallery-title"),
+        Number(card.getAttribute("data-gallery-start")) || 0
       );
     });
   });
@@ -344,4 +345,43 @@
     var dx = e.changedTouches[0].clientX - sx;
     if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
   }, { passive: true });
+})();
+
+// Parallax sutil del mapa de zona de servicio (silueta de Arizona). La silueta
+// y los pines se desplazan un poco a favor del cursor y el brillo en contra,
+// dando sensación de profundidad. Sólo con puntero fino y sin "reducir
+// movimiento"; si no, el mapa queda estático (con su brillo animado por CSS).
+(function () {
+  if (window.matchMedia) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+  }
+  var wrap = document.querySelector("[data-az-map]");
+  if (!wrap) return;
+  var svg = wrap.querySelector(".az-map-svg");
+  var glow = wrap.querySelector(".az-map-glow");
+  wrap.addEventListener("pointermove", function (e) {
+    var r = wrap.getBoundingClientRect();
+    var nx = (e.clientX - r.left) / r.width - 0.5;
+    var ny = (e.clientY - r.top) / r.height - 0.5;
+    if (svg) svg.style.transform = "translate(" + (nx * 14).toFixed(1) + "px," + (ny * 12).toFixed(1) + "px)";
+    if (glow) glow.style.transform = "translate(" + (nx * -26).toFixed(1) + "px," + (ny * -22).toFixed(1) + "px)";
+  });
+  wrap.addEventListener("pointerleave", function () {
+    if (svg) svg.style.transform = "";
+    if (glow) glow.style.transform = "";
+  });
+})();
+
+// Al pasar el mouse por una ciudad del mapa, la traemos al frente (en SVG el
+// orden de pintado = orden en el DOM), para que su punto y su nombre no queden
+// tapados por las ciudades vecinas en el denso área metro de Phoenix.
+(function () {
+  var cities = document.querySelectorAll(".azm-city");
+  if (!cities.length) return;
+  Array.prototype.forEach.call(cities, function (c) {
+    c.addEventListener("pointerenter", function () {
+      if (c.parentNode) c.parentNode.appendChild(c);
+    });
+  });
 })();
