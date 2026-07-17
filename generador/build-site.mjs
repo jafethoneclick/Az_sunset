@@ -546,7 +546,6 @@ ${footProducts}
 		<div class="footer-col" data-footer-reveal>
 			<p class="footer-col-title text-sm font-semibold uppercase tracking-wide text-white">Quick Links</p>
 			<ul class="mt-4 space-y-2 text-sm">
-				<li><a href="${prefix}our-work/our-work.html" class="footer-link hover:text-white">Our Work</a></li>
 				<li><a href="${prefix}financing/financing.html" class="footer-link hover:text-white">Financing</a></li>
 				<li><a href="${prefix}about/about.html" class="footer-link hover:text-white">About Us</a></li>
 				<li><a href="${prefix}contact/contact.html" class="footer-link hover:text-white">Contact</a></li>
