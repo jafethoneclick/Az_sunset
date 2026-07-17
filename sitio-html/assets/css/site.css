@@ -1570,8 +1570,47 @@ textarea:focus-visible, summary:focus-visible {
 	stroke-linecap: round;
 	filter: drop-shadow(0 0 10px rgba(242, 106, 33, 0.45));
 }
-.az-letters {
-	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+.az-word {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-weight: 800;
+	font-size: 140px;
+	letter-spacing: 1px;
+	text-anchor: middle;
+	dominant-baseline: central;
+	fill: var(--color-accent);
+	filter: drop-shadow(0 0 9px rgba(242, 106, 33, 0.55));
+	pointer-events: none;
+}
+.az-cities { pointer-events: none; }
+.az-city-dot {
+	fill: #fbe4d3;
+	stroke: var(--color-accent);
+	stroke-width: 1.4;
+	filter: drop-shadow(0 0 3px rgba(242, 106, 33, 0.55));
+}
+.az-city-star {
+	fill: #ffd9a8;
+	stroke: var(--color-accent);
+	stroke-width: 1.2;
+	stroke-linejoin: round;
+	filter: drop-shadow(0 0 5px rgba(242, 106, 33, 0.7));
+}
+.az-city-label {
+	fill: #eef0f2;
+	font-family: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(0, 0, 0, 0.72);
+	stroke-width: 3px;
+	stroke-linejoin: round;
+}
+.az-city-label.is-capital {
+	fill: #ffffff;
+	font-size: 15px;
+	font-weight: 700;
 }
 .azm-ring { fill: none; stroke: var(--color-accent); stroke-width: 1.5; opacity: 0.45; }
 .azm-hit { fill: transparent; }
@@ -1632,6 +1671,70 @@ textarea:focus-visible, summary:focus-visible {
 .azm-city:hover .azm-label,
 .azm-city:focus .azm-label { opacity: 1; }
 .azm-label.is-capital-label { opacity: 1; font-size: 14px; font-weight: 700; fill: #fff; }
+.az-county-wrap { max-width: 620px; }
+.azc-county {
+	stroke: var(--color-accent);
+	stroke-width: 1.3;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+.azc-state {
+	fill: none;
+	stroke: var(--color-accent);
+	stroke-width: 2.2;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+	filter: drop-shadow(0 0 9px rgba(242, 106, 33, 0.5));
+}
+.azc-county-label {
+	fill: #2b2119;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: 800;
+	letter-spacing: 0.4px;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.55);
+	stroke-width: 2.4px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
+.azc-county-label.is-small { font-size: 8.5px; letter-spacing: 0.2px; }
+.azc-neighbor {
+	fill: #9aa3ac;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	dominant-baseline: middle;
+	pointer-events: none;
+}
+.azc-seat { pointer-events: none; }
+.azc-seat-dot { fill: #3b332c; }
+.azc-seat-label {
+	fill: #2b2119;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 600;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.7);
+	stroke-width: 2.2px;
+	stroke-linejoin: round;
+}
+.azc-capital-label {
+	fill: #1c140d;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 800;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.75);
+	stroke-width: 2.6px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
 .az-map-caption {
 	position: relative;
 	z-index: 1;

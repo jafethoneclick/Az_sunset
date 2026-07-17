@@ -670,36 +670,19 @@ function icon(name) {
 // puntitos (para no encimarse) y se nombran en el pie. El brillo y el parallax
 // sutil los ponen el CSS (.az-map-glow) y el JS de main.js ([data-az-map]).
 function arizonaMap() {
-  // Marca "AZ": silueta de Arizona simplificada (contorno naranja grueso) con
-  // "AZ" en letras geométricas de acabado acero (degradado metálico) y un
-  // resplandor radial naranja "sunset" detrás. Vectores puros (sin depender de
-  // fuentes) para verse nítido a cualquier tamaño. Parallax vía main.js.
-  const state = "M514.0,46.5L513.6,602.0L349.3,602.0L46.0,488.2L53.5,466.2L69.5,462.4L74.0,453.9L69.5,435.6L58.4,435.1L53.1,398.6L69.5,384.6L68.6,347.1L78.4,329.9L91.3,323.5L101.1,310.6L85.1,296.6L74.0,270.9L60.7,254.8L65.5,229.0L57.1,192.0L52.2,134.5L82.0,130.8L91.7,142.6L99.7,142.1L108.2,125.4L108.2,46.5L395.9,46.0Z";
-  const azA = "M24,0 L48,0 L24,100 L0,100 Z M48,0 L72,0 L96,100 L72,100 Z M33.1,62 L62.9,62 L67.7,82 L28.3,82 Z";
-  const azZ = "M0,0 L92,0 L92,26 L0,26 Z M62,0 L92,0 L30,100 L0,100 Z M0,74 L92,74 L92,100 L0,100 Z";
-  return `<div class="az-map-wrap" data-az-map>
-    <svg class="az-map-svg" viewBox="12 16 536 616" role="img" aria-label="Arizona — AZ Sunset Steel Structures service area">
-      <defs>
-        <linearGradient id="azSteel" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#eef1f4"/>
-          <stop offset="20%" stop-color="#c4cad2"/>
-          <stop offset="46%" stop-color="#9aa0a9"/>
-          <stop offset="56%" stop-color="#dfe3e8"/>
-          <stop offset="72%" stop-color="#aab0b9"/>
-          <stop offset="100%" stop-color="#82888f"/>
-        </linearGradient>
-        <radialGradient id="azSunset" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="rgba(242,106,33,0.55)"/>
-          <stop offset="45%" stop-color="rgba(242,106,33,0.18)"/>
-          <stop offset="100%" stop-color="rgba(242,106,33,0)"/>
-        </radialGradient>
-      </defs>
-      <ellipse cx="300" cy="320" rx="159" ry="111" fill="url(#azSunset)"/>
-      <path class="az-outline" d="${state}"/>
-      <g class="az-letters" fill="url(#azSteel)" transform="translate(187.7,270.7) scale(0.9853)">
-        <path d="${azA}"/>
-        <g transform="translate(136,0)"><path d="${azZ}"/></g>
+  // Marca AZ: mapa de Arizona en "wireframe" — relleno NEGRO y líneas NARANJA de
+  // la marca. Solo se ven las siluetas: el contorno del estado y las divisiones
+  // de los condados, con "AZ" al centro en la tipografía del sitio (Hanken
+  // Grotesk). Datos az-geo.json (560×648).
+  const g = azGeo;
+  const counties = g.counties.map((c) => `<path class="azc-county" d="${c.d}" fill="#0b0b0b"/>`).join("\n        ");
+  return `<div class="az-map-wrap az-county-wrap" data-az-map>
+    <svg class="az-map-svg" viewBox="0 0 560 648" role="img" aria-label="Arizona service area — AZ Sunset Steel Structures">
+      <g class="azc-counties">
+        ${counties}
       </g>
+      <path class="azc-state" d="${g.state}"/>
+      <text class="az-word" x="300" y="322">AZ</text>
     </svg>
   </div>`;
 }
@@ -2536,8 +2519,47 @@ textarea:focus-visible, summary:focus-visible {
 	stroke-linecap: round;
 	filter: drop-shadow(0 0 10px rgba(242, 106, 33, 0.45));
 }
-.az-letters {
-	filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35));
+.az-word {
+	font-family: "Hanken Grotesk", sans-serif;
+	font-weight: 800;
+	font-size: 140px;
+	letter-spacing: 1px;
+	text-anchor: middle;
+	dominant-baseline: central;
+	fill: var(--color-accent);
+	filter: drop-shadow(0 0 9px rgba(242, 106, 33, 0.55));
+	pointer-events: none;
+}
+.az-cities { pointer-events: none; }
+.az-city-dot {
+	fill: #fbe4d3;
+	stroke: var(--color-accent);
+	stroke-width: 1.4;
+	filter: drop-shadow(0 0 3px rgba(242, 106, 33, 0.55));
+}
+.az-city-star {
+	fill: #ffd9a8;
+	stroke: var(--color-accent);
+	stroke-width: 1.2;
+	stroke-linejoin: round;
+	filter: drop-shadow(0 0 5px rgba(242, 106, 33, 0.7));
+}
+.az-city-label {
+	fill: #eef0f2;
+	font-family: inherit;
+	font-size: 13.5px;
+	font-weight: 600;
+	letter-spacing: 0.2px;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(0, 0, 0, 0.72);
+	stroke-width: 3px;
+	stroke-linejoin: round;
+}
+.az-city-label.is-capital {
+	fill: #ffffff;
+	font-size: 15px;
+	font-weight: 700;
 }
 .azm-ring { fill: none; stroke: var(--color-accent); stroke-width: 1.5; opacity: 0.45; }
 .azm-hit { fill: transparent; }
@@ -2598,6 +2620,70 @@ textarea:focus-visible, summary:focus-visible {
 .azm-city:hover .azm-label,
 .azm-city:focus .azm-label { opacity: 1; }
 .azm-label.is-capital-label { opacity: 1; font-size: 14px; font-weight: 700; fill: #fff; }
+.az-county-wrap { max-width: 620px; }
+.azc-county {
+	stroke: var(--color-accent);
+	stroke-width: 1.3;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+}
+.azc-state {
+	fill: none;
+	stroke: var(--color-accent);
+	stroke-width: 2.2;
+	stroke-linejoin: round;
+	vector-effect: non-scaling-stroke;
+	filter: drop-shadow(0 0 9px rgba(242, 106, 33, 0.5));
+}
+.azc-county-label {
+	fill: #2b2119;
+	font-family: inherit;
+	font-size: 12px;
+	font-weight: 800;
+	letter-spacing: 0.4px;
+	text-anchor: middle;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.55);
+	stroke-width: 2.4px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
+.azc-county-label.is-small { font-size: 8.5px; letter-spacing: 0.2px; }
+.azc-neighbor {
+	fill: #9aa3ac;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 700;
+	letter-spacing: 2px;
+	dominant-baseline: middle;
+	pointer-events: none;
+}
+.azc-seat { pointer-events: none; }
+.azc-seat-dot { fill: #3b332c; }
+.azc-seat-label {
+	fill: #2b2119;
+	font-family: inherit;
+	font-size: 11px;
+	font-weight: 600;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.7);
+	stroke-width: 2.2px;
+	stroke-linejoin: round;
+}
+.azc-capital-label {
+	fill: #1c140d;
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 800;
+	dominant-baseline: middle;
+	paint-order: stroke;
+	stroke: rgba(255, 255, 255, 0.75);
+	stroke-width: 2.6px;
+	stroke-linejoin: round;
+	pointer-events: none;
+}
 .az-map-caption {
 	position: relative;
 	z-index: 1;
