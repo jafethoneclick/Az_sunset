@@ -682,7 +682,6 @@ function arizonaMap() {
         ${counties}
       </g>
       <path class="azc-state" d="${g.state}"/>
-      <text class="az-word" x="300" y="322">AZ</text>
     </svg>
   </div>`;
 }
