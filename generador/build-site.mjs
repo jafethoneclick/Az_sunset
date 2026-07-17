@@ -605,6 +605,11 @@ const PROJECT_HERO_SHOTS = [
   "proyecto-3/01.webp",
 ];
 function productImage(prefix, p) {
+  // Cada tarjeta usa la portada de su propio catálogo (cover.webp si existe, si
+  // no la primera foto). Así no se repiten imágenes entre productos.
+  if (catalogCount(p.slug)) {
+    return `${prefix}assets/images/products/${p.slug}/catalog/${catalogHasCover(p.slug) ? "cover" : "01"}.webp`;
+  }
   const i = Math.max(0, products.indexOf(p));
   const file = PROJECT_CARD_COVERS[i % PROJECT_CARD_COVERS.length];
   return `${prefix}assets/images/projects/${file}`;
