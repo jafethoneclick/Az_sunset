@@ -18,6 +18,17 @@ function catalogCount(slug) {
   }
 }
 
+// Portada dedicada opcional: si existe cover.webp en el catálogo, se usa como
+// hero de la página y NO aparece en la galería (que solo lista NN.webp).
+function catalogHasCover(slug) {
+  try {
+    return readdirSync(new URL(`../sitio-html/assets/images/products/${slug}/catalog/`, import.meta.url))
+      .some((f) => /^cover\.webp$/i.test(f));
+  } catch {
+    return false;
+  }
+}
+
 const OUT = "C:/Users/Jafeth/Desktop/html_diseño/sitio-html";
 const THEME = "C:/Users/Jafeth/Desktop/html_diseño/wp-content/themes/ironclad-steel";
 
@@ -395,7 +406,6 @@ function navColumns(prefix) {
       icon: navIcons.about,
       href: `${prefix}about/about.html`,
       links: [
-        { label: "Our Work", href: `${prefix}our-work/our-work.html` },
         { label: "Area", href: `${prefix}index.html#where-we-build` },
         { label: "Staff", href: `${prefix}about/about.html` },
         { label: "Reviews", href: `${prefix}index.html#customer-stories` },
@@ -682,6 +692,7 @@ function arizonaMap() {
         ${counties}
       </g>
       <path class="azc-state" d="${g.state}"/>
+      <text class="az-word" x="300" y="322">AZ</text>
     </svg>
   </div>`;
 }
@@ -2797,9 +2808,6 @@ textarea:focus-visible, summary:focus-visible {
 						<span class="project-card-zoom" aria-hidden="true">${icon("expand")}</span>
 					</button>
 					<div class="project-card-body">
-						<span class="project-card-tag">${pr.tag}</span>
-						<span class="project-card-title">${pr.title}</span>
-						<span class="project-card-loc">${pr.location}</span>
 						<a href="${prefix}products/${pr.product}/${pr.product}.html" class="project-card-link">View gallery<span aria-hidden="true"> →</span></a>
 					</div>
 				</article>`;
@@ -2892,7 +2900,7 @@ ${set(true)}
 	</a>
 </section>
 <section class="border-y border-gray-100 bg-gray-50 py-12">
-	<div class="mx-auto grid w-full max-w-7xl grid-cols-2 gap-8 px-4 text-center sm:grid-cols-4 sm:px-6 lg:px-8">
+	<div class="mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 px-4 text-center sm:grid-cols-3 sm:px-6 lg:px-8">
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${site.completedCount}" data-suffix="+">${count}+</p>
 			<p class="mt-1 text-sm text-gray-600">Buildings Delivered</p>
@@ -2900,10 +2908,6 @@ ${set(true)}
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${site.googleReviews}" data-suffix="+">${site.googleReviews}+</p>
 			<p class="mt-1 text-sm text-gray-600">5-Star Reviews</p>
-		</div>
-		<div class="js-reveal-card" data-reveal-group="stats">
-			<p class="text-3xl font-extrabold text-primary sm:text-4xl" data-counter="${statesCount}" data-suffix="+">${statesCount}+</p>
-			<p class="mt-1 text-sm text-gray-600">Cities Served</p>
 		</div>
 		<div class="js-reveal-card" data-reveal-group="stats">
 			<p class="text-3xl font-extrabold text-primary sm:text-4xl">2-4 wks</p>
@@ -3164,7 +3168,7 @@ for (const p of products) {
   const catBase = `${prefix}assets/images/products/${p.slug}/catalog`;
   // Portada: usa la primera foto del propio catálogo del producto; si no hay
   // catálogo, cae a la imagen genérica de respaldo.
-  const heroImg = catCount ? `${catBase}/01.webp` : productHeroImage(prefix, p);
+  const heroImg = catCount ? `${catBase}/${catalogHasCover(p.slug) ? "cover" : "01"}.webp` : productHeroImage(prefix, p);
   const catalogItems = Array.from({ length: catCount }, (_, k) => {
     const n = String(k + 1).padStart(2, "0");
     return `\t\t\t\t<button type="button" class="catalog-item" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
