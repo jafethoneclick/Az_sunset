@@ -29,6 +29,12 @@ function catalogHasCover(slug) {
   }
 }
 
+// Versión de assets para "cache-busting": se agrega ?v=ASSET_VER a las imágenes
+// de producto/proyecto para que el navegador y el CDN bajen siempre la última
+// versión tras cada build (evita que queden fotos viejas en caché).
+const ASSET_VER = Date.now();
+const av = (url) => `${url}${url.includes("?") ? "&" : "?"}v=${ASSET_VER}`;
+
 const OUT = "C:/Users/Jafeth/Desktop/html_diseño/sitio-html";
 const THEME = "C:/Users/Jafeth/Desktop/html_diseño/wp-content/themes/ironclad-steel";
 
@@ -608,16 +614,16 @@ function productImage(prefix, p) {
   // Cada tarjeta usa la portada de su propio catálogo (cover.webp si existe, si
   // no la primera foto). Así no se repiten imágenes entre productos.
   if (catalogCount(p.slug)) {
-    return `${prefix}assets/images/products/${p.slug}/catalog/${catalogHasCover(p.slug) ? "cover" : "01"}.webp`;
+    return av(`${prefix}assets/images/products/${p.slug}/catalog/${catalogHasCover(p.slug) ? "cover" : "01"}.webp`);
   }
   const i = Math.max(0, products.indexOf(p));
   const file = PROJECT_CARD_COVERS[i % PROJECT_CARD_COVERS.length];
-  return `${prefix}assets/images/projects/${file}`;
+  return av(`${prefix}assets/images/projects/${file}`);
 }
 function productHeroImage(prefix, p) {
   const i = Math.max(0, products.indexOf(p));
   const file = PROJECT_HERO_SHOTS[i % PROJECT_HERO_SHOTS.length];
-  return `${prefix}assets/images/projects/${file}`;
+  return av(`${prefix}assets/images/projects/${file}`);
 }
 
 function productCard(prefix, p) {
@@ -2806,8 +2812,8 @@ textarea:focus-visible, summary:focus-visible {
     .map((pr) => {
       const base = `${prefix}assets/images/projects/${pr.slug}`;
       return `\t\t\t<article class="project-card js-reveal-card" data-reveal-group="projects-gallery">
-					<button type="button" class="project-card-media" data-gallery-base="${base}" data-gallery-count="${pr.count}" data-gallery-title="${pr.title}" aria-label="View photos: ${pr.title} (${pr.count} photos)">
-						<img src="${base}/cover.webp" alt="${pr.title}" width="1000" height="750" loading="lazy" decoding="async">
+					<button type="button" class="project-card-media" data-gallery-base="${base}" data-gallery-count="${pr.count}" data-gallery-ver="${ASSET_VER}" data-gallery-title="${pr.title}" aria-label="View photos: ${pr.title} (${pr.count} photos)">
+						<img src="${av(`${base}/cover.webp`)}" alt="${pr.title}" width="1000" height="750" loading="lazy" decoding="async">
 						<span class="project-card-scrim" aria-hidden="true"></span>
 						<span class="project-card-badge">${icon("camera")}<span>${pr.count}</span></span>
 						<span class="project-card-zoom" aria-hidden="true">${icon("expand")}</span>
@@ -3173,11 +3179,11 @@ for (const p of products) {
   const catBase = `${prefix}assets/images/products/${p.slug}/catalog`;
   // Portada: usa la primera foto del propio catálogo del producto; si no hay
   // catálogo, cae a la imagen genérica de respaldo.
-  const heroImg = catCount ? `${catBase}/${catalogHasCover(p.slug) ? "cover" : "01"}.webp` : productHeroImage(prefix, p);
+  const heroImg = catCount ? av(`${catBase}/${catalogHasCover(p.slug) ? "cover" : "01"}.webp`) : productHeroImage(prefix, p);
   const catalogItems = Array.from({ length: catCount }, (_, k) => {
     const n = String(k + 1).padStart(2, "0");
-    return `\t\t\t\t<button type="button" class="catalog-item" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
-						<span class="catalog-media"><img src="${catBase}/${n}.webp" alt="${p.title} example ${k + 1}" loading="lazy" width="700" height="525"></span>
+    return `\t\t\t\t<button type="button" class="catalog-item" data-gallery-base="${catBase}" data-gallery-count="${catCount}" data-gallery-start="${k + 1}" data-gallery-ver="${ASSET_VER}" data-gallery-title="${p.title}" aria-label="View ${p.title} photo ${k + 1} of ${catCount}">
+						<span class="catalog-media"><img src="${av(`${catBase}/${n}.webp`)}" alt="${p.title} example ${k + 1}" loading="lazy" width="700" height="525"></span>
 					</button>`;
   }).join("\n");
   const catalogSection = catCount

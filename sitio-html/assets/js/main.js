@@ -331,9 +331,10 @@
     });
   }
 
-  function open(base, count, t, start) {
+  function open(base, count, t, start, ver) {
     imgs = [];
-    for (var i = 1; i <= count; i++) imgs.push(base + "/" + pad(i) + ".webp");
+    var suffix = ver ? "?v=" + ver : "";
+    for (var i = 1; i <= count; i++) imgs.push(base + "/" + pad(i) + ".webp" + suffix);
     idx = start && start >= 1 && start <= count ? start - 1 : 0;
     title = t || "";
     buildThumbs();
@@ -363,7 +364,8 @@
         card.getAttribute("data-gallery-base"),
         Number(card.getAttribute("data-gallery-count")) || 0,
         card.getAttribute("data-gallery-title"),
-        Number(card.getAttribute("data-gallery-start")) || 0
+        Number(card.getAttribute("data-gallery-start")) || 0,
+        card.getAttribute("data-gallery-ver") || ""
       );
     });
   });
